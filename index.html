@@ -18,7 +18,7 @@
     .systems-wrap{position:relative;min-width:0}.systems{display:flex;gap:18px;align-items:center;overflow-x:auto;scrollbar-width:none;padding:48px 6vw 48px 22px;scroll-snap-type:x mandatory}.systems::-webkit-scrollbar{display:none}.card{scroll-snap-align:center;flex:0 0 clamp(165px,16vw,245px);aspect-ratio:.72;border-radius:24px;background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.11);box-shadow:0 15px 50px rgba(0,0,0,.28);display:flex;flex-direction:column;justify-content:space-between;padding:20px;transform:scale(.88);opacity:.58;transition:.28s ease;cursor:pointer;position:relative;overflow:hidden}.card::before{content:"";position:absolute;inset:-25%;background:radial-gradient(circle at 50% 25%,rgba(66,198,255,.24),transparent 42%);opacity:0;transition:.25s}.card.active{transform:scale(1.08);opacity:1;border-color:rgba(124,231,255,.65);box-shadow:0 26px 85px rgba(0,0,0,.48),0 0 0 2px rgba(66,198,255,.11),0 0 48px rgba(66,198,255,.16)}.card.active::before{opacity:1}.console-icon{height:58%;display:grid;place-items:center;position:relative;z-index:1}.console-icon svg{width:76%;height:76%;filter:drop-shadow(0 12px 30px rgba(0,0,0,.35))}.console-name{position:relative;z-index:1}.console-name strong{display:block;font-size:clamp(20px,2vw,28px);letter-spacing:-.03em}.console-name span{font-size:11px;color:#9fb0c3;text-transform:uppercase;letter-spacing:.14em}.hint{position:absolute;right:6vw;top:12px;color:#7f92a6;font-size:12px}
     footer{display:flex;align-items:center;justify-content:space-between;color:#8093a9;font-size:12px;gap:14px}.keys{display:flex;gap:14px;flex-wrap:wrap}.key{display:inline-flex;align-items:center;gap:7px}.kbd{min-width:24px;padding:4px 7px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:rgba(255,255,255,.06);color:white;text-align:center}.legal{max-width:520px;text-align:right}
     .toast{position:fixed;left:50%;bottom:82px;transform:translate(-50%,20px);background:#07121f;border:1px solid rgba(124,231,255,.35);box-shadow:var(--shadow);padding:13px 18px;border-radius:12px;color:#e9f7ff;opacity:0;pointer-events:none;transition:.22s}.toast.show{opacity:1;transform:translate(-50%,0)}
-    @media(max-width:860px){.app{padding:18px 16px}.status{display:none}main{grid-template-columns:1fr;gap:0}.hero{padding:3vh 4vw 0}.title{font-size:56px}.desc{font-size:15px}.systems{padding:25px 14vw 35px}.card{flex-basis:190px}footer{padding:0 5px}.legal{display:none}.hint{right:16px}}
+    .touchbar{display:none;position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:30;gap:10px;align-items:center}.touchbtn{width:54px;height:54px;border-radius:16px;border:1px solid rgba(255,255,255,.18);background:rgba(8,24,40,.92);color:white;font-size:22px;box-shadow:0 8px 28px rgba(0,0,0,.35);touch-action:manipulation}.touchbtn.primary{width:74px;background:rgba(66,198,255,.22);border-color:rgba(124,231,255,.55);font-size:14px;font-weight:800}.touchbtn.back{font-size:13px;width:64px}.touchbtn:active{transform:scale(.94)}@media (pointer:coarse),(max-width:860px){.touchbar{display:flex}.app{padding:18px 16px 88px}.status{display:none}main{grid-template-columns:1fr;gap:0}.hero{padding:3vh 4vw 0}.title{font-size:56px}.desc{font-size:15px}.systems{padding:25px 14vw 35px}.card{flex-basis:190px}footer{display:none}.hint{display:none}.systems{scroll-snap-type:x mandatory}.card{touch-action:manipulation}}
   </style>
 </head>
 <body>
@@ -44,7 +44,7 @@
     <div class="legal">Use apenas jogos/ROMs que você tenha direito de utilizar.</div>
   </footer>
 </div>
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast"></div><div class="touchbar" id="touchbar"><button class="touchbtn" id="touchLeft" aria-label="Anterior">◀</button><button class="touchbtn primary" id="touchOpen">ABRIR</button><button class="touchbtn" id="touchRight" aria-label="Próximo">▶</button><button class="touchbtn back" id="touchBack">VOLTAR</button></div>
 <script>
 const data=[
   {name:'SNES',sub:'Super Nintendo',gen:'16-bit',desc:'Super Nintendo Entertainment System. Selecione para abrir sua biblioteca de jogos.',icon:'gamepad'},
@@ -85,6 +85,10 @@ function openSystem(){
 }
 window.playGame=id=>{const g=getGames().find(x=>x.id===id);if(!g)return;if(g.rom||g.romStored){location.href='player.html?id='+encodeURIComponent(id)}else alert('Este jogo ainda não tem uma ROM configurada no painel Admin.');};
 window.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){selected=(selected+1)%data.length;render()}if(e.key==='ArrowLeft'){selected=(selected-1+data.length)%data.length;render()}if(e.key==='Enter')openSystem();if(e.key==='Escape'){selected=0;render()}});
+document.getElementById('touchLeft').addEventListener('click',()=>{selected=(selected-1+data.length)%data.length;render()});
+document.getElementById('touchRight').addEventListener('click',()=>{selected=(selected+1)%data.length;render()});
+document.getElementById('touchOpen').addEventListener('click',openSystem);
+document.getElementById('touchBack').addEventListener('click',()=>{location.reload()});
 render();
 </script>
 </body>
