@@ -64,7 +64,7 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'Senha inválida' });
       }
       res.setHeader('Cache-Control', 'no-store, max-age=0');
-      return res.status(200).json({ games: await readCatalog(), apiVersion: '2.2' });
+      return res.status(200).json({ games: await readCatalog(), apiVersion: '3.1' });
     }
 
     if (!authorized(req)) {

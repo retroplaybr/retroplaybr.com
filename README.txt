@@ -1,10 +1,16 @@
-RetroHub v3.0 — catálogo amplo de sistemas no estilo RetroBat
+RetroHub v3.1 — correção do catálogo público
 
-Inclui dezenas de plataformas Nintendo, Sony, Sega, Microsoft, Atari, SNK, NEC,
-Arcade, computadores e outros sistemas.
+CORREÇÕES:
+- Jogos públicos agora aparecem em outros aparelhos.
+- O filtro de sistema ignora maiúsculas/minúsculas e entende SNES/snes/Super Nintendo.
+- Link para o player usa ?id=...&scope=public corretamente.
+- Mantém o catálogo amplo de sistemas no estilo RetroBat.
+- Mantém Vercel Blob e API já configurados.
 
-IMPORTANTE:
-- Esta versão expande o CATÁLOGO/MENU. Nem todos os sistemas possuem emulador compatível com navegador.
-- RetroBat para Windows suporta centenas de sistemas por meio de múltiplos emuladores; um site não consegue reproduzir automaticamente todos esses emuladores.
-- Use somente jogos/homebrews/arquivos que você tenha direito de hospedar e disponibilizar.
-- Envie TODOS os arquivos e a pasta api para o repositório Vercel.
+INSTALAÇÃO:
+1. Substitua TODOS os arquivos no GitHub/Vercel, inclusive a pasta api.
+2. Faça Redeploy SEM usar Build Cache.
+3. Abra o site Vercel e confira v3.1.
+4. Entre em Super Nintendo: o jogo público já existente deve aparecer, sem reenviar a ROM.
+
+Use apenas arquivos que você tenha direito de hospedar/disponibilizar.

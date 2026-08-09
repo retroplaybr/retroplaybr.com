@@ -1,11 +1,115 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RetroHub Jogos</title>
-<style>body{margin:0;background:#07111f;color:white;font-family:Arial;padding:25px}a{color:#70b7ff}.box{margin-top:25px;padding:25px;border:1px solid #29415f;border-radius:16px;background:#0c1929}</style></head>
-<body><a href="index.html">← Voltar aos sistemas</a><div class="box"><h1 id="title"></h1><p id="msg">Carregando catálogo público…</p><div id="games"></div></div>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RetroHub Jogos</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#07111f;color:white;font-family:Arial,sans-serif;padding:24px}
+a{color:#70b7ff;text-decoration:none}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.box{margin-top:22px;padding:24px;border:1px solid #29415f;border-radius:16px;background:#0c1929}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px;margin-top:18px}
+.game{display:block;padding:12px;border:1px solid #29415f;border-radius:14px;background:#101f31;color:white}
+.game img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;background:#172b3e}
+.game strong{display:block;margin-top:10px;font-size:15px}
+.game small{display:block;color:#92a8c0;margin-top:5px}
+#debug{font-size:11px;color:#617892;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="top">
+  <a href="index.html">← Voltar aos sistemas</a>
+  <a href="admin.html">ADMIN</a>
+</div>
+<div class="box">
+  <h1 id="title"></h1>
+  <p id="msg">Carregando catálogo público…</p>
+  <div id="games" class="grid"></div>
+  <div id="debug"></div>
+</div>
+
 <script>
-const p=new URLSearchParams(location.search), system=p.get('system'), name=p.get('name')||system;
-title.textContent=name;
-(async()=>{try{const r=await fetch('/api/catalog');const d=await r.json();const arr=(d.games||d||[]).filter(g=>(g.system||g.console)===system);
-if(!arr.length){msg.textContent='Nenhum jogo publicado para este sistema ainda.';return}
-msg.textContent='';games.innerHTML=arr.map(g=>`<p><a href="player.html?game=${encodeURIComponent(g.id||g.romUrl||'')}">${g.name||g.title||'Jogo'}</a></p>`).join('');
-}catch(e){msg.textContent='Catálogo indisponível neste momento.'}})();
-</script></body></html>
+const p = new URLSearchParams(location.search);
+const requestedSystem = p.get('system') || '';
+const name = p.get('name') || requestedSystem;
+document.getElementById('title').textContent = name;
+
+const aliases = {
+  'snes':'snes','super nintendo':'snes','super nintendo entertainment system':'snes',
+  'nes':'nes','nes / famicom':'nes','nintendo entertainment system':'nes',
+  '3ds':'3ds','nintendo 3ds':'3ds',
+  'nds':'nds','ds':'nds','nintendo ds':'nds',
+  'n64':'n64','nintendo 64':'n64',
+  'n64dd':'n64dd','nintendo 64dd':'n64dd',
+  'gba':'gba','game boy advance':'gba',
+  'gbc':'gbc','game boy color':'gbc',
+  'gb':'gb','game boy':'gb',
+  'gamecube':'gamecube','nintendo gamecube':'gamecube',
+  'wii':'wii','nintendo wii':'wii',
+  'wiiu':'wiiu','wii u':'wiiu','nintendo wii u':'wiiu',
+  'switch':'switch','nintendo switch':'switch',
+  'psx':'psx','playstation':'psx','ps1':'psx',
+  'ps2':'ps2','playstation 2':'ps2',
+  'ps3':'ps3','playstation 3':'ps3',
+  'ps4':'ps4','playstation 4':'ps4',
+  'ps5':'ps5','playstation 5':'ps5',
+  'psp':'psp','ps vita':'psvita','psvita':'psvita',
+  'dreamcast':'dreamcast','sega dreamcast':'dreamcast',
+  'saturn':'saturn','sega saturn':'saturn',
+  'megadrive':'megadrive','mega drive / genesis':'megadrive','sega genesis':'megadrive',
+  'mastersystem':'mastersystem','master system':'mastersystem',
+  'gamegear':'gamegear','game gear':'gamegear',
+  'mame':'mame','arcade / mame':'mame',
+  'fbneo':'fbneo','finalburn neo':'fbneo'
+};
+
+function norm(v){
+  const s = String(v || '').trim().toLowerCase();
+  return aliases[s] || s.replace(/[^a-z0-9]+/g,'');
+}
+
+(async()=>{
+  try{
+    const r = await fetch('/api/catalog?ts=' + Date.now(), {cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    const all = Array.isArray(d.games) ? d.games : (Array.isArray(d) ? d : []);
+    const want = norm(requestedSystem);
+    const arr = all.filter(g => norm(g.system || g.console || g.platform) === want);
+
+    document.getElementById('debug').textContent =
+      `Sistema: ${requestedSystem} → ${want} | catálogo público: ${all.length} jogo(s)`;
+
+    if(!arr.length){
+      document.getElementById('msg').textContent='Nenhum jogo publicado para este sistema ainda.';
+      return;
+    }
+
+    document.getElementById('msg').textContent =
+      `${arr.length} jogo${arr.length===1?'':'s'} encontrado${arr.length===1?'':'s'}.`;
+
+    const placeholder = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22400%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23172b3e%22/%3E%3C/svg%3E';
+
+    document.getElementById('games').innerHTML = arr.map(g => {
+      const id = encodeURIComponent(String(g.id || ''));
+      return `<a class="game" href="player.html?id=${id}&scope=public">
+        <img src="${g.cover || placeholder}" alt="">
+        <strong>${escapeHtml(g.name || g.title || 'Jogo')}</strong>
+        <small>${escapeHtml(g.system || g.console || '')}</small>
+      </a>`;
+    }).join('');
+  }catch(e){
+    document.getElementById('msg').textContent='Catálogo indisponível neste momento: ' + (e.message || e);
+  }
+})();
+
+function escapeHtml(s){
+  return String(s ?? '').replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+</script>
+</body>
+</html>
