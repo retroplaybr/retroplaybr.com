@@ -10,3 +10,12 @@ RETROHUB — PUBLICAR PARA TODOS — v2.1 (correção "requested blob does not e
 Esta versão não usa head() para tentar acessar um Blob por pathname. Ela localiza o arquivo recém-enviado com list(), aguarda a propagação do upload e só então grava o metadado público em catalog/<id>.json.
 
 O Blob é público. Use somente arquivos que você tenha autorização para disponibilizar publicamente.
+
+
+VERSAO 2.2
+- Corrige a deteccao de uploads do Vercel Blob quando o servico adiciona sufixo aleatorio ao pathname.
+- Novos signed uploads pedem addRandomSuffix=false.
+- O catalogo aceita tanto pathname exato quanto blobs antigos com sufixo.
+
+
+V2.3: Nintendo Switch adicionado ao menu e ao painel admin. Arquivos .NSP/.XCI podem ser cadastrados/armazenados, mas o player web atual não emula Nintendo Switch.

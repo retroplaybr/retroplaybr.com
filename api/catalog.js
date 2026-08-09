@@ -8,13 +8,30 @@ function authorized(req) {
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function findUploadedBlob(pathname) {
-  // Signed PUT uploads can be visible a fraction of a second after the browser
-  // finishes. Resolve by pathname instead of calling head() on a not-yet-known URL.
-  for (const wait of [0, 250, 600, 1200, 2000]) {
+  // Vercel Blob may append a random suffix to the final pathname depending on
+  // the upload token/options. Look up both the exact requested path and the
+  // suffixed variant inside the same game folder.
+  const requested = String(pathname);
+  const slash = requested.lastIndexOf('/');
+  const dir = slash >= 0 ? requested.slice(0, slash + 1) : '';
+  const file = slash >= 0 ? requested.slice(slash + 1) : requested;
+  const dot = file.lastIndexOf('.');
+  const stem = dot > 0 ? file.slice(0, dot) : file;
+  const ext = dot > 0 ? file.slice(dot) : '';
+
+  for (const wait of [0, 250, 600, 1200, 2000, 3500]) {
     if (wait) await sleep(wait);
-    const result = await list({ prefix: pathname, limit: 20 });
-    const exact = result.blobs.find((blob) => blob.pathname === pathname);
+    const result = await list({ prefix: dir || requested, limit: 100 });
+
+    const exact = result.blobs.find((blob) => blob.pathname === requested);
     if (exact) return exact;
+
+    const suffixed = result.blobs.find((blob) => {
+      const name = blob.pathname.slice(dir.length);
+      if (ext) return name.startsWith(`${stem}-`) && name.endsWith(ext);
+      return name === stem || name.startsWith(`${stem}-`);
+    });
+    if (suffixed) return suffixed;
   }
   return null;
 }
@@ -47,7 +64,7 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'Senha inválida' });
       }
       res.setHeader('Cache-Control', 'no-store, max-age=0');
-      return res.status(200).json({ games: await readCatalog(), apiVersion: '2.1' });
+      return res.status(200).json({ games: await readCatalog(), apiVersion: '2.2' });
     }
 
     if (!authorized(req)) {
