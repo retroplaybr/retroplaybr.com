@@ -1,0 +1,11 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RetroHub Jogos</title>
+<style>body{margin:0;background:#07111f;color:white;font-family:Arial;padding:25px}a{color:#70b7ff}.box{margin-top:25px;padding:25px;border:1px solid #29415f;border-radius:16px;background:#0c1929}</style></head>
+<body><a href="index.html">← Voltar aos sistemas</a><div class="box"><h1 id="title"></h1><p id="msg">Carregando catálogo público…</p><div id="games"></div></div>
+<script>
+const p=new URLSearchParams(location.search), system=p.get('system'), name=p.get('name')||system;
+title.textContent=name;
+(async()=>{try{const r=await fetch('/api/catalog');const d=await r.json();const arr=(d.games||d||[]).filter(g=>(g.system||g.console)===system);
+if(!arr.length){msg.textContent='Nenhum jogo publicado para este sistema ainda.';return}
+msg.textContent='';games.innerHTML=arr.map(g=>`<p><a href="player.html?game=${encodeURIComponent(g.id||g.romUrl||'')}">${g.name||g.title||'Jogo'}</a></p>`).join('');
+}catch(e){msg.textContent='Catálogo indisponível neste momento.'}})();
+</script></body></html>

@@ -1,10 +1,238 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>RetroHub</title><style>
-:root{--bg:#06111f;--text:#edf7ff;--muted:#91a3b7;--accent:#42c6ff;--shadow:0 22px 60px rgba(0,0,0,.42)}*{box-sizing:border-box}html,body{height:100%;margin:0}body{font-family:Inter,Segoe UI,Arial,sans-serif;background:radial-gradient(circle at 50% 0,#173553,#06111f 42%,#02070d);color:var(--text);overflow:hidden}.app{height:100%;display:grid;grid-template-rows:auto 1fr auto;padding:24px 4vw 24px}header{display:flex;justify-content:space-between;align-items:center}.brand{font-weight:900;letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;gap:12px}.mark{width:34px;height:34px;border:2px solid var(--accent);border-radius:9px;display:grid;place-items:center}.status{color:#91a3b7;font-size:12px}main{display:grid;grid-template-columns:42% 58%;min-height:0}.hero{align-self:center;padding:0 2vw 0 3vw}.eyebrow{color:#62d8ff;text-transform:uppercase;font-size:12px;font-weight:800;letter-spacing:.18em}.title{font-size:clamp(58px,7vw,105px);line-height:.9;margin:14px 0 20px}.desc{max-width:560px;color:#c8d7e5;font-size:18px;line-height:1.45}.meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}.pill{border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:7px 11px;font-size:11px;color:#d4e2ef}.systems-wrap{align-self:center;min-width:0;position:relative}.systems{display:flex;align-items:center;gap:18px;overflow-x:auto;padding:45px 7vw 55px 2vw;scrollbar-width:none}.systems::-webkit-scrollbar{display:none}.card{flex:0 0 205px;height:315px;border-radius:23px;background:linear-gradient(160deg,rgba(31,55,79,.8),rgba(12,25,39,.85));border:1px solid rgba(255,255,255,.08);padding:18px;display:flex;flex-direction:column;justify-content:flex-end;color:#91a3b7;transition:.22s;cursor:pointer}.card.active{transform:scale(1.08);color:#f5fbff;border-color:rgba(98,216,255,.65);box-shadow:0 0 0 1px rgba(66,198,255,.11),0 0 48px rgba(66,198,255,.16)}.console-icon{height:58%;display:grid;place-items:center}.console-icon svg{width:76%;height:76%}.console-name strong{display:block;font-size:25px}.console-name span{font-size:11px;text-transform:uppercase;letter-spacing:.12em}.hint{position:absolute;right:6vw;top:12px;color:#7f92a6;font-size:12px}footer{display:flex;justify-content:space-between;color:#8093a9;font-size:12px}.toast{position:fixed;left:50%;bottom:82px;transform:translate(-50%,20px);background:#07121f;border:1px solid rgba(124,231,255,.35);box-shadow:var(--shadow);padding:13px 18px;border-radius:12px;opacity:0;transition:.22s}.toast.show{opacity:1;transform:translate(-50%,0)}.touchbar{display:none;position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:30;gap:10px}.touchbtn{width:54px;height:54px;border-radius:16px;border:1px solid rgba(255,255,255,.18);background:rgba(8,24,40,.92);color:white;font-size:22px}.touchbtn.primary{width:74px;background:rgba(66,198,255,.22);font-size:14px;font-weight:800}.touchbtn.back{width:64px;font-size:13px}@media(pointer:coarse),(max-width:860px){.touchbar{display:flex}.app{padding:18px 16px 88px}.status{display:none}main{grid-template-columns:1fr}.hero{padding:3vh 4vw 0}.title{font-size:56px}.desc{font-size:15px}.systems{padding:25px 14vw 35px}.card{flex-basis:190px}footer,.hint{display:none}}
-</style></head><body><div class="app"><header><div class="brand"><div class="mark">R</div> RetroHub</div><div class="status">CATÁLOGO ONLINE • <a href="admin.html" style="color:#91a3b7;text-decoration:none">ADMIN</a></div></header><main><section class="hero"><div class="eyebrow">Sistema selecionado</div><h1 class="title" id="heroTitle">SNES</h1><div class="desc" id="heroDesc"></div><div class="meta"><span class="pill" id="generation"></span><span class="pill">Catálogo público</span><span class="pill">Touch</span></div></section><section class="systems-wrap"><div class="hint">← → navegar • Enter abrir</div><div class="systems" id="systems"></div></section></main><footer><div>← → Navegar • Enter Abrir • Esc Voltar</div><div>Use apenas jogos/ROMs que você tenha direito de utilizar.</div></footer></div><div class="toast" id="toast"></div><div class="touchbar"><button class="touchbtn" id="touchLeft">◀</button><button class="touchbtn primary" id="touchOpen">ABRIR</button><button class="touchbtn" id="touchRight">▶</button><button class="touchbtn back" id="touchBack">VOLTAR</button></div><script>
-const data=[{name:'SNES',sub:'Super Nintendo',gen:'16-bit',desc:'Super Nintendo Entertainment System.',icon:'gamepad'},{name:'NES',sub:'Nintendo Entertainment System',gen:'8-bit',desc:'Clássicos do Nintendo Entertainment System.',icon:'gamepad'},{name:'Nintendo 3DS',sub:'3DS',gen:'Portátil 3D',desc:'Biblioteca de Nintendo 3DS.',icon:'dual'},{name:'Nintendo DS',sub:'DS',gen:'Dual Screen',desc:'Jogos de Nintendo DS.',icon:'dual'},{name:'Nintendo 64',sub:'N64',gen:'64-bit',desc:'Biblioteca Nintendo 64.',icon:'gamepad'},{name:'Game Boy Advance',sub:'GBA',gen:'32-bit portátil',desc:'Biblioteca de Game Boy Advance.',icon:'handheld'},{name:'Game Boy',sub:'GB',gen:'8-bit portátil',desc:'Clássicos do Game Boy.',icon:'handheld'},{name:'Game Boy Color',sub:'GBC',gen:'Color portátil',desc:'Biblioteca de Game Boy Color.',icon:'handheld'},{name:'GameCube',sub:'Nintendo GameCube',gen:'128-bit era',desc:'Biblioteca GameCube.',icon:'cube'},{name:'Nintendo Switch',sub:'Switch',gen:'Híbrido',desc:'Biblioteca Nintendo Switch.',icon:'switch'}];let selected=0,publicGames=[];
-const systems=document.getElementById('systems');function icon(type){const c='fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"';if(type==='dual')return `<svg viewBox="0 0 180 180" ${c}><rect x="37" y="18" width="106" height="144" rx="14"/><rect x="53" y="36" width="74" height="44" rx="5"/><rect x="53" y="96" width="74" height="44" rx="5"/></svg>`;if(type==='handheld')return `<svg viewBox="0 0 180 180" ${c}><rect x="43" y="18" width="94" height="144" rx="22"/><rect x="57" y="35" width="66" height="56" rx="6"/><path d="M62 118h24M74 106v24"/><circle cx="112" cy="116" r="7"/><circle cx="126" cy="129" r="7"/></svg>`;if(type==='switch')return `<svg viewBox="0 0 180 180" ${c}><rect x="36" y="32" width="108" height="116" rx="14"/><path d="M65 32v116M115 32v116"/><circle cx="51" cy="68" r="8"/><circle cx="129" cy="112" r="8"/></svg>`;if(type==='cube')return `<svg viewBox="0 0 180 180" ${c}><path d="M90 20l57 31v68l-57 41-57-41V51z"/><path d="M33 51l57 34 57-34M90 85v75"/></svg>`;return `<svg viewBox="0 0 180 180" ${c}><path d="M42 72c-18 6-28 24-24 43l7 31c3 13 20 17 29 7l21-25h30l21 25c9 10 26 6 29-7l7-31c4-19-6-37-24-43l-28-9H70z"/><circle cx="122" cy="98" r="8"/><circle cx="140" cy="112" r="8"/><path d="M48 103h27M61.5 89.5v27"/></svg>`}
-function render(){systems.innerHTML='';data.forEach((x,i)=>{const el=document.createElement('article');el.className='card'+(i===selected?' active':'');el.innerHTML=`<div class="console-icon">${icon(x.icon)}</div><div class="console-name"><span>${x.sub}</span><strong>${x.name}</strong></div>`;el.onclick=()=>{selected=i;render();openSystem()};systems.appendChild(el)});const d=data[selected];heroTitle.textContent=d.name;heroDesc.textContent=d.desc;generation.textContent=d.gen;requestAnimationFrame(()=>systems.children[selected]?.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'}))}
-async function loadPublic(){try{const r=await fetch('/api/catalog',{cache:'no-store'});if(!r.ok)throw 0;publicGames=(await r.json()).games||[]}catch{publicGames=[]}}
-function openSystem(){const sys=data[selected].name,games=publicGames.filter(g=>g.system===sys);if(!games.length){toast.textContent=`${sys}: nenhum jogo público cadastrado ainda.`;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1900);return}document.querySelector('main').innerHTML=`<section style="grid-column:1/-1;overflow:auto;padding:3vh 4vw"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="eyebrow">Biblioteca pública</div><h1 style="font-size:clamp(34px,5vw,70px);margin:8px 0 18px">${sys}</h1></div><button onclick="location.reload()" style="background:#14283b;color:white;border:1px solid #38506a;border-radius:10px;padding:10px 14px">Voltar</button></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px">${games.map(g=>`<article onclick="location.href='player.html?scope=public&id=${encodeURIComponent(g.id)}'" style="cursor:pointer;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.11);border-radius:16px;overflow:hidden"><div style="aspect-ratio:3/4;background:#13283d"><img src="${g.cover||''}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'"></div><div style="padding:12px"><strong>${g.name}</strong><div style="font-size:11px;color:#91a3b7;margin-top:4px">🌐 ${g.system}</div></div></article>`).join('')}</div></section>`}
-window.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){selected=(selected+1)%data.length;render()}if(e.key==='ArrowLeft'){selected=(selected-1+data.length)%data.length;render()}if(e.key==='Enter')openSystem();if(e.key==='Escape')location.reload()});touchLeft.onclick=()=>{selected=(selected-1+data.length)%data.length;render()};touchRight.onclick=()=>{selected=(selected+1)%data.length;render()};touchOpen.onclick=openSystem;touchBack.onclick=()=>location.reload();(async()=>{await loadPublic();render()})();
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RetroHub — Sistemas RetroBat</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#07111f;color:#fff;font-family:Arial,sans-serif}
+header{position:sticky;top:0;background:#081525ee;backdrop-filter:blur(12px);padding:18px 5%;z-index:5;border-bottom:1px solid #203047}
+h1{margin:0;font-size:28px}p{color:#9fb0c7}.top{display:flex;justify-content:space-between;gap:15px;align-items:center;flex-wrap:wrap}
+a{color:#fff;text-decoration:none;background:#1677ff;padding:11px 16px;border-radius:10px}
+.filters{display:flex;gap:8px;overflow:auto;padding:14px 0 2px}.filter{white-space:nowrap;border:1px solid #31435d;background:#101e31;color:#fff;padding:9px 12px;border-radius:999px}
+main{padding:24px 5% 60px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.card{min-height:145px;text-align:left;padding:18px;border:1px solid #263a55;border-radius:16px;background:linear-gradient(145deg,#10233a,#091522);color:#fff;cursor:pointer}
+.card:hover{transform:translateY(-2px);border-color:#55a7ff}.card strong{display:block;font-size:18px;margin:22px 0 7px}.card small{color:#7e94ae}
+.badge{font-size:11px;background:#1d3553;padding:5px 8px;border-radius:8px;color:#bcd7f5}
+#notice{position:fixed;left:50%;bottom:25px;transform:translateX(-50%);background:#111d2d;border:1px solid #37506f;padding:14px 18px;border-radius:12px;display:none;max-width:90%}
+</style></head>
+<body><header><div class="top"><div><h1>RETROHUB</h1><p>Catálogo amplo de sistemas no estilo RetroBat • v3.0</p></div><a href="admin.html">ADMIN</a></div>
+<div class="filters"><button class="filter" onclick="filterCat('Todos')">Todos</button>
+<button class="filter" onclick="filterCat('Arcade')">Arcade</button>
+<button class="filter" onclick="filterCat('Atari')">Atari</button>
+<button class="filter" onclick="filterCat('Computadores')">Computadores</button>
+<button class="filter" onclick="filterCat('Microsoft')">Microsoft</button>
+<button class="filter" onclick="filterCat('NEC')">NEC</button>
+<button class="filter" onclick="filterCat('Nintendo')">Nintendo</button>
+<button class="filter" onclick="filterCat('Outros')">Outros</button>
+<button class="filter" onclick="filterCat('SNK')">SNK</button>
+<button class="filter" onclick="filterCat('Sega')">Sega</button>
+<button class="filter" onclick="filterCat('Sony')">Sony</button></div></header>
+<main><div class="grid" id="grid"><button class="card" data-cat="Nintendo" onclick="openSystem('switch','Nintendo Switch')">
+      <span class="badge">Nintendo</span><strong>Nintendo Switch</strong><small>SWITCH</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('wiiu','Nintendo Wii U')">
+      <span class="badge">Nintendo</span><strong>Nintendo Wii U</strong><small>WIIU</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('wii','Nintendo Wii')">
+      <span class="badge">Nintendo</span><strong>Nintendo Wii</strong><small>WII</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('gamecube','Nintendo GameCube')">
+      <span class="badge">Nintendo</span><strong>Nintendo GameCube</strong><small>GAMECUBE</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('3ds','Nintendo 3DS')">
+      <span class="badge">Nintendo</span><strong>Nintendo 3DS</strong><small>3DS</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('nds','Nintendo DS')">
+      <span class="badge">Nintendo</span><strong>Nintendo DS</strong><small>NDS</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('n64dd','Nintendo 64DD')">
+      <span class="badge">Nintendo</span><strong>Nintendo 64DD</strong><small>N64DD</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('n64','Nintendo 64')">
+      <span class="badge">Nintendo</span><strong>Nintendo 64</strong><small>N64</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('snes','Super Nintendo')">
+      <span class="badge">Nintendo</span><strong>Super Nintendo</strong><small>SNES</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('nes','NES / Famicom')">
+      <span class="badge">Nintendo</span><strong>NES / Famicom</strong><small>NES</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('fds','Famicom Disk System')">
+      <span class="badge">Nintendo</span><strong>Famicom Disk System</strong><small>FDS</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('virtualboy','Virtual Boy')">
+      <span class="badge">Nintendo</span><strong>Virtual Boy</strong><small>VIRTUALBOY</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('gba','Game Boy Advance')">
+      <span class="badge">Nintendo</span><strong>Game Boy Advance</strong><small>GBA</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('gbc','Game Boy Color')">
+      <span class="badge">Nintendo</span><strong>Game Boy Color</strong><small>GBC</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('gb','Game Boy')">
+      <span class="badge">Nintendo</span><strong>Game Boy</strong><small>GB</small>
+    </button>
+<button class="card" data-cat="Nintendo" onclick="openSystem('pokemini','Pokémon Mini')">
+      <span class="badge">Nintendo</span><strong>Pokémon Mini</strong><small>POKEMINI</small>
+    </button>
+<button class="card" data-cat="Sony" onclick="openSystem('ps5','PlayStation 5')">
+      <span class="badge">Sony</span><strong>PlayStation 5</strong><small>PS5</small>
+    </button>
+<button class="card" data-cat="Sony" onclick="openSystem('ps4','PlayStation 4')">
+      <span class="badge">Sony</span><strong>PlayStation 4</strong><small>PS4</small>
+    </button>
+<button class="card" data-cat="Sony" onclick="openSystem('ps3','PlayStation 3')">
+      <span class="badge">Sony</span><strong>PlayStation 3</strong><small>PS3</small>
+    </button>
+<button class="card" data-cat="Sony" onclick="openSystem('ps2','PlayStation 2')">
+      <span class="badge">Sony</span><strong>PlayStation 2</strong><small>PS2</small>
+    </button>
+<button class="card" data-cat="Sony" onclick="openSystem('psx','PlayStation')">
+      <span class="badge">Sony</span><strong>PlayStation</strong><small>PSX</small>
+    </button>
+<button class="card" data-cat="Sony" onclick="openSystem('psp','PSP')">
+      <span class="badge">Sony</span><strong>PSP</strong><small>PSP</small>
+    </button>
+<button class="card" data-cat="Sony" onclick="openSystem('psvita','PS Vita')">
+      <span class="badge">Sony</span><strong>PS Vita</strong><small>PSVITA</small>
+    </button>
+<button class="card" data-cat="Sega" onclick="openSystem('dreamcast','Sega Dreamcast')">
+      <span class="badge">Sega</span><strong>Sega Dreamcast</strong><small>DREAMCAST</small>
+    </button>
+<button class="card" data-cat="Sega" onclick="openSystem('saturn','Sega Saturn')">
+      <span class="badge">Sega</span><strong>Sega Saturn</strong><small>SATURN</small>
+    </button>
+<button class="card" data-cat="Sega" onclick="openSystem('sega32x','Sega 32X')">
+      <span class="badge">Sega</span><strong>Sega 32X</strong><small>SEGA32X</small>
+    </button>
+<button class="card" data-cat="Sega" onclick="openSystem('segacd','Sega CD / Mega-CD')">
+      <span class="badge">Sega</span><strong>Sega CD / Mega-CD</strong><small>SEGACD</small>
+    </button>
+<button class="card" data-cat="Sega" onclick="openSystem('megadrive','Mega Drive / Genesis')">
+      <span class="badge">Sega</span><strong>Mega Drive / Genesis</strong><small>MEGADRIVE</small>
+    </button>
+<button class="card" data-cat="Sega" onclick="openSystem('mastersystem','Master System')">
+      <span class="badge">Sega</span><strong>Master System</strong><small>MASTERSYSTEM</small>
+    </button>
+<button class="card" data-cat="Sega" onclick="openSystem('gamegear','Game Gear')">
+      <span class="badge">Sega</span><strong>Game Gear</strong><small>GAMEGEAR</small>
+    </button>
+<button class="card" data-cat="Sega" onclick="openSystem('sg1000','SG-1000')">
+      <span class="badge">Sega</span><strong>SG-1000</strong><small>SG1000</small>
+    </button>
+<button class="card" data-cat="Microsoft" onclick="openSystem('xbox','Xbox')">
+      <span class="badge">Microsoft</span><strong>Xbox</strong><small>XBOX</small>
+    </button>
+<button class="card" data-cat="Microsoft" onclick="openSystem('xbox360','Xbox 360')">
+      <span class="badge">Microsoft</span><strong>Xbox 360</strong><small>XBOX360</small>
+    </button>
+<button class="card" data-cat="Atari" onclick="openSystem('atari2600','Atari 2600')">
+      <span class="badge">Atari</span><strong>Atari 2600</strong><small>ATARI2600</small>
+    </button>
+<button class="card" data-cat="Atari" onclick="openSystem('atari5200','Atari 5200')">
+      <span class="badge">Atari</span><strong>Atari 5200</strong><small>ATARI5200</small>
+    </button>
+<button class="card" data-cat="Atari" onclick="openSystem('atari7800','Atari 7800')">
+      <span class="badge">Atari</span><strong>Atari 7800</strong><small>ATARI7800</small>
+    </button>
+<button class="card" data-cat="Atari" onclick="openSystem('jaguar','Atari Jaguar')">
+      <span class="badge">Atari</span><strong>Atari Jaguar</strong><small>JAGUAR</small>
+    </button>
+<button class="card" data-cat="Atari" onclick="openSystem('lynx','Atari Lynx')">
+      <span class="badge">Atari</span><strong>Atari Lynx</strong><small>LYNX</small>
+    </button>
+<button class="card" data-cat="Atari" onclick="openSystem('atarist','Atari ST')">
+      <span class="badge">Atari</span><strong>Atari ST</strong><small>ATARIST</small>
+    </button>
+<button class="card" data-cat="SNK" onclick="openSystem('neogeo','Neo Geo')">
+      <span class="badge">SNK</span><strong>Neo Geo</strong><small>NEOGEO</small>
+    </button>
+<button class="card" data-cat="SNK" onclick="openSystem('neogeocd','Neo Geo CD')">
+      <span class="badge">SNK</span><strong>Neo Geo CD</strong><small>NEOGEOCD</small>
+    </button>
+<button class="card" data-cat="SNK" onclick="openSystem('ngp','Neo Geo Pocket')">
+      <span class="badge">SNK</span><strong>Neo Geo Pocket</strong><small>NGP</small>
+    </button>
+<button class="card" data-cat="SNK" onclick="openSystem('ngpc','Neo Geo Pocket Color')">
+      <span class="badge">SNK</span><strong>Neo Geo Pocket Color</strong><small>NGPC</small>
+    </button>
+<button class="card" data-cat="NEC" onclick="openSystem('pcengine','PC Engine / TurboGrafx-16')">
+      <span class="badge">NEC</span><strong>PC Engine / TurboGrafx-16</strong><small>PCENGINE</small>
+    </button>
+<button class="card" data-cat="NEC" onclick="openSystem('pcenginecd','PC Engine CD')">
+      <span class="badge">NEC</span><strong>PC Engine CD</strong><small>PCENGINECD</small>
+    </button>
+<button class="card" data-cat="NEC" onclick="openSystem('pcfx','PC-FX')">
+      <span class="badge">NEC</span><strong>PC-FX</strong><small>PCFX</small>
+    </button>
+<button class="card" data-cat="Outros" onclick="openSystem('3do','3DO')">
+      <span class="badge">Outros</span><strong>3DO</strong><small>3DO</small>
+    </button>
+<button class="card" data-cat="Outros" onclick="openSystem('colecovision','ColecoVision')">
+      <span class="badge">Outros</span><strong>ColecoVision</strong><small>COLECOVISION</small>
+    </button>
+<button class="card" data-cat="Outros" onclick="openSystem('intellivision','Intellivision')">
+      <span class="badge">Outros</span><strong>Intellivision</strong><small>INTELLIVISION</small>
+    </button>
+<button class="card" data-cat="Outros" onclick="openSystem('vectrex','Vectrex')">
+      <span class="badge">Outros</span><strong>Vectrex</strong><small>VECTREX</small>
+    </button>
+<button class="card" data-cat="Outros" onclick="openSystem('wonderswan','WonderSwan')">
+      <span class="badge">Outros</span><strong>WonderSwan</strong><small>WONDERSWAN</small>
+    </button>
+<button class="card" data-cat="Outros" onclick="openSystem('wonderswancolor','WonderSwan Color')">
+      <span class="badge">Outros</span><strong>WonderSwan Color</strong><small>WONDERSWANCOLOR</small>
+    </button>
+<button class="card" data-cat="Arcade" onclick="openSystem('mame','Arcade / MAME')">
+      <span class="badge">Arcade</span><strong>Arcade / MAME</strong><small>MAME</small>
+    </button>
+<button class="card" data-cat="Arcade" onclick="openSystem('fbneo','FinalBurn Neo')">
+      <span class="badge">Arcade</span><strong>FinalBurn Neo</strong><small>FBNEO</small>
+    </button>
+<button class="card" data-cat="Arcade" onclick="openSystem('naomi','Naomi')">
+      <span class="badge">Arcade</span><strong>Naomi</strong><small>NAOMI</small>
+    </button>
+<button class="card" data-cat="Arcade" onclick="openSystem('atomiswave','Atomiswave')">
+      <span class="badge">Arcade</span><strong>Atomiswave</strong><small>ATOMISWAVE</small>
+    </button>
+<button class="card" data-cat="Computadores" onclick="openSystem('amiga','Amiga')">
+      <span class="badge">Computadores</span><strong>Amiga</strong><small>AMIGA</small>
+    </button>
+<button class="card" data-cat="Computadores" onclick="openSystem('amstradcpc','Amstrad CPC')">
+      <span class="badge">Computadores</span><strong>Amstrad CPC</strong><small>AMSTRADCPC</small>
+    </button>
+<button class="card" data-cat="Computadores" onclick="openSystem('apple2','Apple II')">
+      <span class="badge">Computadores</span><strong>Apple II</strong><small>APPLE2</small>
+    </button>
+<button class="card" data-cat="Computadores" onclick="openSystem('c64','Commodore 64')">
+      <span class="badge">Computadores</span><strong>Commodore 64</strong><small>C64</small>
+    </button>
+<button class="card" data-cat="Computadores" onclick="openSystem('dos','MS-DOS')">
+      <span class="badge">Computadores</span><strong>MS-DOS</strong><small>DOS</small>
+    </button>
+<button class="card" data-cat="Computadores" onclick="openSystem('msx','MSX')">
+      <span class="badge">Computadores</span><strong>MSX</strong><small>MSX</small>
+    </button>
+<button class="card" data-cat="Computadores" onclick="openSystem('msx2','MSX2')">
+      <span class="badge">Computadores</span><strong>MSX2</strong><small>MSX2</small>
+    </button>
+<button class="card" data-cat="Computadores" onclick="openSystem('scummvm','ScummVM')">
+      <span class="badge">Computadores</span><strong>ScummVM</strong><small>SCUMMVM</small>
+    </button>
+<button class="card" data-cat="Computadores" onclick="openSystem('zxspectrum','ZX Spectrum')">
+      <span class="badge">Computadores</span><strong>ZX Spectrum</strong><small>ZXSPECTRUM</small>
+    </button>
+<button class="card" data-cat="Computadores" onclick="openSystem('windows','Windows')">
+      <span class="badge">Computadores</span><strong>Windows</strong><small>WINDOWS</small>
+    </button>
+<button class="card" data-cat="Computadores" onclick="openSystem('pc98','PC-98')">
+      <span class="badge">Computadores</span><strong>PC-98</strong><small>PC98</small>
+    </button>
+<button class="card" data-cat="Computadores" onclick="openSystem('x68000','Sharp X68000')">
+      <span class="badge">Computadores</span><strong>Sharp X68000</strong><small>X68000</small>
+    </button></div></main><div id="notice"></div>
+<script>
+function filterCat(cat){document.querySelectorAll('.card').forEach(c=>c.style.display=(cat==='Todos'||c.dataset.cat===cat)?'block':'none')}
+function openSystem(key,name){
+  localStorage.setItem('retrohub_selected_system',key);
+  location.href='games.html?system='+encodeURIComponent(key)+'&name='+encodeURIComponent(name);
+}
 </script></body></html>
