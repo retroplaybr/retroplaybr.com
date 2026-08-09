@@ -1,27 +1,91 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Jogar Jogos Retrô</title>
-<style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;background:#05070a;color:#fff;font-family:Segoe UI,Arial,sans-serif;overflow:hidden}
-body{background:radial-gradient(circle at 50% 42%,#182235 0,#090d14 38%,#05070a 72%)}
-header{height:95px;padding:24px 38px;display:flex;justify-content:space-between;align-items:center}
-.brand{font-weight:900;letter-spacing:.1em;font-size:24px}.domain{font-size:11px;color:#8290a5}
-main{height:calc(100% - 165px);display:grid;place-items:center}.carousel{position:relative;width:100%;height:440px;display:flex;align-items:center;justify-content:center}
-.card{position:absolute;width:330px;height:330px;border:1px solid #283446;border-radius:28px;background:linear-gradient(145deg,#16202d,#0c1118);display:grid;place-items:center;text-align:center;opacity:0;transition:.25s;box-shadow:0 30px 80px #0008}
-.card .badge{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:#202b3c;border:2px solid #60708c;font-size:42px;font-weight:900}
-.card h2{margin:18px 0 0;font-size:28px}.card p{margin:7px 0 0;color:#7f8ca0;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
-.active{opacity:1;transform:translateX(0) scale(1)}.prev{opacity:.28;transform:translateX(-420px) scale(.72)}.next{opacity:.28;transform:translateX(420px) scale(.72)}
-footer{height:70px;border-top:1px solid #17202c;padding:0 38px;display:flex;align-items:center;justify-content:space-between;color:#8390a3;font-size:12px}
-kbd{padding:5px 8px;border:1px solid #3a4658;border-radius:7px;background:#111722;color:white}
-</style></head><body>
-<header><div class="brand">JOGAR JOGOS RETRÔ</div></header>
-<main><div class="carousel" id="carousel"></div></main>
-<footer><span>MENU DE CONSOLES</span><span><kbd>← →</kbd> escolher &nbsp; <kbd>ENTER / A</kbd> abrir</span></footer>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>RetroHub</title>
+  <style>
+    :root{
+      --bg:#06111f; --panel:#0d1b2a; --panel2:#13283d; --text:#f4f8ff;
+      --muted:#91a3b7; --accent:#42c6ff; --accent2:#7ce7ff; --shadow:0 24px 70px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box} html,body{height:100%;margin:0} body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at 50% 15%,#14314f 0,#081727 36%,#030811 100%);color:var(--text);overflow:hidden}
+    body::before{content:"";position:fixed;inset:0;background:linear-gradient(120deg,rgba(66,198,255,.08),transparent 35%,rgba(124,231,255,.05));pointer-events:none}
+    .app{height:100%;display:grid;grid-template-rows:auto 1fr auto;padding:24px 34px 26px;gap:14px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.mark{width:38px;height:38px;border:2px solid var(--accent);border-radius:11px;display:grid;place-items:center;box-shadow:0 0 28px rgba(66,198,255,.22);font-size:18px}.status{font-size:13px;color:var(--muted)}
+    main{min-height:0;display:grid;grid-template-columns:minmax(260px,34vw) 1fr;align-items:center;gap:7vw}
+    .hero{padding-left:3vw}.eyebrow{color:var(--accent2);font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase}.title{font-size:clamp(42px,7vw,104px);line-height:.9;margin:10px 0 18px;letter-spacing:-.065em}.desc{max-width:560px;color:#b8c7d8;font-size:clamp(14px,1.35vw,20px);line-height:1.55}.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.pill{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.055);padding:8px 12px;border-radius:999px;color:#d5e0ec;font-size:12px}
+    .systems-wrap{position:relative;min-width:0}.systems{display:flex;gap:18px;align-items:center;overflow-x:auto;scrollbar-width:none;padding:48px 6vw 48px 22px;scroll-snap-type:x mandatory}.systems::-webkit-scrollbar{display:none}.card{scroll-snap-align:center;flex:0 0 clamp(165px,16vw,245px);aspect-ratio:.72;border-radius:24px;background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.11);box-shadow:0 15px 50px rgba(0,0,0,.28);display:flex;flex-direction:column;justify-content:space-between;padding:20px;transform:scale(.88);opacity:.58;transition:.28s ease;cursor:pointer;position:relative;overflow:hidden}.card::before{content:"";position:absolute;inset:-25%;background:radial-gradient(circle at 50% 25%,rgba(66,198,255,.24),transparent 42%);opacity:0;transition:.25s}.card.active{transform:scale(1.08);opacity:1;border-color:rgba(124,231,255,.65);box-shadow:0 26px 85px rgba(0,0,0,.48),0 0 0 2px rgba(66,198,255,.11),0 0 48px rgba(66,198,255,.16)}.card.active::before{opacity:1}.console-icon{height:58%;display:grid;place-items:center;position:relative;z-index:1}.console-icon svg{width:76%;height:76%;filter:drop-shadow(0 12px 30px rgba(0,0,0,.35))}.console-name{position:relative;z-index:1}.console-name strong{display:block;font-size:clamp(20px,2vw,28px);letter-spacing:-.03em}.console-name span{font-size:11px;color:#9fb0c3;text-transform:uppercase;letter-spacing:.14em}.hint{position:absolute;right:6vw;top:12px;color:#7f92a6;font-size:12px}
+    footer{display:flex;align-items:center;justify-content:space-between;color:#8093a9;font-size:12px;gap:14px}.keys{display:flex;gap:14px;flex-wrap:wrap}.key{display:inline-flex;align-items:center;gap:7px}.kbd{min-width:24px;padding:4px 7px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:rgba(255,255,255,.06);color:white;text-align:center}.legal{max-width:520px;text-align:right}
+    .toast{position:fixed;left:50%;bottom:82px;transform:translate(-50%,20px);background:#07121f;border:1px solid rgba(124,231,255,.35);box-shadow:var(--shadow);padding:13px 18px;border-radius:12px;color:#e9f7ff;opacity:0;pointer-events:none;transition:.22s}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:860px){.app{padding:18px 16px}.status{display:none}main{grid-template-columns:1fr;gap:0}.hero{padding:3vh 4vw 0}.title{font-size:56px}.desc{font-size:15px}.systems{padding:25px 14vw 35px}.card{flex-basis:190px}footer{padding:0 5px}.legal{display:none}.hint{right:16px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand"><div class="mark">R</div> RetroHub</div>
+    <div class="status">MENU DE CONSOLES • <a href="admin.html" style="color:#91a3b7;text-decoration:none">ADMIN</a></div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Sistema selecionado</div>
+      <h1 class="title" id="heroTitle">SNES</h1>
+      <div class="desc" id="heroDesc">Super Nintendo Entertainment System. Selecione para abrir sua biblioteca de jogos.</div>
+      <div class="meta"><span class="pill" id="generation">16-bit</span><span class="pill">Biblioteca local</span><span class="pill">Modo TV</span></div>
+    </section>
+    <section class="systems-wrap">
+      <div class="hint">← → para navegar • Enter para selecionar</div>
+      <div class="systems" id="systems"></div>
+    </section>
+  </main>
+  <footer>
+    <div class="keys"><span class="key"><span class="kbd">←</span><span class="kbd">→</span> Navegar</span><span class="key"><span class="kbd">Enter</span> Abrir</span><span class="key"><span class="kbd">Esc</span> Voltar</span></div>
+    <div class="legal">Use apenas jogos/ROMs que você tenha direito de utilizar.</div>
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
 <script>
-const systems=[{"id": "nes", "name": "Nintendinho", "core": "nes", "emoji": "NES", "ext": ".nes"}, {"id": "snes", "name": "Super Nintendo", "core": "snes", "emoji": "SNES", "ext": ".sfc / .smc"}, {"id": "n64", "name": "Nintendo 64", "core": "n64", "emoji": "N64", "ext": ".z64 / .n64 / .v64"}, {"id": "nds", "name": "Nintendo DS", "core": "nds", "emoji": "DS", "ext": ".nds"}, {"id": "3ds", "name": "Nintendo 3DS", "core": "3ds", "emoji": "3DS", "ext": ".cci / .3ds / .cxi"}, {"id": "segaMD", "name": "Mega Drive", "core": "segaMD", "emoji": "MD", "ext": ".bin / .md / .gen"}, {"id": "psx", "name": "PlayStation", "core": "psx", "emoji": "PS1", "ext": ".bin/.cue / .iso / .pbp"}, {"id": "psp", "name": "PSP", "core": "psp", "emoji": "PSP", "ext": ".iso / .cso / .pbp"}]; let current=1; const c=document.getElementById('carousel');
-systems.forEach((s,i)=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<div><div class="badge">${s.emoji}</div><h2>${s.name}</h2><p>${s.ext}</p></div>`;d.onclick=()=>{current=i;render();openSys()};c.appendChild(d)});
-function render(){[...c.children].forEach((el,i)=>{const diff=i-current;el.className='card '+(diff===0?'active':diff===-1?'prev':diff===1?'next':'')})}
-function move(n){current=(current+n+systems.length)%systems.length;render()}
-function openSys(){location.href='library.html?system='+encodeURIComponent(systems[current].id)}
-addEventListener('keydown',e=>{if(e.key==='ArrowLeft')move(-1);if(e.key==='ArrowRight')move(1);if(e.key==='Enter')openSys()});
-let latch=false;function poll(){const gp=navigator.getGamepads?.()[0];if(gp){const x=gp.axes?.[0]||0,L=gp.buttons?.[14]?.pressed||x<-.55,R=gp.buttons?.[15]?.pressed||x>.55,A=gp.buttons?.[0]?.pressed;if(!latch&&(L||R||A)){if(L)move(-1);else if(R)move(1);else openSys();latch=true}if(!L&&!R&&!A)latch=false}requestAnimationFrame(poll)}render();poll();
-</script></body></html>
+const data=[
+  {name:'SNES',sub:'Super Nintendo',gen:'16-bit',desc:'Super Nintendo Entertainment System. Selecione para abrir sua biblioteca de jogos.',icon:'gamepad'},
+  {name:'NES',sub:'Nintendo Entertainment System',gen:'8-bit',desc:'Clássicos do Nintendo Entertainment System em uma biblioteca simples e rápida.',icon:'pad'},
+  {name:'Nintendo 3DS',sub:'3DS',gen:'Portátil 3D',desc:'Biblioteca dedicada aos seus jogos de Nintendo 3DS compatíveis com emulação web.',icon:'dual'},
+  {name:'Nintendo DS',sub:'DS',gen:'Dual Screen',desc:'Jogos de Nintendo DS com suporte a layout de duas telas.',icon:'dual'},
+  {name:'Nintendo 64',sub:'N64',gen:'64-bit',desc:'Nintendo 64 com foco em navegação por controle e experiência de sala.',icon:'trident'},
+  {name:'Game Boy Advance',sub:'GBA',gen:'32-bit portátil',desc:'Sua coleção de Game Boy Advance organizada em uma interface de console.',icon:'handheld'},
+  {name:'Game Boy',sub:'GB',gen:'8-bit portátil',desc:'Os clássicos do Game Boy em uma seção própria da biblioteca.',icon:'handheld'},
+  {name:'Game Boy Color',sub:'GBC',gen:'Color portátil',desc:'Biblioteca de Game Boy Color com visual dedicado.',icon:'handheld'},
+  {name:'GameCube',sub:'Nintendo GameCube',gen:'128-bit era',desc:'Nintendo GameCube em uma seção preparada para títulos compatíveis.',icon:'cube'}
+];
+let selected=0;
+const systems=document.getElementById('systems');
+function icon(type){
+  const common='fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"';
+  if(type==='dual') return `<svg viewBox="0 0 180 180" ${common}><rect x="37" y="18" width="106" height="144" rx="14"/><rect x="53" y="36" width="74" height="44" rx="5"/><rect x="53" y="96" width="74" height="44" rx="5"/><circle cx="47" cy="88" r="3" fill="currentColor" stroke="none"/><circle cx="133" cy="88" r="3" fill="currentColor" stroke="none"/></svg>`;
+  if(type==='handheld') return `<svg viewBox="0 0 180 180" ${common}><rect x="43" y="18" width="94" height="144" rx="22"/><rect x="57" y="35" width="66" height="56" rx="6"/><path d="M62 118h24M74 106v24"/><circle cx="112" cy="116" r="7"/><circle cx="126" cy="129" r="7"/></svg>`;
+  if(type==='cube') return `<svg viewBox="0 0 180 180" ${common}><path d="M90 20l57 31v68l-57 41-57-41V51z"/><path d="M33 51l57 34 57-34M90 85v75"/><circle cx="90" cy="63" r="18"/><path d="M83 63h14M90 56v14"/></svg>`;
+  if(type==='trident') return `<svg viewBox="0 0 180 180" ${common}><path d="M48 75c-16 7-24 25-19 42l9 29c3 10 17 12 23 4l18-24h22l18 24c6 8 20 6 23-4l9-29c5-17-3-35-19-42l-23-10H71z"/><circle cx="119" cy="99" r="8"/><circle cx="101" cy="115" r="8"/><path d="M58 102h24M70 90v24"/></svg>`;
+  return `<svg viewBox="0 0 180 180" ${common}><path d="M42 72c-18 6-28 24-24 43l7 31c3 13 20 17 29 7l21-25h30l21 25c9 10 26 6 29-7l7-31c4-19-6-37-24-43l-28-9H70z"/><circle cx="122" cy="98" r="8"/><circle cx="140" cy="112" r="8"/><path d="M48 103h27M61.5 89.5v27"/></svg>`;
+}
+function render(){
+  systems.innerHTML='';
+  data.forEach((x,i)=>{
+    const el=document.createElement('article'); el.className='card'+(i===selected?' active':''); el.tabIndex=0;
+    el.innerHTML=`<div class="console-icon">${icon(x.icon)}</div><div class="console-name"><span>${x.sub}</span><strong>${x.name}</strong></div>`;
+    el.onclick=()=>{selected=i;render();openSystem()}; el.onfocus=()=>{selected=i;render(false)}; systems.appendChild(el);
+  });
+  const d=data[selected];document.getElementById('heroTitle').textContent=d.name;document.getElementById('heroDesc').textContent=d.desc;document.getElementById('generation').textContent=d.gen;
+  requestAnimationFrame(()=>systems.children[selected]?.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'}));
+}
+function getGames(){try{return JSON.parse(localStorage.getItem('retrohub_games_v1'))||[]}catch{return[]}}
+function openSystem(){
+  const sys=data[selected].name, games=getGames().filter(g=>g.system===sys);
+  if(!games.length){const t=document.getElementById('toast');t.textContent=`${sys}: nenhum jogo cadastrado ainda.`;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1900);return}
+  document.querySelector('main').innerHTML=`<section style="grid-column:1/-1;align-self:stretch;overflow:auto;padding:3vh 4vw"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><div><div class="eyebrow">Biblioteca</div><h1 style="font-size:clamp(34px,5vw,70px);margin:8px 0 18px">${sys}</h1></div><button onclick="location.reload()" style="background:rgba(255,255,255,.08);color:white;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px 14px;cursor:pointer">Voltar</button></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px">${games.map(g=>`<article onclick="playGame(${g.id})" style="cursor:pointer;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.11);border-radius:16px;overflow:hidden"><div style="aspect-ratio:3/4;background:#13283d"><img src="${g.cover||''}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'"></div><div style="padding:12px"><strong>${g.name}</strong><div style="font-size:11px;color:#91a3b7;margin-top:4px">${g.system}</div></div></article>`).join('')}</div></section>`;
+}
+window.playGame=id=>{const g=getGames().find(x=>x.id===id);if(!g)return;if(g.rom||g.romStored){location.href='player.html?id='+encodeURIComponent(id)}else alert('Este jogo ainda não tem uma ROM configurada no painel Admin.');};
+window.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){selected=(selected+1)%data.length;render()}if(e.key==='ArrowLeft'){selected=(selected-1+data.length)%data.length;render()}if(e.key==='Enter')openSystem();if(e.key==='Escape'){selected=0;render()}});
+render();
+</script>
+</body>
+</html>
