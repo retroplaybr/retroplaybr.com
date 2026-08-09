@@ -54,6 +54,7 @@
 <script>
 const KEY='retrohub_games_v1', PASSKEY='retrohub_admin_pass_v1';
 const $=id=>document.getElementById(id);
+const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({ '&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;' }[ch]));
 const getPass=()=>localStorage.getItem(PASSKEY)||'retro123';
 const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch{return[]}};
 const save=x=>localStorage.setItem(KEY,JSON.stringify(x));
@@ -70,7 +71,7 @@ $('addBtn').onclick=async()=>{
   const name=$('gameName').value.trim(),system=$('system').value,coverFile=$('cover').files[0],romFile=$('rom').files[0];
   if(!name||!romFile){$('formMsg').textContent='Informe o nome e escolha o arquivo da ROM.';return}
   $('addBtn').disabled=true;$('formMsg').textContent='Salvando jogo no navegador...';
-  try{const id=Date.now();const cover=await fileToDataURL(coverFile);await putRom(id,romFile);const games=load();games.push({id,name,system,cover,romStored:true,romName:romFile.name});save(games);clearForm();$('formMsg').textContent='Jogo adicionado. Agora ele pode ser aberto pelo menu neste aparelho.';render()}catch(e){$('formMsg').textContent='Não foi possível salvar. O navegador pode estar sem espaço: '+(e.message||e)}finally{$('addBtn').disabled=false}
+  try{const id=Date.now();const cover=await fileToDataURL(coverFile);await putRom(id,romFile);const games=load();games.push({id,name,system,cover,romStored:true,romName:romFile.name});try{save(games)}catch(storageErr){try{await deleteRom(id)}catch{}throw storageErr}clearForm();$('formMsg').textContent='Jogo adicionado. Agora ele pode ser aberto pelo menu neste aparelho.';render()}catch(e){$('formMsg').textContent='Não foi possível salvar: '+(e.message||e)}finally{$('addBtn').disabled=false}
 };
 window.removeGame=async id=>{if(!confirm('Excluir este jogo?'))return;save(load().filter(g=>g.id!==id));try{await deleteRom(id)}catch{}render()};
 function render(){const games=load();$('count').textContent=`${games.length} jogo${games.length===1?'':'s'}`;$('games').innerHTML=games.length?games.map(g=>`<div class="game"><img class="cover" src="${esc(g.cover)||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2256%22 height=%2270%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23172b3e%22/%3E%3C/svg%3E'}"><div><strong>${esc(g.name)}</strong><br><small>${esc(g.system)}${g.romStored?' • ROM salva neste aparelho':''}</small></div><button class="danger" onclick="removeGame(${g.id})">Excluir</button></div>`).join(''):'<div class="note">Nenhum jogo cadastrado ainda.</div>'}
