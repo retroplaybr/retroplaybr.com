@@ -1,0 +1,27 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jogar Jogos Retrô</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#05070a;color:#fff;font-family:Segoe UI,Arial,sans-serif;overflow:hidden}
+body{background:radial-gradient(circle at 50% 42%,#182235 0,#090d14 38%,#05070a 72%)}
+header{height:95px;padding:24px 38px;display:flex;justify-content:space-between;align-items:center}
+.brand{font-weight:900;letter-spacing:.1em;font-size:24px}.domain{font-size:11px;color:#8290a5}
+main{height:calc(100% - 165px);display:grid;place-items:center}.carousel{position:relative;width:100%;height:440px;display:flex;align-items:center;justify-content:center}
+.card{position:absolute;width:330px;height:330px;border:1px solid #283446;border-radius:28px;background:linear-gradient(145deg,#16202d,#0c1118);display:grid;place-items:center;text-align:center;opacity:0;transition:.25s;box-shadow:0 30px 80px #0008}
+.card .badge{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:#202b3c;border:2px solid #60708c;font-size:42px;font-weight:900}
+.card h2{margin:18px 0 0;font-size:28px}.card p{margin:7px 0 0;color:#7f8ca0;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.active{opacity:1;transform:translateX(0) scale(1)}.prev{opacity:.28;transform:translateX(-420px) scale(.72)}.next{opacity:.28;transform:translateX(420px) scale(.72)}
+footer{height:70px;border-top:1px solid #17202c;padding:0 38px;display:flex;align-items:center;justify-content:space-between;color:#8390a3;font-size:12px}
+kbd{padding:5px 8px;border:1px solid #3a4658;border-radius:7px;background:#111722;color:white}
+</style></head><body>
+<header><div class="brand">JOGAR JOGOS RETRÔ</div></header>
+<main><div class="carousel" id="carousel"></div></main>
+<footer><span>MENU DE CONSOLES</span><span><kbd>← →</kbd> escolher &nbsp; <kbd>ENTER / A</kbd> abrir</span></footer>
+<script>
+const systems=[{"id": "nes", "name": "Nintendinho", "core": "nes", "emoji": "NES", "ext": ".nes"}, {"id": "snes", "name": "Super Nintendo", "core": "snes", "emoji": "SNES", "ext": ".sfc / .smc"}, {"id": "n64", "name": "Nintendo 64", "core": "n64", "emoji": "N64", "ext": ".z64 / .n64 / .v64"}, {"id": "nds", "name": "Nintendo DS", "core": "nds", "emoji": "DS", "ext": ".nds"}, {"id": "3ds", "name": "Nintendo 3DS", "core": "3ds", "emoji": "3DS", "ext": ".cci / .3ds / .cxi"}, {"id": "segaMD", "name": "Mega Drive", "core": "segaMD", "emoji": "MD", "ext": ".bin / .md / .gen"}, {"id": "psx", "name": "PlayStation", "core": "psx", "emoji": "PS1", "ext": ".bin/.cue / .iso / .pbp"}, {"id": "psp", "name": "PSP", "core": "psp", "emoji": "PSP", "ext": ".iso / .cso / .pbp"}]; let current=1; const c=document.getElementById('carousel');
+systems.forEach((s,i)=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<div><div class="badge">${s.emoji}</div><h2>${s.name}</h2><p>${s.ext}</p></div>`;d.onclick=()=>{current=i;render();openSys()};c.appendChild(d)});
+function render(){[...c.children].forEach((el,i)=>{const diff=i-current;el.className='card '+(diff===0?'active':diff===-1?'prev':diff===1?'next':'')})}
+function move(n){current=(current+n+systems.length)%systems.length;render()}
+function openSys(){location.href='library.html?system='+encodeURIComponent(systems[current].id)}
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft')move(-1);if(e.key==='ArrowRight')move(1);if(e.key==='Enter')openSys()});
+let latch=false;function poll(){const gp=navigator.getGamepads?.()[0];if(gp){const x=gp.axes?.[0]||0,L=gp.buttons?.[14]?.pressed||x<-.55,R=gp.buttons?.[15]?.pressed||x>.55,A=gp.buttons?.[0]?.pressed;if(!latch&&(L||R||A)){if(L)move(-1);else if(R)move(1);else openSys();latch=true}if(!L&&!R&&!A)latch=false}requestAnimationFrame(poll)}render();poll();
+</script></body></html>
