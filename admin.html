@@ -36,7 +36,7 @@
       </div>
       <div class="actions"><button id="addBtn">Adicionar jogo</button><button class="secondary" id="clearBtn">Limpar campos</button></div>
       <div class="msg" id="formMsg"></div>
-      <div class="note">Escolha a capa e o arquivo do jogo diretamente no seu computador. Nesta versão, os arquivos ficam salvos no armazenamento deste navegador/aparelho; eles não são enviados automaticamente ao GitHub ou para outros aparelhos.</div>
+      <div class="note">Escolha a capa e a ROM. Os arquivos serão enviados ao Vercel Blob e o jogo ficará disponível no catálogo online para outros aparelhos.</div>
     </div>
 
     <div class="panel" style="margin-top:18px">
@@ -52,30 +52,70 @@
   </section>
 </div>
 <script>
-const KEY='retrohub_games_v1', PASSKEY='retrohub_admin_pass_v1';
 const $=id=>document.getElementById(id);
-const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({ '&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;' }[ch]));
-const getPass=()=>localStorage.getItem(PASSKEY)||'retro123';
-const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch{return[]}};
-const save=x=>localStorage.setItem(KEY,JSON.stringify(x));
-function showAdmin(){ $('loginView').classList.add('hidden'); $('adminView').classList.remove('hidden'); render(); }
-$('loginBtn').onclick=()=>{ if($('password').value===getPass()){sessionStorage.setItem('retrohub_admin_ok','1');showAdmin()}else $('loginMsg').textContent='Senha incorreta.' };
+const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[ch]));
+let adminPassword=sessionStorage.getItem('retrohub_admin_password')||'';
+let games=[];
+
+async function api(url, options={}){
+  const headers={...(options.headers||{})};
+  if(adminPassword) headers['x-admin-password']=adminPassword;
+  const r=await fetch(url,{...options,headers});
+  let data={}; try{data=await r.json()}catch{}
+  if(!r.ok) throw new Error(data.error||`Erro HTTP ${r.status}`);
+  return data;
+}
+async function showAdmin(){
+  $('loginView').classList.add('hidden'); $('adminView').classList.remove('hidden');
+  await render();
+}
+$('loginBtn').onclick=async()=>{
+  adminPassword=$('password').value;
+  try{
+    await api('/api/catalog?adminCheck=1');
+    sessionStorage.setItem('retrohub_admin_password',adminPassword);
+    $('loginMsg').textContent=''; await showAdmin();
+  }catch(e){$('loginMsg').textContent='Senha incorreta ou API indisponível.';adminPassword=''}
+};
 $('password').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginBtn').click()});
-$('logoutBtn').onclick=()=>{sessionStorage.removeItem('retrohub_admin_ok');location.reload()};
+$('logoutBtn').onclick=()=>{sessionStorage.removeItem('retrohub_admin_password');location.reload()};
 function clearForm(){['gameName','cover','rom'].forEach(x=>$(x).value='');$('system').selectedIndex=0}
-function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open('retrohub_files_v1',1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('roms'))r.result.createObjectStore('roms')};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
-async function putRom(id,file){const db=await openDB();return new Promise((resolve,reject)=>{const tx=db.transaction('roms','readwrite');tx.objectStore('roms').put(file,String(id));tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error)})}
-async function deleteRom(id){const db=await openDB();return new Promise((resolve,reject)=>{const tx=db.transaction('roms','readwrite');tx.objectStore('roms').delete(String(id));tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error)})}
-function fileToDataURL(file){return new Promise((resolve,reject)=>{if(!file)return resolve('');const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.readAsDataURL(file)})}
+
+function safeName(name){return name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'')||'file'}
+async function signAndUpload(file, kind, id){
+  const ext=(file.name.match(/\.[^.]+$/)||[''])[0].toLowerCase();
+  const pathname=`games/${id}/${kind}-${safeName(file.name.replace(ext,''))}${ext}`;
+  const signed=await api('/api/sign-upload',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({pathname,contentType:file.type||'application/octet-stream',size:file.size})});
+  const up=await fetch(signed.presignedUrl,{method:'PUT',headers:{'content-type':file.type||'application/octet-stream'},body:file});
+  if(!up.ok) throw new Error(`Falha no upload de ${file.name} (${up.status})`);
+  return pathname;
+}
 $('addBtn').onclick=async()=>{
   const name=$('gameName').value.trim(),system=$('system').value,coverFile=$('cover').files[0],romFile=$('rom').files[0];
   if(!name||!romFile){$('formMsg').textContent='Informe o nome e escolha o arquivo da ROM.';return}
-  $('addBtn').disabled=true;$('formMsg').textContent='Salvando jogo no navegador...';
-  try{const id=Date.now();const cover=await fileToDataURL(coverFile);await putRom(id,romFile);const games=load();games.push({id,name,system,cover,romStored:true,romName:romFile.name});try{save(games)}catch(storageErr){try{await deleteRom(id)}catch{}throw storageErr}clearForm();$('formMsg').textContent='Jogo adicionado. Agora ele pode ser aberto pelo menu neste aparelho.';render()}catch(e){$('formMsg').textContent='Não foi possível salvar: '+(e.message||e)}finally{$('addBtn').disabled=false}
+  $('addBtn').disabled=true;$('formMsg').textContent='Preparando upload...';
+  try{
+    const id=String(Date.now());
+    let coverPath='';
+    if(coverFile){$('formMsg').textContent='Enviando capa...';coverPath=await signAndUpload(coverFile,'cover',id)}
+    $('formMsg').textContent='Enviando ROM... Não feche esta página.';
+    const romPath=await signAndUpload(romFile,'rom',id);
+    $('formMsg').textContent='Salvando no catálogo online...';
+    await api('/api/catalog',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id,name,system,coverPath,romPath,romName:romFile.name})});
+    clearForm(); $('formMsg').textContent='Jogo publicado no catálogo online.'; await render();
+  }catch(e){$('formMsg').textContent='Não foi possível adicionar: '+(e.message||e)}finally{$('addBtn').disabled=false}
 };
-window.removeGame=async id=>{if(!confirm('Excluir este jogo?'))return;save(load().filter(g=>g.id!==id));try{await deleteRom(id)}catch{}render()};
-function render(){const games=load();$('count').textContent=`${games.length} jogo${games.length===1?'':'s'}`;$('games').innerHTML=games.length?games.map(g=>`<div class="game"><img class="cover" src="${esc(g.cover)||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2256%22 height=%2270%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23172b3e%22/%3E%3C/svg%3E'}"><div><strong>${esc(g.name)}</strong><br><small>${esc(g.system)}${g.romStored?' • ROM salva neste aparelho':''}</small></div><button class="danger" onclick="removeGame(${g.id})">Excluir</button></div>`).join(''):'<div class="note">Nenhum jogo cadastrado ainda.</div>'}
-$('changePass').onclick=()=>{const p=$('newPass').value;if(p.length<6){$('passMsg').textContent='Use pelo menos 6 caracteres.';return}localStorage.setItem(PASSKEY,p);$('newPass').value='';$('passMsg').textContent='Senha local alterada.'};
-if(sessionStorage.getItem('retrohub_admin_ok')==='1')showAdmin();
+$('clearBtn').onclick=clearForm;
+window.removeGame=async id=>{
+  const g=games.find(x=>String(x.id)===String(id)); if(!g||!confirm('Excluir este jogo do catálogo e do armazenamento?'))return;
+  try{await api('/api/catalog',{method:'DELETE',headers:{'content-type':'application/json'},body:JSON.stringify({id:g.id,coverUrl:g.cover,romUrl:g.rom,metadataPath:g.metadataPath})});await render()}catch(e){alert('Não foi possível excluir: '+e.message)}
+};
+async function render(){
+  try{const d=await api('/api/catalog');games=d.games||[]}catch(e){games=[];$('formMsg').textContent='Erro ao carregar catálogo: '+e.message}
+  $('count').textContent=`${games.length} jogo${games.length===1?'':'s'}`;
+  $('games').innerHTML=games.length?games.map(g=>`<div class="game"><img class="cover" src="${esc(g.cover)||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2256%22 height=%2270%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23172b3e%22/%3E%3C/svg%3E'}"><div><strong>${esc(g.name)}</strong><br><small>${esc(g.system)} • online</small></div><button class="danger" onclick="removeGame('${esc(g.id)}')">Excluir</button></div>`).join(''):'<div class="note">Nenhum jogo cadastrado ainda.</div>';
+}
+$('changePass').onclick=()=>{$('passMsg').textContent='A senha agora é definida com a variável ADMIN_PASSWORD na Vercel. Altere-a em Project Settings → Environment Variables.'};
+if(adminPassword) showAdmin().catch(()=>{});
 </script>
 </body></html>

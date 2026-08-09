@@ -1,19 +1,17 @@
-RETROHUB - MENU + ADMIN + PLAYER
+RETROHUB + VERCEL BLOB (CATALOGO ONLINE)
 
-Arquivos:
-- index.html: menu principal e bibliotecas
-- admin.html: cadastro de jogos
-- player.html: abre os jogos no EmulatorJS quando o sistema é compatível
+1. Envie TODOS os arquivos e a pasta api/ para a raiz do repositório conectado à Vercel.
+2. O Blob Store retrohub-games precisa continuar conectado ao projeto retroplaybr.com.
+3. Em Vercel > Project > Settings > Environment Variables, crie:
+   ADMIN_PASSWORD = uma senha forte que somente você conhece
+   Marque Production e Preview.
+4. Faça novo Deploy/Redeploy.
+5. Abra /admin.html, use a senha definida em ADMIN_PASSWORD e adicione um jogo.
+6. O Admin envia capa e ROM diretamente ao Vercel Blob e grava um JSON em catalog/.
+7. Abra o site no celular: o catálogo é carregado da API e será o mesmo em todos os aparelhos.
 
-Como testar:
-1. Publique a pasta em um servidor HTTP/HTTPS (não abra apenas com file://).
-2. Entre em admin.html. Senha inicial: retro123
-3. Cadastre nome, console, capa e uma URL DIRETA para a ROM que você tenha direito de utilizar.
-4. Volte ao menu, abra o console e clique no jogo.
-
-Suporte configurado neste player:
-NES, SNES, Game Boy, Game Boy Color, Game Boy Advance, Nintendo 64, Nintendo DS e Nintendo 3DS.
-3DS exige suporte a threads/SharedArrayBuffer e cabeçalhos adequados no servidor.
-GameCube ainda não está conectado a este player.
-
-Observação: o catálogo usa localStorage, portanto os cadastros ficam apenas no navegador em que foram feitos. Para um site público com Admin central, é necessário banco de dados + armazenamento de arquivos + autenticação no servidor.
+IMPORTANTE
+- O Blob Store está PUBLIC: qualquer pessoa com a URL direta de um arquivo consegue acessá-lo.
+- Use apenas arquivos que você tenha direito de hospedar/distribuir.
+- GameCube ainda não possui core funcional neste player.
+- Vercel Blob tem limites de uso conforme o plano.

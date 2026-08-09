@@ -32,7 +32,7 @@
       <div class="eyebrow">Sistema selecionado</div>
       <h1 class="title" id="heroTitle">SNES</h1>
       <div class="desc" id="heroDesc">Super Nintendo Entertainment System. Selecione para abrir sua biblioteca de jogos.</div>
-      <div class="meta"><span class="pill" id="generation">16-bit</span><span class="pill">Biblioteca local</span><span class="pill">Modo TV</span></div>
+      <div class="meta"><span class="pill" id="generation">16-bit</span><span class="pill">Biblioteca online</span><span class="pill">Modo TV</span></div>
     </section>
     <section class="systems-wrap">
       <div class="hint">← → para navegar • Enter para selecionar</div>
@@ -77,19 +77,25 @@ function render(){
   const d=data[selected];document.getElementById('heroTitle').textContent=d.name;document.getElementById('heroDesc').textContent=d.desc;document.getElementById('generation').textContent=d.gen;
   requestAnimationFrame(()=>systems.children[selected]?.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'}));
 }
-function getGames(){try{return JSON.parse(localStorage.getItem('retrohub_games_v1'))||[]}catch{return[]}}
-function openSystem(){
-  const sys=data[selected].name, games=getGames().filter(g=>g.system===sys);
-  if(!games.length){const t=document.getElementById('toast');t.textContent=`${sys}: nenhum jogo cadastrado ainda.`;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1900);return}
-  document.querySelector('main').innerHTML=`<section style="grid-column:1/-1;align-self:stretch;overflow:auto;padding:3vh 4vw"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><div><div class="eyebrow">Biblioteca</div><h1 style="font-size:clamp(34px,5vw,70px);margin:8px 0 18px">${sys}</h1></div><button onclick="location.reload()" style="background:rgba(255,255,255,.08);color:white;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px 14px;cursor:pointer">Voltar</button></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px">${games.map(g=>`<article onclick="playGame(${g.id})" style="cursor:pointer;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.11);border-radius:16px;overflow:hidden"><div style="aspect-ratio:3/4;background:#13283d"><img src="${g.cover||''}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'"></div><div style="padding:12px"><strong>${g.name}</strong><div style="font-size:11px;color:#91a3b7;margin-top:4px">${g.system}</div></div></article>`).join('')}</div></section>`;
+let onlineGames=[];
+async function loadGames(){
+  try{const r=await fetch('/api/catalog',{cache:'no-store'});const d=await r.json();onlineGames=d.games||[]}catch{onlineGames=[]}
+  return onlineGames;
 }
-window.playGame=id=>{const g=getGames().find(x=>x.id===id);if(!g)return;if(g.rom||g.romStored){location.href='player.html?id='+encodeURIComponent(id)}else alert('Este jogo ainda não tem uma ROM configurada no painel Admin.');};
+async function openSystem(){
+  const sys=data[selected].name;
+  if(!onlineGames.length) await loadGames();
+  const games=onlineGames.filter(g=>g.system===sys);
+  if(!games.length){const t=document.getElementById('toast');t.textContent=`${sys}: nenhum jogo cadastrado ainda.`;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1900);return}
+  document.querySelector('main').innerHTML=`<section style="grid-column:1/-1;align-self:stretch;overflow:auto;padding:3vh 4vw"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><div><div class="eyebrow">Biblioteca online</div><h1 style="font-size:clamp(34px,5vw,70px);margin:8px 0 18px">${sys}</h1></div><button onclick="location.reload()" style="background:rgba(255,255,255,.08);color:white;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px 14px;cursor:pointer">Voltar</button></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px">${games.map(g=>`<article onclick="playGame('${g.id}')" style="cursor:pointer;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.11);border-radius:16px;overflow:hidden"><div style="aspect-ratio:3/4;background:#13283d"><img src="${g.cover||''}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'"></div><div style="padding:12px"><strong>${g.name}</strong><div style="font-size:11px;color:#91a3b7;margin-top:4px">${g.system}</div></div></article>`).join('')}</div></section>`;
+}
+window.playGame=id=>{location.href='player.html?id='+encodeURIComponent(id)};
 window.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){selected=(selected+1)%data.length;render()}if(e.key==='ArrowLeft'){selected=(selected-1+data.length)%data.length;render()}if(e.key==='Enter')openSystem();if(e.key==='Escape'){selected=0;render()}});
 document.getElementById('touchLeft').addEventListener('click',()=>{selected=(selected-1+data.length)%data.length;render()});
 document.getElementById('touchRight').addEventListener('click',()=>{selected=(selected+1)%data.length;render()});
 document.getElementById('touchOpen').addEventListener('click',openSystem);
 document.getElementById('touchBack').addEventListener('click',()=>{location.reload()});
-render();
+render();loadGames();
 </script>
 </body>
 </html>

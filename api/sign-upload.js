@@ -1,0 +1,21 @@
+import { issueSignedToken, presignUrl } from '@vercel/blob';
+
+const MAX = 8 * 1024 * 1024 * 1024; // 8 GB por arquivo neste projeto
+function authorized(req){
+  const expected=process.env.ADMIN_PASSWORD || 'retro123';
+  return req.headers['x-admin-password']===expected;
+}
+
+export default async function handler(req,res){
+  if(req.method!=='POST') return res.status(405).json({error:'Método não permitido'});
+  if(!authorized(req)) return res.status(401).json({error:'Senha administrativa inválida'});
+  try{
+    const {pathname,contentType,size}=req.body||{};
+    if(!pathname || !pathname.startsWith('games/')) return res.status(400).json({error:'Caminho inválido'});
+    if(!Number.isFinite(Number(size)) || Number(size)<=0 || Number(size)>MAX) return res.status(400).json({error:'Tamanho de arquivo inválido ou acima do limite configurado'});
+    const validUntil=Date.now()+15*60*1000;
+    const token=await issueSignedToken({pathname,operations:['put'],validUntil});
+    const {presignedUrl}=await presignUrl(token,{pathname,operation:'put',validUntil});
+    return res.status(200).json({presignedUrl,contentType:contentType||'application/octet-stream'});
+  }catch(e){return res.status(500).json({error:e?.message||String(e)})}
+}

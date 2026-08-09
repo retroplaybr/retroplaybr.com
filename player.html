@@ -12,23 +12,18 @@ html,body{height:100%;margin:0;background:#02060b;color:#fff;font-family:Inter,S
 <div class="top"><div class="brand"><b>Retro</b>Hub Player</div><div class="actions"><span id="gameTitle" class="small"></span><a class="btn" href="index.html">Voltar</a></div></div>
 <div class="stage" id="stage"><div class="frame"><div id="game"></div></div></div>
 <script>
-const KEY='retrohub_games_v1';
-const getGames=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch{return[]}};
-const params=new URLSearchParams(location.search), id=Number(params.get('id'));
-const game=getGames().find(g=>Number(g.id)===id);
+const params=new URLSearchParams(location.search), id=params.get('id');
 const systemMap={'SNES':'snes','NES':'nes','Nintendo 3DS':'3ds','Nintendo DS':'nds','Nintendo 64':'n64','Game Boy Advance':'gba','Game Boy':'gb','Game Boy Color':'gb'};
 function fail(title,text,extra=''){document.getElementById('stage').innerHTML=`<div class="message"><h1>${title}</h1><p>${text}</p>${extra?`<p class="warn">${extra}</p>`:''}<p><a class="btn" href="admin.html">Abrir painel Admin</a> <a class="btn" href="index.html">Voltar ao menu</a></p></div>`}
-function getLocalRom(id){return new Promise((resolve,reject)=>{const r=indexedDB.open('retrohub_files_v1',1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('roms'))r.result.createObjectStore('roms')};r.onsuccess=()=>{const tx=r.result.transaction('roms','readonly');const q=tx.objectStore('roms').get(String(id));q.onsuccess=()=>resolve(q.result||null);q.onerror=()=>reject(q.error)};r.onerror=()=>reject(r.error)})}
 async function boot(){
- if(!game)return fail('Jogo não encontrado','Esse cadastro não existe neste navegador.');
+ const r=await fetch('/api/catalog',{cache:'no-store'});if(!r.ok)throw new Error('Não foi possível carregar o catálogo.');const d=await r.json();const game=(d.games||[]).find(g=>String(g.id)===String(id));
+ if(!game)return fail('Jogo não encontrado','Esse jogo não existe no catálogo online.');
  if(game.system==='GameCube')return fail('GameCube ainda não está ativo neste player','O player atual não possui um core GameCube integrado.');
  const core=systemMap[game.system]; if(!core)return fail('Console não configurado',`Ainda não há um core definido para ${game.system}.`);
- let gameUrl=game.rom||'';
- if(game.romStored){const blob=await getLocalRom(id);if(!blob)return fail('Arquivo não encontrado','A ROM não está mais armazenada neste navegador. Adicione o jogo novamente pelo Admin.');gameUrl=URL.createObjectURL(blob)}
- if(!gameUrl)return fail('ROM não configurada','Adicione o arquivo do jogo pelo painel Admin.');
+ if(!game.rom)return fail('ROM não configurada','O arquivo online deste jogo não foi encontrado.');
  document.getElementById('gameTitle').textContent=game.name+' • '+game.system;
  const schemeMap={snes:'snes',nes:'nes',nds:'nds',n64:'n64',gba:'gba',gb:'gb'};
- window.EJS_player='#game';window.EJS_core=core;window.EJS_gameUrl=gameUrl;window.EJS_gameName=game.name;window.EJS_gameID=id||1;window.EJS_pathtodata='https://cdn.emulatorjs.org/stable/data/';window.EJS_startOnLoaded=true;window.EJS_fullscreenOnLoaded=false;window.EJS_language='pt-BR';window.EJS_color='#42c6ff';window.EJS_controlScheme=schemeMap[core]||core;window.EJS_noAutoFocus=false;if(core==='3ds')window.EJS_threads=true;
+ window.EJS_player='#game';window.EJS_core=core;window.EJS_gameUrl=game.rom;window.EJS_gameName=game.name;window.EJS_gameID=game.id||1;window.EJS_pathtodata='https://cdn.emulatorjs.org/stable/data/';window.EJS_startOnLoaded=true;window.EJS_fullscreenOnLoaded=false;window.EJS_language='pt-BR';window.EJS_color='#42c6ff';window.EJS_controlScheme=schemeMap[core]||core;window.EJS_noAutoFocus=false;if(core==='3ds')window.EJS_threads=true;
  const sc=document.createElement('script');sc.src='https://cdn.emulatorjs.org/stable/data/loader.js';sc.onerror=()=>fail('Não foi possível carregar o emulador','Verifique a conexão com a internet.');document.body.appendChild(sc)
 }
 boot().catch(e=>fail('Erro ao abrir o jogo',e.message||String(e)));
