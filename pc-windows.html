@@ -1,0 +1,19 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PC / Windows - RetroHub</title><style>
+body{font-family:Arial;background:#061526;color:#fff;padding:35px}.box{background:#0d2235;border:1px solid #29465f;border-radius:14px;padding:24px;max-width:850px}
+input,button{margin:8px 0;padding:12px;border-radius:8px}button{cursor:pointer}.ok{color:#7ee787}.warn{color:#ffd166}
+</style></head><body><div class="box"><h1>PC / Windows</h1>
+<p>Selecione um jogo/aplicativo Windows que você possui legalmente.</p>
+<input id="f" type="file" accept=".exe,.msi,.zip,.7z"><br>
+<button onclick="check()">Verificar arquivo</button><div id="out"></div>
+<hr><h3>Como funciona</h3>
+<p><b>.exe moderno:</b> o RetroHub pode catalogar o jogo e iniciar/baixar o arquivo para execução no Windows local. O Chrome/Vercel não pode executar nativamente um .exe dentro da página.</p>
+<p><b>Jogar dentro do navegador:</b> requer um backend Windows com streaming ou um runtime WebAssembly específico. O módulo está preparado para receber essa integração sem fingir compatibilidade inexistente.</p>
+<p><a href="index.html">← Voltar</a></p></div>
+<script>
+function check(){let f=document.getElementById('f').files[0],o=document.getElementById('out');
+if(!f){o.innerHTML='<p class="warn">Escolha um arquivo.</p>';return}
+let ext=f.name.split('.').pop().toLowerCase();
+if(ext==='exe')o.innerHTML='<p class="ok">EXE detectado: '+f.name+'</p><p>Windows moderno será tratado como aplicativo nativo/streaming, não como ROM de console.</p>';
+else o.innerHTML='<p>Arquivo detectado: '+f.name+'</p>';}
+</script></body></html>
