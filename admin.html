@@ -195,8 +195,12 @@
 <option value="karaoke">Karaoke</option>
 <option value="tvgames">TV Games</option>
 </optgroup>
-</select><small style="display:block;color:#7fd6ff;margin-top:7px">Lista completa v3.9 — inclui PS1, PS2, PS3, PSP, PS Vita, Xbox, Sega, Atari, Arcade e muito mais.</small></div></div><div class="row"><div class="field"><label>Capa do jogo</label><input id="cover" type="file" accept="image/*"></div><div class="field"><label>Arquivo do jogo / ROM</label><input id="rom" type="file"></div></div>
-<div class="actions"><button class="secondary" id="localBtn">Salvar só neste aparelho</button><button class="public" id="publicBtn">🌐 PUBLICAR TURBO</button><button class="secondary" id="clearBtn">Limpar campos</button></div><div class="progress" id="progress"><div class="bar" id="bar"></div></div><div class="msg" id="progressText"></div><div class="msg" id="formMsg"></div><div class="note"><b>PUBLICAR TURBO</b> envia a capa e o arquivo para o Vercel Blob e adiciona o jogo ao catálogo público. Qualquer aparelho que abrir este site verá o mesmo jogo. Use apenas arquivos que você tenha autorização para disponibilizar.</div></div>
+</select><small style="display:block;color:#7fd6ff;margin-top:7px">Lista completa v3.9 — inclui PS1, PS2, PS3, PSP, PS Vita, Xbox, Sega, Atari, Arcade e muito mais.</small></div></div><div class="row"><div class="field"><label>Capa do jogo</label><input id="cover" type="file" accept="image/*"></div><div class="field"><label>Link da ROM (TeraBox)</label><input type="url" id="romUrl" placeholder="Cole aqui o link público do TeraBox"></div>
+<div style="margin-top:10px;font-size:12px;opacity:.8">
+O RetroHub salva no catálogo o link público informado. O TeraBox continua hospedando o arquivo.
+</div>
+</div>
+<div class="actions"><button class="secondary" id="localBtn">Salvar só neste aparelho</button><button class="public" id="publicBtn">🌐 PUBLICAR LINK</button><button class="secondary" id="clearBtn">Limpar campos</button></div><div class="progress" id="progress"><div class="bar" id="bar"></div></div><div class="msg" id="progressText"></div><div class="msg" id="formMsg"></div><div class="note"><b>PUBLICAR LINK</b> envia a capa e o arquivo para o Vercel Blob e adiciona o jogo ao catálogo público. Qualquer aparelho que abrir este site verá o mesmo jogo. Use apenas arquivos que você tenha autorização para disponibilizar.</div></div>
 <div class="panel" style="margin-top:18px"><div class="sectionTitle"><h2 style="margin:0">Jogos públicos</h2><span id="publicCount" class="badge public">0 jogos</span></div><div id="publicGames" class="games"></div></div>
 <div class="panel" style="margin-top:18px"><div class="sectionTitle"><h2 style="margin:0">Só neste aparelho</h2><span id="localCount" class="badge">0 jogos</span></div><div id="localGames" class="games"></div></div>
 </section></div><script>
@@ -379,7 +383,7 @@ async function uploadR2(file,key,label,fromPct,toPct){
   return uploadSmallR2(file,key,label,fromPct,toPct);
 }
 
-$('publicBtn').textContent='🚀 PUBLICAR TURBO R2';
+$('publicBtn').textContent='🔗 PUBLICAR LINK';
 
 $('publicBtn').onclick=async()=>{
   const {name,system,coverFile,romFile}=fields();

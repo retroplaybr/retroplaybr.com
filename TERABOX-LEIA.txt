@@ -1,0 +1,14 @@
+RETROHUB + TERABOX
+
+Esta versão troca a interface de upload da ROM por um campo para link público.
+
+Uso:
+1. Envie para o TeraBox somente arquivos que você tenha direito de disponibilizar.
+2. No TeraBox, Compartilhar -> Copiar o link.
+3. No RetroHub Admin, cole em "Link da ROM (TeraBox)".
+4. Publique no catálogo.
+
+IMPORTANTE:
+O link comum do TeraBox é uma página de compartilhamento. Dependendo do emulador,
+ele pode não funcionar como URL direta/streaming da ROM. Nesse caso, o botão poderá
+abrir a página do TeraBox em vez de carregar a ROM diretamente.
