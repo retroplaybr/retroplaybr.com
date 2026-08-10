@@ -1,0 +1,14 @@
+RETROHUB v5.1 — PESQUISA NO MENU PRINCIPAL
+
+Adicionado:
+- Barra "Pesquisar emulador ou plataforma" no menu principal.
+- Pesquisa em tempo real nos cards.
+- Exemplos: PS2, PS5, Windows, Pegasus, Nintendo, Xbox, 3DS.
+- Funciona junto com os filtros de categorias.
+- ESC limpa a pesquisa.
+
+Mantido:
+- Todos os arquivos e plataformas da v5.0.
+- Pesquisa no Admin.
+- PC / Windows moderno.
+- TeraBox e players anteriores.

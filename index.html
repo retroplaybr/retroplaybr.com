@@ -1,5 +1,5 @@
 <!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RetroHub v3.9 R2 + LG webOS</title><style>
+<title>RetroHub v5.1 + Pesquisa rápida</title><style>
 *{box-sizing:border-box}body{margin:0;background:#06111f;color:#fff;font-family:Arial,sans-serif}
 header{position:sticky;top:0;z-index:4;background:#071526f2;border-bottom:1px solid #22364e;padding:18px 4%}
 .top{display:flex;justify-content:space-between;align-items:center;gap:15px}h1{margin:0}.sub{color:#93a9c0;margin:5px 0 0}
@@ -9,8 +9,18 @@ header{position:sticky;top:0;z-index:4;background:#071526f2;border-bottom:1px so
 .card{display:inline-block;vertical-align:top;width:220px;height:150px;margin:0 12px 14px 0;min-height:140px;text-align:left;padding:16px;border:1px solid #263b56;background:linear-gradient(145deg,#10243a,#091522);border-radius:15px;color:#fff;cursor:pointer}
 .card:hover,.card:focus{border-color:#45bdf2;outline:4px solid #45bdf2}.card span{font-size:10px;color:#81a1c1;background:#172b42;padding:5px 7px;border-radius:7px}
 .card strong{display:block;font-size:17px;margin:24px 0 7px}.card small{color:#6f8aa5}
-</style></head><body><header><div class="top"><div><h1>RETROHUB</h1><div class="sub">Sistemas RetroBat no Admin • v3.9 R2 + LG webOS • 169 plataformas</div></div><a class="admin" href="admin.html">ADMIN</a></div>
-<div class="filters"><button class="filter active" data-cat="Todos">Todos</button><button class="filter" data-cat="Nintendo">Nintendo</button><button class="filter" data-cat="Sony">Sony</button><button class="filter" data-cat="Microsoft">Microsoft</button><button class="filter" data-cat="Sega">Sega</button><button class="filter" data-cat="Atari">Atari</button><button class="filter" data-cat="NEC">NEC</button><button class="filter" data-cat="SNK">SNK</button><button class="filter" data-cat="Bandai">Bandai</button><button class="filter" data-cat="Outros consoles">Outros consoles</button><button class="filter" data-cat="Arcade">Arcade</button><button class="filter" data-cat="Computadores">Computadores</button><button class="filter" data-cat="Engines/Ports">Engines/Ports</button></div></header><main><div class="grid" id="grid"><button class="card" data-cat="Nintendo" onclick="openSystem('nes','Nintendo Entertainment System / Famicom')">
+
+.searchbar{margin-top:14px;display:flex;gap:8px;align-items:center}
+.searchbar input{width:min(520px,100%);background:#0e1c2d;color:#fff;border:1px solid #2d425c;border-radius:12px;padding:12px 14px;font-size:16px;outline:none}
+.searchbar input:focus{border-color:#45bdf2;box-shadow:0 0 0 3px rgba(69,189,242,.18)}
+.search-count{color:#93a9c0;font-size:13px;white-space:nowrap}
+</style></head><body><header><div class="top"><div><h1>RETROHUB</h1><div class="sub">Sistemas RetroBat no Admin • v5.1 + Pesquisa rápida • 169+ plataformas</div></div><a class="admin" href="admin.html">ADMIN</a></div>
+<div class="filters"><button class="filter active" data-cat="Todos">Todos</button><button class="filter" data-cat="Nintendo">Nintendo</button><button class="filter" data-cat="Sony">Sony</button><button class="filter" data-cat="Microsoft">Microsoft</button><button class="filter" data-cat="Sega">Sega</button><button class="filter" data-cat="Atari">Atari</button><button class="filter" data-cat="NEC">NEC</button><button class="filter" data-cat="SNK">SNK</button><button class="filter" data-cat="Bandai">Bandai</button><button class="filter" data-cat="Outros consoles">Outros consoles</button><button class="filter" data-cat="Arcade">Arcade</button><button class="filter" data-cat="Computadores">Computadores</button><button class="filter" data-cat="Engines/Ports">Engines/Ports</button></div>
+<div class="searchbar">
+  <input id="systemSearch" type="search" placeholder="🔎 Pesquisar emulador ou plataforma... Ex.: PS2, Windows, Pegasus" aria-label="Pesquisar emuladores">
+  <span id="searchCount" class="search-count"></span>
+</div>
+</header><main><div class="grid" id="grid"><button class="card" data-cat="Nintendo" onclick="openSystem('nes','Nintendo Entertainment System / Famicom')">
     <span>Nintendo</span><strong>Nintendo Entertainment System / Famicom</strong><small>nes</small></button><button class="card" data-cat="Nintendo" onclick="openSystem('fds','Famicom Disk System')">
     <span>Nintendo</span><strong>Famicom Disk System</strong><small>fds</small></button><button class="card" data-cat="Nintendo" onclick="openSystem('nes3d','NES 3D')">
     <span>Nintendo</span><strong>NES 3D</strong><small>nes3d</small></button><button class="card" data-cat="Nintendo" onclick="openSystem('snes','Super Nintendo / Super Famicom')">
@@ -202,4 +212,51 @@ function openSystem(k,n){
 }
 </script>
 
+
+<script>
+(function(){
+  var input=document.getElementById('systemSearch');
+  var count=document.getElementById('searchCount');
+  var cards=[].slice.call(document.querySelectorAll('.card'));
+  var filters=[].slice.call(document.querySelectorAll('.filter'));
+  var activeCat='Todos';
+
+  function norm(s){
+    s=String(s||'').toLowerCase();
+    try{s=s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');}catch(e){}
+    return s;
+  }
+
+  function applySearch(){
+    var q=norm(input.value).trim();
+    var shown=0;
+    cards.forEach(function(card){
+      var cat=card.getAttribute('data-cat')||'';
+      var text=norm(card.textContent+' '+(card.getAttribute('onclick')||'')+' '+cat);
+      var catOk=activeCat==='Todos'||cat===activeCat;
+      var searchOk=!q||text.indexOf(q)!==-1;
+      var visible=catOk&&searchOk;
+      card.style.display=visible?'inline-block':'none';
+      if(visible) shown++;
+    });
+    count.textContent=q ? shown+' encontrado'+(shown===1?'':'s') : '';
+  }
+
+  input.addEventListener('input',applySearch);
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){
+      input.value='';
+      applySearch();
+      input.blur();
+    }
+  });
+
+  filters.forEach(function(btn){
+    btn.addEventListener('click',function(){
+      activeCat=btn.getAttribute('data-cat')||'Todos';
+      setTimeout(applySearch,0);
+    });
+  });
+})();
+</script>
 </body></html>
