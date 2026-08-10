@@ -1,0 +1,17 @@
+RETROHUB v4.1 — CORREÇÃO DO LOGIN
+
+CORRIGIDO:
+- O JavaScript do Admin tinha um erro de sintaxe que fazia o botão Entrar não responder.
+- O botão Entrar agora mostra "Entrando..." e mensagens de erro reais.
+- O campo Link da ROM (TeraBox) continua ativo.
+- "Salvar só neste aparelho" não tenta mais procurar um arquivo ROM que não existe.
+- A senha continua SOMENTE na variável ADMIN_PASSWORD da Vercel.
+
+PARA PUBLICAR:
+1. Substitua TODOS os arquivos do projeto pelos arquivos deste ZIP.
+2. Na Vercel, mantenha ADMIN_PASSWORD como Sensitive.
+3. Faça Redeploy SEM Build Cache.
+4. Abra /admin.html e teste a senha.
+
+Para PUBLICAR LINK no catálogo público, a versão também usa as variáveis do GitHub
+descritas em CONFIGURAR-GITHUB-CATALOGO.txt.
