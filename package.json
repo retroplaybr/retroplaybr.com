@@ -1,9 +1,5 @@
 {
-  "name": "retrohub-v39-cloudflare-r2",
+  "name": "retrohub-v40-terabox-github-catalog",
   "private": true,
-  "type": "module",
-  "dependencies": {
-    "@aws-sdk/client-s3": "^3.864.0",
-    "@aws-sdk/s3-request-presigner": "^3.864.0"
-  }
+  "type": "module"
 }

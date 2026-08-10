@@ -1,0 +1,21 @@
+RETROHUB v4.0 — TERABOX + CATÁLOGO NO GITHUB
+
+A ROM/ISO fica no TeraBox.
+O RetroHub salva somente os dados do jogo no arquivo catalog.json do seu GitHub.
+
+Na Vercel, configure estas Environment Variables:
+- ADMIN_PASSWORD = sua senha secreta
+- GITHUB_TOKEN = token GitHub com permissão Contents: Read and write
+- GITHUB_REPO_OWNER = retroplaybr
+- GITHUB_REPO_NAME = retroplaybr.com
+- GITHUB_BRANCH = main
+
+Depois faça Redeploy.
+
+IMPORTANTE:
+1. GITHUB_TOKEN deve ser marcado como Sensitive.
+2. Nunca coloque o token dentro do GitHub ou do HTML.
+3. PUBLICAR LINK não envia a ROM para Vercel Blob nem para R2.
+4. O link comum do TeraBox é uma página de compartilhamento. Ele pode aparecer no catálogo,
+   mas o emulador web pode não conseguir fazer streaming direto da ROM/ISO por esse link.
+5. Use apenas arquivos que você tenha direito de armazenar/disponibilizar.
