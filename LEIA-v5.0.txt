@@ -1,0 +1,11 @@
+RETROHUB v5.0 — WINDOWS MODERNO
+
+Correção:
+- Adicionada a plataforma "PC / Windows moderno" no seletor do Admin.
+- Identificador pesquisável: windows-modern
+- Também pode pesquisar por "Windows" ou "PC".
+- Mantidos os demais consoles, pesquisa de consoles e pesquisa de jogos.
+
+Observação:
+A categoria organiza jogos modernos de Windows. Executar arquivos .exe diretamente
+em navegador/Vercel exige uma tecnologia de execução/streaming separada.
