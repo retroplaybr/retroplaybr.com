@@ -3,86 +3,169 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RetroHub Jogos</title>
+<title>RetroHub TV</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#07111f;color:white;font-family:Arial,sans-serif;padding:24px}
-a{color:#70b7ff;text-decoration:none}
-.top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
-.box{margin-top:22px;padding:24px;border:1px solid #29415f;border-radius:16px;background:#0c1929}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px;margin-top:18px}
-.game{display:block;padding:12px;border:1px solid #29415f;border-radius:14px;background:#101f31;color:white}
-.game img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;background:#172b3e}
-.game strong{display:block;margin-top:10px;font-size:15px}
-.game small{display:block;color:#92a8c0;margin-top:5px}
-#debug{font-size:11px;color:#617892;margin-top:18px}
+body{margin:0;background:#06111f;color:#fff;font-family:Arial,sans-serif;padding:26px}
+a,button{font-family:Arial,sans-serif}
+.top{display:table;width:100%;margin-bottom:20px}.top-left,.top-right{display:table-cell;vertical-align:middle}.top-right{text-align:right}
+.btn{display:inline-block;background:#17304b;color:#fff;border:1px solid #365a7b;border-radius:10px;padding:14px 18px;text-decoration:none;font-size:18px}
+.btn:focus,.game:focus{outline:4px solid #44c8ff}
+.box{padding:24px;border:1px solid #29415f;border-radius:16px;background:#0c1929}
+h1{font-size:34px;margin:0 0 12px}
+#msg{font-size:21px;color:#c7d7e8;min-height:32px}
+#retry{display:none;margin-top:14px;background:#1da1f2;color:#04111d;border:0;border-radius:10px;padding:14px 20px;font-size:19px;font-weight:bold}
+.grid{margin-top:22px}
+.game{display:inline-block;vertical-align:top;width:210px;margin:0 16px 18px 0;padding:12px;background:#102237;border:1px solid #2e4966;border-radius:14px;color:#fff;text-decoration:none}
+.game img{display:block;width:184px;height:246px;object-fit:cover;background:#172b3e;border-radius:9px}
+.game strong{display:block;font-size:18px;margin-top:10px;line-height:1.2}
+.game small{display:block;color:#8faccc;margin-top:6px;font-size:14px}
+#debug{margin-top:18px;color:#708aa5;font-size:13px}
 </style>
 </head>
 <body>
 <div class="top">
-  <a href="index.html">← Voltar aos sistemas</a>
-  <a href="admin.html">ADMIN</a>
+ <div class="top-left"><a class="btn" href="index.html">← VOLTAR</a></div>
+ <div class="top-right"><a class="btn" href="admin.html">ADMIN</a></div>
 </div>
 <div class="box">
-  <h1 id="title"></h1>
-  <p id="msg">Carregando catálogo público…</p>
-  <div id="games" class="grid"></div>
-  <div id="debug"></div>
+ <h1 id="title">Jogos</h1>
+ <div id="msg">Carregando catálogo público...</div>
+ <button id="retry" type="button">TENTAR NOVAMENTE</button>
+ <div id="games" class="grid"></div>
+ <div id="debug"></div>
 </div>
-
 <script>
-const p = new URLSearchParams(location.search);
-const requestedSystem = p.get('system') || '';
-const name = p.get('name') || requestedSystem;
-document.getElementById('title').textContent = name;
+(function(){
+  var aliases = {"snes": "snes", "super nintendo": "snes", "super nintendo / super famicom": "snes", "nes": "nes", "nintendo entertainment system / famicom": "nes", "3ds": "3ds", "nintendo 3ds": "3ds", "nds": "nds", "nintendo ds": "nds", "ds": "nds", "n64": "n64", "nintendo 64": "n64", "gba": "gba", "game boy advance": "gba", "gbc": "gbc", "game boy color": "gbc", "gb": "gb", "game boy": "gb", "gamecube": "gamecube", "wii": "wii", "wiiu": "wiiu", "switch": "switch", "psx": "psx", "ps2": "ps2", "ps3": "ps3", "ps4": "ps4", "ps5": "ps5", "psp": "psp", "psvita": "psvita", "xbox": "xbox", "xbox360": "xbox360", "dreamcast": "dreamcast", "saturn": "saturn", "megadrive": "megadrive", "mastersystem": "mastersystem", "gamegear": "gamegear", "mame": "mame", "fbneo": "fbneo"};
+  var params = parseQuery(location.search);
+  var requestedSystem = params.system || '';
+  var pageName = params.name || requestedSystem || 'Jogos';
+  var msg = document.getElementById('msg');
+  var retry = document.getElementById('retry');
+  var gamesEl = document.getElementById('games');
+  var debug = document.getElementById('debug');
+  document.getElementById('title').innerHTML = esc(pageName);
 
-const aliases = {"nes": "nes", "fds": "fds", "nes3d": "nes3d", "snes": "snes", "satellaview": "satellaview", "sufami": "sufami", "snes-msu1": "snes-msu1", "sgb": "sgb", "n64": "n64", "n64dd": "n64dd", "gamecube": "gamecube", "wii": "wii", "wiiu": "wiiu", "switch": "switch", "gb": "gb", "gbc": "gbc", "gba": "gba", "nds": "nds", "3ds": "3ds", "virtualboy": "virtualboy", "pokemini": "pokemini", "gameandwatch": "gameandwatch", "psx": "psx", "ps2": "ps2", "ps3": "ps3", "ps4": "ps4", "ps5": "ps5", "psp": "psp", "psvita": "psvita", "xbox": "xbox", "xbox360": "xbox360", "windows": "windows", "dos": "dos", "msx": "msx", "msx2": "msx2", "msx2plus": "msx2plus", "sg1000": "sg1000", "mastersystem": "mastersystem", "gamegear": "gamegear", "megadrive": "megadrive", "megadrive-msu": "megadrive-msu", "segacd": "segacd", "sega32x": "sega32x", "saturn": "saturn", "dreamcast": "dreamcast", "naomi": "naomi", "naomi2": "naomi2", "atomiswave": "atomiswave", "model2": "model2", "model3": "model3", "atari2600": "atari2600", "atari5200": "atari5200", "atari7800": "atari7800", "atari800": "atari800", "atarist": "atarist", "jaguar": "jaguar", "jaguarcd": "jaguarcd", "lynx": "lynx", "pcengine": "pcengine", "supergrafx": "supergrafx", "pcenginecd": "pcenginecd", "pcfx": "pcfx", "pc88": "pc88", "pc98": "pc98", "neogeo": "neogeo", "neogeocd": "neogeocd", "ngp": "ngp", "ngpc": "ngpc", "wonderswan": "wonderswan", "wonderswancolor": "wonderswancolor", "3do": "3do", "cdi": "cdi", "colecovision": "colecovision", "adam": "adam", "intellivision": "intellivision", "aquarius": "aquarius", "vectrex": "vectrex", "odyssey2": "odyssey2", "channelf": "channelf", "astrocade": "astrocade", "arcadia": "arcadia", "apfm1000": "apfm1000", "advision": "advision", "actionmax": "actionmax", "gx4000": "gx4000", "casloopy": "casloopy", "pv1000": "pv1000", "scv": "scv", "supracan": "supracan", "vc4000": "vc4000", "creativision": "creativision", "vsmile": "vsmile", "vircon32": "vircon32", "uzebox": "uzebox", "mame": "mame", "fbneo": "fbneo", "daphne": "daphne", "hypseus": "hypseus", "teknoparrot": "teknoparrot", "chihiro": "chihiro", "hikaru": "hikaru", "triforce": "triforce", "namcos22": "namcos22", "namco2x6": "namco2x6", "c64": "c64", "c128": "c128", "vic20": "vic20", "plus4": "plus4", "amiga": "amiga", "amigacd32": "amigacd32", "amigacdtv": "amigacdtv", "amstradcpc": "amstradcpc", "pcw": "pcw", "zxspectrum": "zxspectrum", "zx81": "zx81", "samcoupe": "samcoupe", "apple2": "apple2", "apple2gs": "apple2gs", "macintosh": "macintosh", "archimedes": "archimedes", "atom": "atom", "bbc": "bbc", "x68000": "x68000", "x1": "x1", "fm7": "fm7", "fmtowns": "fmtowns", "coco": "coco", "trs80": "trs80", "ti99": "ti99", "oric": "oric", "thomson": "thomson", "dragon32": "dragon32", "enterprise": "enterprise", "spectravideo": "spectravideo", "camputerslynx": "camputerslynx", "tutor": "tutor", "pegasus": "pegasus", "scummvm": "scummvm", "pico8": "pico8", "tic80": "tic80", "wasm4": "wasm4", "lowresnx": "lowresnx", "openbor": "openbor", "gzdoom": "gzdoom", "prboom": "prboom", "quake": "quake", "quake2": "quake2", "eduke32": "eduke32", "ecwolf": "ecwolf", "rtcw": "rtcw", "xash3d": "xash3d", "cavestory": "cavestory", "openjazz": "openjazz", "sonicmania": "sonicmania", "sonic3air": "sonic3air", "sonicretro": "sonicretro", "supermariowar": "supermariowar", "devilutionx": "devilutionx", "opengoal": "opengoal", "openlara": "openlara", "theforceengine": "theforceengine", "soh": "soh", "2s2h": "2s2h", "starship": "starship", "perfectdark": "perfectdark", "flash": "flash", "j2me": "j2me", "karaoke": "karaoke", "tvgames": "tvgames", "nintendo 3ds": "3ds", "nintendo ds": "nds", "nintendo 64": "n64", "game boy advance": "gba", "game boy": "gb", "game boy color": "gbc", "nintendo switch": "switch"};
+  function parseQuery(q){
+    var obj = {};
+    q = (q || '').replace(/^\?/,'');
+    if(!q) return obj;
+    var parts = q.split('&');
+    for(var i=0;i<parts.length;i++){
+      var p = parts[i].split('=');
+      var k = decodeURIComponent(p[0] || '');
+      var v = decodeURIComponent((p.slice(1).join('=') || '').replace(/\+/g,' '));
+      obj[k] = v;
+    }
+    return obj;
+  }
 
-function norm(v){
-  const s = String(v || '').trim().toLowerCase();
-  return aliases[s] || s.replace(/[^a-z0-9]+/g,'');
-}
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g,function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
 
-(async()=>{
-  try{
-    const r = await fetch('/api/catalog?ts=' + Date.now(), {cache:'no-store'});
-    if(!r.ok) throw new Error('HTTP ' + r.status);
-    const d = await r.json();
-    const all = Array.isArray(d.games) ? d.games : (Array.isArray(d) ? d : []);
-    const want = norm(requestedSystem);
-    const arr = all.filter(g => norm(g.system || g.console || g.platform) === want);
+  function norm(v){
+    var s = String(v || '').replace(/^\s+|\s+$/g,'').toLowerCase();
+    return aliases[s] || s.replace(/[^a-z0-9]+/g,'');
+  }
 
-    document.getElementById('debug').textContent =
-      `Sistema: ${requestedSystem} → ${want} | catálogo público: ${all.length} jogo(s)`;
+  function fail(text){
+    msg.innerHTML = esc(text);
+    retry.style.display = 'inline-block';
+    debug.innerHTML = 'LG webOS Edition v3.8';
+  }
+
+  function render(data){
+    var all = [];
+    if(data && data.games && Object.prototype.toString.call(data.games) === '[object Array]') all = data.games;
+    else if(Object.prototype.toString.call(data) === '[object Array]') all = data;
+
+    var want = norm(requestedSystem);
+    var arr = [];
+    for(var i=0;i<all.length;i++){
+      var g = all[i] || {};
+      if(norm(g.system || g.console || g.platform) === want) arr.push(g);
+    }
+
+    debug.innerHTML = 'Sistema: '+esc(requestedSystem)+' → '+esc(want)+' | catálogo público: '+all.length+' jogo(s) | TV v3.8';
 
     if(!arr.length){
-      document.getElementById('msg').textContent='Nenhum jogo publicado para este sistema ainda.';
+      msg.innerHTML = 'Nenhum jogo publicado para este sistema ainda.';
+      retry.style.display = 'inline-block';
       return;
     }
 
-    document.getElementById('msg').textContent =
-      `${arr.length} jogo${arr.length===1?'':'s'} encontrado${arr.length===1?'':'s'}.`;
+    msg.innerHTML = arr.length + (arr.length===1 ? ' jogo encontrado.' : ' jogos encontrados.');
+    retry.style.display = 'none';
 
-    const placeholder = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22400%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23172b3e%22/%3E%3C/svg%3E';
-
-    document.getElementById('games').innerHTML = arr.map(g => {
-      const id = encodeURIComponent(String(g.id || ''));
-      return `<a class="game" href="player.html?id=${id}&scope=public">
-        <img src="${g.cover || placeholder}" alt="">
-        <strong>${escapeHtml(g.name || g.title || 'Jogo')}</strong>
-        <small>${escapeHtml(g.system || g.console || '')}</small>
-      </a>`;
-    }).join('');
-  }catch(e){
-    document.getElementById('msg').textContent='Catálogo indisponível neste momento: ' + (e.message || e);
+    var placeholder = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22400%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23172b3e%22/%3E%3C/svg%3E';
+    var html = '';
+    for(var j=0;j<arr.length;j++){
+      var game = arr[j] || {};
+      var id = encodeURIComponent(String(game.id || ''));
+      var cover = game.cover || placeholder;
+      html += '<a class="game" tabindex="0" href="player.html?id='+id+'&scope=public">';
+      html += '<img src="'+esc(cover)+'" alt="">';
+      html += '<strong>'+esc(game.name || game.title || 'Jogo')+'</strong>';
+      html += '<small>'+esc(game.system || game.console || requestedSystem)+'</small>';
+      html += '</a>';
+    }
+    gamesEl.innerHTML = html;
   }
-})();
 
-function escapeHtml(s){
-  return String(s ?? '').replace(/[&<>"']/g, c => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[c]));
-}
+  function loadCatalog(){
+    msg.innerHTML = 'Carregando catálogo público...';
+    retry.style.display = 'none';
+    gamesEl.innerHTML = '';
+
+    var xhr = new XMLHttpRequest();
+    var finished = false;
+    var timeoutId = setTimeout(function(){
+      if(finished) return;
+      try{ xhr.abort(); }catch(e){}
+      fail('A TV demorou para carregar o catálogo. Clique em TENTAR NOVAMENTE.');
+    }, 12000);
+
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState !== 4 || finished) return;
+      finished = true;
+      clearTimeout(timeoutId);
+
+      if(xhr.status >= 200 && xhr.status < 300){
+        try{
+          var data = JSON.parse(xhr.responseText);
+          render(data);
+        }catch(e){
+          fail('A TV recebeu o catálogo, mas não conseguiu interpretar os dados.');
+        }
+      }else{
+        fail('Não foi possível carregar o catálogo. HTTP '+xhr.status+'.');
+      }
+    };
+
+    xhr.onerror = function(){
+      if(finished) return;
+      finished = true;
+      clearTimeout(timeoutId);
+      fail('Falha de rede ao carregar o catálogo.');
+    };
+
+    try{
+      xhr.open('GET','/api/catalog?tv=38&t='+(new Date().getTime()),true);
+      xhr.setRequestHeader('Cache-Control','no-cache');
+      xhr.send(null);
+    }catch(e){
+      clearTimeout(timeoutId);
+      fail('Este navegador da TV não conseguiu iniciar a conexão com o catálogo.');
+    }
+  }
+
+  retry.onclick = loadCatalog;
+  loadCatalog();
+})();
 </script>
 </body>
 </html>
