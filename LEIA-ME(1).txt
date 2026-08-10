@@ -1,0 +1,29 @@
+JOGAR JOGOS RETRÔ — VERSÃO LEVE
+
+ESTA PASTA JÁ TEM A ESTRUTURA CORRETA.
+
+roms/
+  snes/       -> coloque Super Mario World (USA).sfc
+  3ds/        -> coloque Super Mario 3D Land (USA) (En,Fr,Es) (Rev 1).cci
+  nes/
+  n64/
+  nds/
+  megadrive/
+  psx/
+  psp/
+
+Depois:
+1. Abra a pasta jogarjogosretro-leve.
+2. Clique na barra de endereço e digite: cmd
+3. No CMD digite: py -m http.server 8000
+4. Abra no navegador: http://localhost:8000
+
+IMPORTANTE:
+Não dê dois cliques em index.html ou emulator.html.
+Abra sempre pelo localhost:8000.
+
+O site já cadastra:
+- Super Mario World em Super Nintendo
+- Super Mario 3D Land em Nintendo 3DS
+
+As ROMs não estão incluídas neste ZIP; copie para as pastas acima os arquivos que você já possui.
