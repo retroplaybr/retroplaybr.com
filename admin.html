@@ -1,13 +1,11 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RetroHub Admin v5.0 WINDOWS MODERNO</title>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RetroHub Admin v4.3 TeraBox + PC</title>
 <style>
 :root{--bg:#06111f;--panel:#0d1b2a;--text:#f4f8ff;--muted:#91a3b7;--accent:#42c6ff;--danger:#ff667d;--green:#37d889}*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,Segoe UI,Arial,sans-serif;background:radial-gradient(circle at 50% 0,#173553,#06111f 42%,#02070d);color:var(--text)}.wrap{max-width:1080px;margin:auto;padding:28px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.brand{font-weight:900;letter-spacing:.15em;text-transform:uppercase}.brand b{color:var(--accent)}a{color:var(--accent);text-decoration:none}.panel{background:rgba(13,27,42,.92);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px;box-shadow:0 25px 70px rgba(0,0,0,.35)}h1,h2{margin-top:0}.login{max-width:430px;margin:11vh auto 0}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{margin-bottom:14px}label{display:block;color:#c8d6e5;font-size:13px;margin-bottom:7px}input,select{width:100%;padding:13px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:#081522;color:white;outline:none}input:focus,select:focus{border-color:var(--accent)}button{border:0;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer;background:var(--accent);color:#04111b}.secondary{background:#20364b;color:white}.public{background:var(--green);color:#042116}.danger{background:rgba(255,102,125,.14);color:#ff94a5;border:1px solid rgba(255,102,125,.35)}.actions{display:flex;gap:10px;flex-wrap:wrap}.msg{min-height:18px;margin-top:10px;color:#a9bdd1;font-size:13px}.hidden{display:none!important}.games{display:grid;gap:10px;margin-top:18px}.game{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(255,255,255,.035)}.cover{width:56px;height:70px;border-radius:8px;object-fit:cover;background:#172b3e}.game small{color:var(--muted)}.note{color:#91a3b7;font-size:12px;line-height:1.5;margin-top:14px}.badge{display:inline-block;padding:5px 8px;border-radius:999px;background:rgba(66,198,255,.12);color:#92e4ff;font-size:11px}.badge.public{background:rgba(55,216,137,.13);color:#84f1b8}.sectionTitle{display:flex;justify-content:space-between;align-items:center;gap:12px}.progress{height:8px;background:#07131f;border-radius:999px;overflow:hidden;margin-top:10px;display:none}.bar{height:100%;width:0;background:var(--accent);transition:width .2s}@media(max-width:680px){.wrap{padding:16px}.row{grid-template-columns:1fr}.game{grid-template-columns:48px 1fr}.game .danger{grid-column:1/-1}.cover{width:48px;height:60px}}
 </style></head><body><div class="wrap">
 <section id="loginView" class="panel login"><div class="brand"><b>Retro</b>Hub Admin</div><h1 style="margin-top:18px">Acesso administrativo</h1><div class="field"><label>Senha</label><input id="password" type="password" placeholder="Senha do administrador"></div><button id="loginBtn">Entrar</button><div class="msg" id="loginMsg"></div><div class="note">Digite sua senha de administrador para continuar.</div></section>
-<section id="adminView" class="hidden"><div class="top"><div><div class="brand"><b>Retro</b>Hub Admin</div><span class="badge">Painel de jogos • v5.0 WINDOWS MODERNO</span></div><div class="actions"><a href="index.html">Abrir site</a><button class="secondary" id="logoutBtn">Sair</button></div></div>
-<div class="panel"><h2>Adicionar jogo</h2><div class="row"><div class="field"><label>Nome do jogo</label><input id="gameName" placeholder="Ex.: Super Mario World"></div><div class="field"><label>Pesquisar console / plataforma</label>
-<input id="consoleSearch" type="search" placeholder="Ex.: Windows, PS2, 3DS, Xbox, Pegasus..." autocomplete="off" style="margin-bottom:8px">
-<label>Console</label><select id="system">
+<section id="adminView" class="hidden"><div class="top"><div><div class="brand"><b>Retro</b>Hub Admin</div><span class="badge">Painel de jogos • v4.3 TeraBox + PC</span></div><div class="actions"><a href="/">Abrir site</a><button class="secondary" id="logoutBtn">Sair</button></div></div>
+<div class="panel"><h2>Adicionar jogo</h2><div class="row"><div class="field"><label>Nome do jogo</label><input id="gameName" placeholder="Ex.: Super Mario World"></div><div class="field"><label>Console</label><select id="system">
 <optgroup label="Nintendo">
 <option value="nes">Nintendo Entertainment System / Famicom</option>
 <option value="fds">Famicom Disk System</option>
@@ -44,7 +42,6 @@
 <optgroup label="Xbox / Microsoft">
 <option value="xbox">Xbox</option>
 <option value="xbox360">Xbox 360</option>
-<option value="windows-modern">PC / Windows moderno</option>
 <option value="windows">PC Windows 95/98 (js-dos)</option>
 <option value="dos">PC MS-DOS (js-dos)</option>
 <option value="msx">MSX</option>
@@ -200,7 +197,6 @@
 </optgroup>
 </select><small style="display:block;color:#7fd6ff;margin-top:7px">Lista completa v4.0 — inclui PS1, PS2, PS3, PSP, PS Vita, Xbox, Sega, Atari, Arcade e muito mais.</small></div></div><div class="row"><div class="field"><label>Capa do jogo</label><input id="cover" type="file" accept="image/*"></div><div class="field"><label>Link da ROM (TeraBox)</label><input id="romUrl" type="url" placeholder="Cole aqui o link público do TeraBox"></div></div>
 <div class="actions"><button class="secondary" id="localBtn">Salvar só neste aparelho</button><button class="public" id="publicBtn">🔗 PUBLICAR LINK</button><button class="secondary" id="clearBtn">Limpar campos</button></div><div class="progress" id="progress"><div class="bar" id="bar"></div></div><div class="msg" id="progressText"></div><div class="msg" id="formMsg"></div><div class="note" style="margin-bottom:8px">Se aparecer erro de GITHUB_TOKEN após salvar a variável, faça um novo Redeploy sem Build Cache. Diagnóstico: <a href="/api/env-check" target="_blank">/api/env-check</a></div><div class="note"><b>PUBLICAR LINK</b> salva no catálogo somente o nome, console, capa e o link público informado. A ROM continua hospedada no TeraBox.</div></div>
-<div class="panel" style="margin-top:18px"><div class="sectionTitle"><h2 style="margin:0">Pesquisar jogos</h2></div><div class="field" style="margin-top:14px;margin-bottom:0"><label>Pesquisa no Admin</label><input id="adminSearch" type="search" placeholder="Digite nome do jogo ou console..."></div><div class="note">A pesquisa filtra os jogos públicos e os salvos neste aparelho.</div></div>
 <div class="panel" style="margin-top:18px"><div class="sectionTitle"><h2 style="margin:0">Jogos públicos</h2><span id="publicCount" class="badge public">0 jogos</span></div><div id="publicGames" class="games"></div></div>
 <div class="panel" style="margin-top:18px"><div class="sectionTitle"><h2 style="margin:0">Só neste aparelho</h2><span id="localCount" class="badge">0 jogos</span></div><div id="localGames" class="games"></div></div>
 </section></div><script>
@@ -379,104 +375,7 @@ async function getPublic(){try{const r=await fetch('/api/catalog',{cache:'no-sto
 window.removeLocal=async id=>{if(!confirm('Excluir deste aparelho?'))return;saveLocal(loadLocal().filter(g=>String(g.id)!==String(id)));try{await deleteRom(id)}catch{}await renderAll()};
 window.removePublic=async id=>{if(!confirm('Remover este jogo do catálogo público?'))return;try{await api('/api/catalog',{method:'DELETE',headers:{'content-type':'application/json'},body:JSON.stringify({id:id})});await renderAll()}catch(e){alert(e.message)}};
 function card(g,mode){const placeholder='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2256%22 height=%2270%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23172b3e%22/%3E%3C/svg%3E';return `<div class="game"><img class="cover" src="${esc(g.cover)||placeholder}"><div><strong>${esc(g.name)}</strong><br><small>${esc(g.system)} • ${mode==='public'?'🌐 público':'neste aparelho'}</small></div><button class="danger" onclick="${mode==='public'?'removePublic':'removeLocal'}('${esc(g.id)}')">Excluir</button></div>`}
-let adminPublicGames=[],adminLocalGames=[];
-function normSearch(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
-function applyAdminSearch(){
-  const q=normSearch($('adminSearch')?.value||'');
-  const filter=arr=>!q?arr:arr.filter(g=>normSearch((g.name||'')+' '+(g.system||'')).includes(q));
-  const local=filter(adminLocalGames),pub=filter(adminPublicGames);
-  $('localCount').textContent=`${local.length} jogo${local.length===1?'':'s'}`;
-  $('publicCount').textContent=`${pub.length} jogo${pub.length===1?'':'s'}`;
-  $('localGames').innerHTML=local.length?local.map(g=>card(g,'local')).join(''):'<div class="note">Nenhum jogo encontrado.</div>';
-  $('publicGames').innerHTML=pub.length?pub.map(g=>card(g,'public')).join(''):'<div class="note">Nenhum jogo encontrado.</div>';
-}
-async function renderAll(){adminLocalGames=loadLocal();adminPublicGames=await getPublic();applyAdminSearch()}
-$('adminSearch')?.addEventListener('input',applyAdminSearch);
-
-// Pesquisa da lista de consoles/plataformas do formulário "Adicionar jogo".
-const consoleSelect=$('system');
-const consoleSearch=$('consoleSearch');
-
-const originalConsoleGroups=[...consoleSelect.children].map(node=>{
-  if(node.tagName==='OPTGROUP'){
-    return {
-      type:'group',
-      label:node.label,
-      options:[...node.children].map(o=>({value:o.value,text:o.textContent}))
-    };
-  }
-  return {type:'option',value:node.value,text:node.textContent};
-});
-
-function normConsoleSearch(v){
-  return String(v||'')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g,'')
-    .toLowerCase()
-    .trim();
-}
-
-function renderConsoleOptions(query){
-  const q=normConsoleSearch(query);
-  const previous=consoleSelect.value;
-  consoleSelect.innerHTML='';
-
-  let firstValue='';
-
-  originalConsoleGroups.forEach(item=>{
-    if(item.type==='group'){
-      const matches=item.options.filter(o=>{
-        const hay=normConsoleSearch(item.label+' '+o.text+' '+o.value);
-        return !q || hay.includes(q);
-      });
-
-      if(matches.length){
-        const g=document.createElement('optgroup');
-        g.label=item.label;
-        matches.forEach(o=>{
-          const op=document.createElement('option');
-          op.value=o.value;
-          op.textContent=o.text;
-          g.appendChild(op);
-          if(!firstValue) firstValue=o.value;
-        });
-        consoleSelect.appendChild(g);
-      }
-    }else{
-      const hay=normConsoleSearch(item.text+' '+item.value);
-      if(!q || hay.includes(q)){
-        const op=document.createElement('option');
-        op.value=item.value;
-        op.textContent=item.text;
-        consoleSelect.appendChild(op);
-        if(!firstValue) firstValue=item.value;
-      }
-    }
-  });
-
-  const values=[...consoleSelect.options].map(o=>o.value);
-  if(values.includes(previous)) consoleSelect.value=previous;
-  else if(firstValue) consoleSelect.value=firstValue;
-
-  if(!consoleSelect.options.length){
-    const op=document.createElement('option');
-    op.value='';
-    op.textContent='Nenhum console encontrado';
-    op.disabled=true;
-    op.selected=true;
-    consoleSelect.appendChild(op);
-  }
-}
-
-consoleSearch.addEventListener('input',()=>renderConsoleOptions(consoleSearch.value));
-consoleSearch.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){
-    consoleSearch.value='';
-    renderConsoleOptions('');
-    consoleSearch.blur();
-  }
-});
-
+async function renderAll(){const local=loadLocal(),pub=await getPublic();$('localCount').textContent=`${local.length} jogo${local.length===1?'':'s'}`;$('publicCount').textContent=`${pub.length} jogo${pub.length===1?'':'s'}`;$('localGames').innerHTML=local.length?local.map(g=>card(g,'local')).join(''):'<div class="note">Nenhum jogo salvo somente neste aparelho.</div>';$('publicGames').innerHTML=pub.length?pub.map(g=>card(g,'public')).join(''):'<div class="note">Nenhum jogo publicado para todos ainda.</div>'}
 const remembered=sessionStorage.getItem('retrohub_admin_pass');if(remembered){adminPassword=remembered;$('loginView').classList.add('hidden');$('adminView').classList.remove('hidden');renderAll()}
 </script><script>
 window.RETROHUB_SYSTEMS = [{"name": "Nintendo Switch", "key": "switch", "category": "Nintendo"}, {"name": "Nintendo Wii U", "key": "wiiu", "category": "Nintendo"}, {"name": "Nintendo Wii", "key": "wii", "category": "Nintendo"}, {"name": "Nintendo GameCube", "key": "gamecube", "category": "Nintendo"}, {"name": "Nintendo 3DS", "key": "3ds", "category": "Nintendo"}, {"name": "Nintendo DS", "key": "nds", "category": "Nintendo"}, {"name": "Nintendo 64DD", "key": "n64dd", "category": "Nintendo"}, {"name": "Nintendo 64", "key": "n64", "category": "Nintendo"}, {"name": "Super Nintendo", "key": "snes", "category": "Nintendo"}, {"name": "NES / Famicom", "key": "nes", "category": "Nintendo"}, {"name": "Famicom Disk System", "key": "fds", "category": "Nintendo"}, {"name": "Virtual Boy", "key": "virtualboy", "category": "Nintendo"}, {"name": "Game Boy Advance", "key": "gba", "category": "Nintendo"}, {"name": "Game Boy Color", "key": "gbc", "category": "Nintendo"}, {"name": "Game Boy", "key": "gb", "category": "Nintendo"}, {"name": "Pokémon Mini", "key": "pokemini", "category": "Nintendo"}, {"name": "PlayStation 5", "key": "ps5", "category": "Sony"}, {"name": "PlayStation 4", "key": "ps4", "category": "Sony"}, {"name": "PlayStation 3", "key": "ps3", "category": "Sony"}, {"name": "PlayStation 2", "key": "ps2", "category": "Sony"}, {"name": "PlayStation", "key": "psx", "category": "Sony"}, {"name": "PSP", "key": "psp", "category": "Sony"}, {"name": "PS Vita", "key": "psvita", "category": "Sony"}, {"name": "Sega Dreamcast", "key": "dreamcast", "category": "Sega"}, {"name": "Sega Saturn", "key": "saturn", "category": "Sega"}, {"name": "Sega 32X", "key": "sega32x", "category": "Sega"}, {"name": "Sega CD / Mega-CD", "key": "segacd", "category": "Sega"}, {"name": "Mega Drive / Genesis", "key": "megadrive", "category": "Sega"}, {"name": "Master System", "key": "mastersystem", "category": "Sega"}, {"name": "Game Gear", "key": "gamegear", "category": "Sega"}, {"name": "SG-1000", "key": "sg1000", "category": "Sega"}, {"name": "Xbox", "key": "xbox", "category": "Microsoft"}, {"name": "Xbox 360", "key": "xbox360", "category": "Microsoft"}, {"name": "Atari 2600", "key": "atari2600", "category": "Atari"}, {"name": "Atari 5200", "key": "atari5200", "category": "Atari"}, {"name": "Atari 7800", "key": "atari7800", "category": "Atari"}, {"name": "Atari Jaguar", "key": "jaguar", "category": "Atari"}, {"name": "Atari Lynx", "key": "lynx", "category": "Atari"}, {"name": "Atari ST", "key": "atarist", "category": "Atari"}, {"name": "Neo Geo", "key": "neogeo", "category": "SNK"}, {"name": "Neo Geo CD", "key": "neogeocd", "category": "SNK"}, {"name": "Neo Geo Pocket", "key": "ngp", "category": "SNK"}, {"name": "Neo Geo Pocket Color", "key": "ngpc", "category": "SNK"}, {"name": "PC Engine / TurboGrafx-16", "key": "pcengine", "category": "NEC"}, {"name": "PC Engine CD", "key": "pcenginecd", "category": "NEC"}, {"name": "PC-FX", "key": "pcfx", "category": "NEC"}, {"name": "3DO", "key": "3do", "category": "Outros"}, {"name": "ColecoVision", "key": "colecovision", "category": "Outros"}, {"name": "Intellivision", "key": "intellivision", "category": "Outros"}, {"name": "Vectrex", "key": "vectrex", "category": "Outros"}, {"name": "WonderSwan", "key": "wonderswan", "category": "Outros"}, {"name": "WonderSwan Color", "key": "wonderswancolor", "category": "Outros"}, {"name": "Arcade / MAME", "key": "mame", "category": "Arcade"}, {"name": "FinalBurn Neo", "key": "fbneo", "category": "Arcade"}, {"name": "Naomi", "key": "naomi", "category": "Arcade"}, {"name": "Atomiswave", "key": "atomiswave", "category": "Arcade"}, {"name": "Amiga", "key": "amiga", "category": "Computadores"}, {"name": "Amstrad CPC", "key": "amstradcpc", "category": "Computadores"}, {"name": "Apple II", "key": "apple2", "category": "Computadores"}, {"name": "Commodore 64", "key": "c64", "category": "Computadores"}, {"name": "MS-DOS", "key": "dos", "category": "Computadores"}, {"name": "MSX", "key": "msx", "category": "Computadores"}, {"name": "MSX2", "key": "msx2", "category": "Computadores"}, {"name": "ScummVM", "key": "scummvm", "category": "Computadores"}, {"name": "ZX Spectrum", "key": "zxspectrum", "category": "Computadores"}, {"name": "Windows", "key": "windows", "category": "Computadores"}, {"name": "PC-98", "key": "pc98", "category": "Computadores"}, {"name": "Sharp X68000", "key": "x68000", "category": "Computadores"}];

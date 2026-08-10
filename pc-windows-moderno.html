@@ -1,34 +1,7 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RetroHub • PC Windows Moderno</title>
-<style>
-body{margin:0;background:#061526;color:#fff;font-family:Arial,Helvetica,sans-serif}
-header{padding:22px 5%;background:#081b2d;border-bottom:1px solid #29465f}
-main{padding:28px 5%}.box{max-width:850px;background:#0d2235;border:1px solid #29465f;border-radius:16px;padding:24px}
-input,button{padding:12px;border-radius:9px;margin:6px 0}button{cursor:pointer}.muted{color:#a9bbca;line-height:1.5}
-a{color:#48c8ff}
-</style>
-</head>
-<body>
-<header><b>RetroHub</b> • PC / Windows moderno</header>
-<main><div class="box">
-<h1>PC / Windows moderno</h1>
-<p class="muted">Área separada para jogos e aplicativos Windows modernos.</p>
-<input id="file" type="file" accept=".exe,.msi,.zip,.7z">
-<button onclick="inspectFile()">Verificar</button>
-<div id="result"></div>
-<hr>
-<p class="muted"><b>Importante:</b> Chrome, webOS e Vercel não executam um .exe moderno diretamente dentro da página. Esta área mantém o jogo catalogado como PC/Windows e está preparada para futura integração com execução remota/streaming de um computador Windows.</p>
-<p><a href="index.html">← Voltar ao RetroHub</a></p>
-</div></main>
-<script>
-function inspectFile(){
- const f=document.getElementById('file').files[0], r=document.getElementById('result');
- if(!f){r.textContent='Escolha um arquivo.';return}
- r.innerHTML='<p><b>'+f.name+'</b></p><p>Arquivo reconhecido como conteúdo de PC/Windows.</p>';
-}
-</script>
-</body></html>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>PC / Windows moderno</title>
+<style>body{font-family:Arial;background:#0b3154;color:white;padding:30px}a{color:#4bd6ff}.box{max-width:800px;background:#174a75;padding:24px;border-radius:18px}</style>
+</head><body><div class="box"><h1>PC / Windows moderno</h1>
+<p>Categoria para organizar jogos e aplicativos modernos de Windows.</p>
+<p>Arquivos .exe não rodam diretamente dentro do navegador/Vercel; esta área fica preparada para integração futura com execução/streaming.</p>
+<p><a href="/">← Voltar ao RetroHub</a></p></div></body></html>

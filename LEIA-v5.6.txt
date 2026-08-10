@@ -1,0 +1,22 @@
+RETROHUB v5.6 — BASE FUNCIONAL
+
+Esta versão foi reconstruída a partir da v4.3 que tinha navegação funcional.
+
+CORRIGIDO:
+- ADMIN usa /admin.html
+- consoles usam /games.html
+- links absolutos para funcionar melhor na Vercel
+- pesquisa no menu
+- PC / Windows moderno
+- visual atual preservado
+
+PRESERVADO:
+- Admin completo
+- APIs auth/catalog/env-check/TeraBox
+- players/emuladores
+- biblioteca
+- package.json e vercel.json
+
+IMPORTANTE:
+O ZIP NÃO contém catalog.json. Não apague o catalog.json existente no GitHub,
+pois ele guarda o catálogo público.
