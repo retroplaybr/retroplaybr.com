@@ -1,25 +1,21 @@
-RetroHub v3.5 — correção do client token do Vercel Blob
+RetroHub v3.6 — PUBLICAÇÃO PRO
 
-CORREÇÕES:
-- /api/upload usa BLOB_READ_WRITE_TOKEN explicitamente.
-- O body do handleUpload é normalizado antes de gerar o client token.
-- Removida a lista rígida de MIME types, evitando falhas com ISO/ROM.
-- /api/blob-check confirma se o deployment realmente recebeu o token.
-- Mantém upload multipart para arquivos grandes.
-- Mantém barra de progresso.
-- Mantém catálogo e seletor completo de sistemas.
+NOVO FLUXO:
+1. Para ROMs/ISOs grandes, abra Vercel > Storage > retrohub-games > Manage Blobs.
+2. Clique Upload e envie a ROM/ISO diretamente pelo painel da Vercel.
+3. Depois do upload, abra o arquivo e copie a URL pública.
+4. No RetroHub Admin v3.6, cole essa URL em "URL pública da ROM / ISO no Vercel Blob".
+5. Clique 🚀 Publicar PRO.
 
-INSTALAÇÃO:
-1. Substitua TODOS os arquivos no GitHub, inclusive a pasta api.
-2. Confirme que existem:
-   api/upload.js
-   api/blob-check.js
-   api/catalog.js
-3. Faça Redeploy sem marcar "Use existing Build Cache".
-4. Abra o Admin e confirme "Painel de jogos • v3.5".
-5. Teste novamente "Publicar para todos".
+VANTAGENS:
+- Não usa client token no navegador para a ISO.
+- Não usa /api/upload para o arquivo grande.
+- Evita o erro "Failed to retrieve the client token".
+- O RetroHub só registra a URL pronta no catálogo.
+- Continua publicando para todos os aparelhos.
+- Capa pode ser arquivo pequeno ou URL.
+- Mantém o jogo Super Mario já publicado.
 
-Se o preflight funcionar, o Admin começa a transferência.
-Se o token ainda não estiver no deployment, a v3.5 mostra a causa ANTES de enviar a ISO.
-
+IMPORTANTE:
+O botão antigo foi substituído por Publicar PRO.
 Use somente arquivos que você tenha direito de armazenar/disponibilizar.
