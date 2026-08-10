@@ -1,0 +1,12 @@
+RETROHUB v4.9 — PESQUISA DE CONSOLE NO ADMIN
+
+Adicionado:
+- Campo "Pesquisar console / plataforma" imediatamente acima da lista Console.
+- Digite Windows, PS2, 3DS, Xbox, Pegasus etc.
+- A lista de consoles é filtrada enquanto você digita.
+- ESC limpa a pesquisa.
+
+Mantido:
+- Pesquisa de jogos cadastrados.
+- Todos os consoles/plataformas já existentes.
+- Admin, catálogo, TeraBox e players anteriores.
