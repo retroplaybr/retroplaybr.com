@@ -1,3 +1,13 @@
 {
-  "games": []
+  "games": [
+    {
+      "id": "1786396119423",
+      "name": "Super mario All-Stars USA",
+      "system": "snes",
+      "cover": "",
+      "rom": "https://1024terabox.com/s/1Mdtek4hinY1F6U2YJ8Ys1Q",
+      "source": "terabox",
+      "createdAt": 1786396119423
+    }
+  ]
 }
