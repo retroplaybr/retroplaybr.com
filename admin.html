@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RetroHub Admin v3.6</title>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RetroHub Admin v3.7</title>
 <style>
 :root{--bg:#06111f;--panel:#0d1b2a;--text:#f4f8ff;--muted:#91a3b7;--accent:#42c6ff;--danger:#ff667d;--green:#37d889}*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,Segoe UI,Arial,sans-serif;background:radial-gradient(circle at 50% 0,#173553,#06111f 42%,#02070d);color:var(--text)}.wrap{max-width:1080px;margin:auto;padding:28px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.brand{font-weight:900;letter-spacing:.15em;text-transform:uppercase}.brand b{color:var(--accent)}a{color:var(--accent);text-decoration:none}.panel{background:rgba(13,27,42,.92);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px;box-shadow:0 25px 70px rgba(0,0,0,.35)}h1,h2{margin-top:0}.login{max-width:430px;margin:11vh auto 0}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{margin-bottom:14px}label{display:block;color:#c8d6e5;font-size:13px;margin-bottom:7px}input,select{width:100%;padding:13px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:#081522;color:white;outline:none}input:focus,select:focus{border-color:var(--accent)}button{border:0;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer;background:var(--accent);color:#04111b}.secondary{background:#20364b;color:white}.public{background:var(--green);color:#042116}.danger{background:rgba(255,102,125,.14);color:#ff94a5;border:1px solid rgba(255,102,125,.35)}.actions{display:flex;gap:10px;flex-wrap:wrap}.msg{min-height:18px;margin-top:10px;color:#a9bdd1;font-size:13px}.hidden{display:none!important}.games{display:grid;gap:10px;margin-top:18px}.game{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(255,255,255,.035)}.cover{width:56px;height:70px;border-radius:8px;object-fit:cover;background:#172b3e}.game small{color:var(--muted)}.note{color:#91a3b7;font-size:12px;line-height:1.5;margin-top:14px}.badge{display:inline-block;padding:5px 8px;border-radius:999px;background:rgba(66,198,255,.12);color:#92e4ff;font-size:11px}.badge.public{background:rgba(55,216,137,.13);color:#84f1b8}.sectionTitle{display:flex;justify-content:space-between;align-items:center;gap:12px}.progress{height:8px;background:#07131f;border-radius:999px;overflow:hidden;margin-top:10px;display:none}.bar{height:100%;width:0;background:var(--accent);transition:width .2s}@media(max-width:680px){.wrap{padding:16px}.row{grid-template-columns:1fr}.game{grid-template-columns:48px 1fr}.game .danger{grid-column:1/-1}.cover{width:48px;height:60px}}
 </style></head><body><div class="wrap">
 <section id="loginView" class="panel login"><div class="brand"><b>Retro</b>Hub Admin</div><h1 style="margin-top:18px">Acesso administrativo</h1><div class="field"><label>Senha</label><input id="password" type="password" placeholder="Senha do administrador"></div><button id="loginBtn">Entrar</button><div class="msg" id="loginMsg"></div><div class="note">Use a senha configurada em <b>ADMIN_PASSWORD</b> na Vercel. Se ainda não configurou, esta versão aceita <b>retro123</b> como padrão temporário.</div></section>
-<section id="adminView" class="hidden"><div class="top"><div><div class="brand"><b>Retro</b>Hub Admin</div><span class="badge">Painel de jogos • v3.6</span></div><div class="actions"><a href="index.html">Abrir site</a><button class="secondary" id="logoutBtn">Sair</button></div></div>
+<section id="adminView" class="hidden"><div class="top"><div><div class="brand"><b>Retro</b>Hub Admin</div><span class="badge">Painel de jogos • v3.7</span></div><div class="actions"><a href="index.html">Abrir site</a><button class="secondary" id="logoutBtn">Sair</button></div></div>
 <div class="panel"><h2>Adicionar jogo</h2><div class="row"><div class="field"><label>Nome do jogo</label><input id="gameName" placeholder="Ex.: Super Mario World"></div><div class="field"><label>Console</label><select id="system">
 <optgroup label="Nintendo">
 <option value="nes">Nintendo Entertainment System / Famicom</option>
@@ -195,21 +195,8 @@
 <option value="karaoke">Karaoke</option>
 <option value="tvgames">TV Games</option>
 </optgroup>
-</select><small style="display:block;color:#7fd6ff;margin-top:7px">Lista completa v3.6 — inclui PS1, PS2, PS3, PSP, PS Vita, Xbox, Sega, Atari, Arcade e muito mais.</small></div></div><div class="row"><div class="field"><label>Capa do jogo</label><input id="cover" type="file" accept="image/*"></div><div class="field"><label>Arquivo do jogo / ROM</label>
-    <input id="rom" type="file">
-    <div style="margin-top:10px"></div>
-    <label>URL pública da ROM / ISO no Vercel Blob</label>
-    <input id="romUrl" type="url" placeholder="https://...public.blob.vercel-storage.com/..."></div></div>
-<div class="actions"><button class="secondary" id="localBtn">Salvar só neste aparelho</button><button class="public" id="publicBtn">🚀 Publicar PRO</button><button class="secondary" id="clearBtn">Limpar campos</button></div><div class="progress" id="progress"><div class="bar" id="bar"></div></div><div class="msg" id="progressText"></div><div class="msg" id="formMsg"></div>
-<div style="margin-top:14px;padding:14px;border:1px solid #2b4967;border-radius:12px;background:#0a1828">
-  <strong style="color:#69d2ff">🚀 PUBLICAÇÃO PRO</strong>
-  <div style="margin-top:7px;color:#9cb3c9;line-height:1.45">
-    Para jogos grandes: envie a ROM/ISO diretamente no <b>Vercel Blob → Upload</b>,
-    copie a URL pública e cole no campo acima. O RetroHub apenas registra o jogo no catálogo.
-    Isso evita o erro de client token e funciona melhor com arquivos grandes.
-  </div>
-</div>
-<div class="note"><b>Publicar PRO</b> usa upload multipart automático para arquivos grandes e envia a capa e o arquivo para o Vercel Blob e adiciona o jogo ao catálogo público. Qualquer aparelho que abrir este site verá o mesmo jogo. Use apenas arquivos que você tenha autorização para disponibilizar.</div></div>
+</select><small style="display:block;color:#7fd6ff;margin-top:7px">Lista completa v3.7 — inclui PS1, PS2, PS3, PSP, PS Vita, Xbox, Sega, Atari, Arcade e muito mais.</small></div></div><div class="row"><div class="field"><label>Capa do jogo</label><input id="cover" type="file" accept="image/*"></div><div class="field"><label>Arquivo do jogo / ROM</label><input id="rom" type="file"></div></div>
+<div class="actions"><button class="secondary" id="localBtn">Salvar só neste aparelho</button><button class="public" id="publicBtn">🌐 PUBLICAR TURBO</button><button class="secondary" id="clearBtn">Limpar campos</button></div><div class="progress" id="progress"><div class="bar" id="bar"></div></div><div class="msg" id="progressText"></div><div class="msg" id="formMsg"></div><div class="note"><b>PUBLICAR TURBO</b> envia a capa e o arquivo para o Vercel Blob e adiciona o jogo ao catálogo público. Qualquer aparelho que abrir este site verá o mesmo jogo. Use apenas arquivos que você tenha autorização para disponibilizar.</div></div>
 <div class="panel" style="margin-top:18px"><div class="sectionTitle"><h2 style="margin:0">Jogos públicos</h2><span id="publicCount" class="badge public">0 jogos</span></div><div id="publicGames" class="games"></div></div>
 <div class="panel" style="margin-top:18px"><div class="sectionTitle"><h2 style="margin:0">Só neste aparelho</h2><span id="localCount" class="badge">0 jogos</span></div><div id="localGames" class="games"></div></div>
 </section></div><script>
@@ -225,98 +212,113 @@ function clearForm(){['gameName','cover','rom'].forEach(x=>$(x).value='');$('sys
 function fields(){return {name:$('gameName').value.trim(),system:$('system').value,coverFile:$('cover').files[0],romFile:$('rom').files[0]}}
 $('localBtn').onclick=async()=>{const {name,system,coverFile,romFile}=fields();if(!name||!romFile)return $('formMsg').textContent='Informe o nome e escolha a ROM.';try{$('localBtn').disabled=true;$('formMsg').textContent='Salvando neste aparelho...';const id=Date.now();const cover=await fileToDataURL(coverFile);await putRom(id,romFile);const games=loadLocal();games.push({id:String(id),name,system,cover,romStored:true,romName:romFile.name,scope:'local'});saveLocal(games);clearForm();$('formMsg').textContent='Salvo somente neste aparelho.';await renderAll()}catch(e){$('formMsg').textContent='Erro: '+e.message}finally{$('localBtn').disabled=false}};
 function safeName(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,120)||'arquivo'}
-async function blobClientUpload(file, pathname, label, progressStart=0, progressEnd=100) {
-  const { upload } = await import('https://esm.sh/@vercel/blob@2.4.0/client');
+async function signedUpload(file,pathname){const sign=await api('/api/sign-upload',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({pathname,contentType:file.type||'application/octet-stream',size:file.size})});const r=await fetch(sign.presignedUrl,{method:'PUT',headers:{'content-type':file.type||'application/octet-stream'},body:file});if(!r.ok)throw new Error('Falha no upload para o Blob ('+r.status+').');return pathname}
 
-  const blob = await upload(pathname, file, {
-    access: 'public',
-    handleUploadUrl: location.origin + '/api/upload?v=35',
-    clientPayload: JSON.stringify({ adminPassword }),
-    multipart: file.size > 100 * 1024 * 1024,
-    onUploadProgress: ({ percentage, loaded, total }) => {
-      const scaled = progressStart + ((progressEnd - progressStart) * (percentage || 0) / 100);
-      $('bar').style.width = Math.max(1, Math.min(100, scaled)) + '%';
-      const mb = n => (n / 1024 / 1024).toFixed(1);
-      $('progressText').textContent = `${label}: ${Math.round(percentage || 0)}% — ${mb(loaded || 0)} MB / ${mb(total || file.size)} MB`;
-    },
+async function checkUploadRoute(){
+  const r = await fetch('/api/upload', {
+    method:'GET',
+    headers:{'x-admin-password':adminPassword},
+    cache:'no-store'
   });
+  const text = await r.text();
+  let data={};
+  try{ data=JSON.parse(text); }catch{}
+  if(!r.ok) throw new Error(data.error || `A rota /api/upload respondeu HTTP ${r.status}.`);
+  if(!data.ok) throw new Error('A rota /api/upload não respondeu corretamente.');
+  if(data.version!=='3.7') throw new Error(`A API ainda não é v3.7 (respondeu ${data.version||'sem versão'}).`);
+  if(!data.hasBlobToken) throw new Error('O deployment não recebeu BLOB_READ_WRITE_TOKEN.');
+  if(!data.hasAdminPassword) throw new Error('O deployment não recebeu ADMIN_PASSWORD.');
+  return data;
+}
 
+async function directBlobUpload(file, pathname, label, fromPct, toPct){
+  const mod = await import('https://esm.sh/@vercel/blob@2.4.0/client?bundle');
+  if(!mod.upload) throw new Error('Não foi possível carregar o módulo de upload do Vercel Blob.');
+
+  const blob = await mod.upload(pathname, file, {
+    access:'public',
+    handleUploadUrl:'/api/upload',
+    clientPayload:JSON.stringify({adminPassword}),
+    multipart: file.size > 100 * 1024 * 1024,
+    onUploadProgress: ({percentage=0, loaded=0, total=file.size}) => {
+      const scaled=fromPct+((toPct-fromPct)*(percentage/100));
+      $('bar').style.width=Math.max(1,Math.min(100,scaled))+'%';
+      const gb=n=>(n/1024/1024/1024).toFixed(2);
+      const mb=n=>(n/1024/1024).toFixed(1);
+      $('progressText').textContent =
+        total >= 1024*1024*1024
+          ? `${label}: ${Math.round(percentage)}% — ${gb(loaded)} GB / ${gb(total)} GB`
+          : `${label}: ${Math.round(percentage)}% — ${mb(loaded)} MB / ${mb(total)} MB`;
+    }
+  });
   return blob;
 }
 
-$('publicBtn').onclick=async()=>{
-  const {name,system,coverFile,coverUrl,romUrl}=fields();
+$('publicBtn').textContent='🚀 PUBLICAR TURBO';
 
-  if(!name){
-    $('formMsg').textContent='Digite o nome do jogo.';
-    return;
-  }
-  if(!romUrl){
-    $('formMsg').textContent='Cole a URL pública da ROM/ISO que você enviou ao Vercel Blob.';
-    return;
-  }
-  if(!/^https?:\/\//i.test(romUrl)){
-    $('formMsg').textContent='A URL da ROM/ISO precisa começar com http:// ou https://';
+$('publicBtn').onclick=async()=>{
+  const {name,system,coverFile,romFile}=fields();
+  if(!name || !romFile){
+    $('formMsg').textContent='Informe o nome e escolha a ROM/ISO.';
     return;
   }
 
   const id=String(Date.now());
   $('publicBtn').disabled=true;
   $('localBtn').disabled=true;
+  $('progress').style.display='block';
+  $('bar').style.width='1%';
 
   try{
-    $('formMsg').textContent='🚀 Publicação PRO: preparando catálogo...';
+    $('formMsg').textContent='🔎 Testando a conexão antes do upload...';
+    $('progressText').textContent='Verificando /api/upload e o token do Blob...';
+    await checkUploadRoute();
 
-    let finalCoverUrl=coverUrl || '';
-    let coverPath='';
-
-    // If a local cover was selected, upload only the small cover via existing sign-upload route.
-    // If that fails, publication can still continue without cover.
-    if(coverFile && !finalCoverUrl){
-      try{
-        $('formMsg').textContent='🚀 Publicação PRO: enviando capa...';
-        const coverBlob=await signedUpload(
-          coverFile,
-          `games/${id}/cover-${safeName(coverFile.name)}`
-        );
-        finalCoverUrl=coverBlob.url || '';
-        coverPath=coverBlob.pathname || '';
-      }catch(coverErr){
-        console.warn('Falha ao enviar capa; continuando sem capa', coverErr);
-      }
+    let coverBlob=null;
+    if(coverFile){
+      $('formMsg').textContent='🖼️ Enviando a capa...';
+      coverBlob=await directBlobUpload(
+        coverFile,
+        `games/${id}/cover-${safeName(coverFile.name)}`,
+        'Capa', 2, 8
+      );
     }
 
-    $('formMsg').textContent='🚀 Publicação PRO: registrando jogo...';
+    $('formMsg').textContent = romFile.size > 100*1024*1024
+      ? '⚡ Upload TURBO multipart iniciado. Não feche esta aba.'
+      : '⚡ Enviando jogo para o Vercel Blob...';
 
-    const romName = (() => {
-      try {
-        return decodeURIComponent(new URL(romUrl).pathname.split('/').pop() || 'jogo');
-      } catch {
-        return 'jogo';
-      }
-    })();
+    const romBlob=await directBlobUpload(
+      romFile,
+      `games/${id}/rom-${safeName(romFile.name)}`,
+      'Jogo', 8, 94
+    );
+
+    $('bar').style.width='96%';
+    $('progressText').textContent='Arquivo enviado. Registrando no catálogo público...';
 
     await api('/api/catalog',{
       method:'POST',
       headers:{'content-type':'application/json'},
       body:JSON.stringify({
-        id,
-        name,
-        system,
-        coverPath,
-        coverUrl:finalCoverUrl,
-        romPath:'external-url',
-        romUrl,
-        romName
+        id,name,system,
+        coverPath:coverBlob?.pathname||'',
+        coverUrl:coverBlob?.url||'',
+        romPath:romBlob.pathname,
+        romUrl:romBlob.url,
+        romName:romFile.name
       })
     });
 
+    $('bar').style.width='100%';
+    $('progressText').textContent='100% — concluído.';
     clearForm();
-    $('formMsg').textContent='✅ PUBLICADO PRO! O jogo foi adicionado ao catálogo público para todos os aparelhos.';
+    $('formMsg').textContent='✅ PUBLICADO TURBO! O jogo entrou no catálogo público.';
     await renderAll();
   }catch(e){
     console.error(e);
-    $('formMsg').textContent='Não foi possível concluir a Publicação PRO: '+(e?.message||e);
+    $('formMsg').textContent='❌ '+(e?.message||e);
+    $('progressText').textContent='Upload não iniciado ou interrompido.';
   }finally{
     $('publicBtn').disabled=false;
     $('localBtn').disabled=false;

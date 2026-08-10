@@ -1,95 +1,73 @@
 import { handleUpload } from '@vercel/blob/client';
 
-export const config = {
-  maxDuration: 60,
-};
+export const config = { maxDuration: 60 };
 
 export default async function handler(req, res) {
-  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({
-      error: 'Método não permitido',
-      route: 'upload-v3.5',
+  if (req.method === 'GET') {
+    return res.status(200).json({
+      ok: true,
+      version: '3.7',
+      route: '/api/upload',
+      hasBlobToken: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      hasAdminPassword: Boolean(process.env.ADMIN_PASSWORD),
+      hasStoreId: Boolean(process.env.BLOB_STORE_ID)
     });
   }
 
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Método não permitido', version: '3.7' });
+  }
+
   try {
-    const token = process.env.BLOB_READ_WRITE_TOKEN;
-    if (!token) {
-      return res.status(500).json({
-        error: 'BLOB_READ_WRITE_TOKEN não está disponível neste deployment. Faça um novo Redeploy depois de salvar a conexão do Blob.',
-        route: 'upload-v3.5',
-      });
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      return res.status(500).json({ error: 'BLOB_READ_WRITE_TOKEN não está disponível neste deployment.' });
     }
 
     let body = req.body;
     if (typeof body === 'string') {
-      try {
-        body = JSON.parse(body);
-      } catch {
-        return res.status(400).json({
-          error: 'O servidor recebeu um corpo de upload inválido.',
-          route: 'upload-v3.5',
-        });
-      }
+      try { body = JSON.parse(body); }
+      catch { return res.status(400).json({ error: 'Body do client upload inválido.' }); }
     }
 
     const jsonResponse = await handleUpload({
-      token,
+      token: process.env.BLOB_READ_WRITE_TOKEN,
       body,
       request: req,
 
-      onBeforeGenerateToken: async (pathname, clientPayload, multipart) => {
+      onBeforeGenerateToken: async (pathname, clientPayload) => {
         let payload = {};
-        try {
-          payload = typeof clientPayload === 'string'
-            ? JSON.parse(clientPayload || '{}')
-            : (clientPayload || {});
-        } catch {}
+        try { payload = JSON.parse(clientPayload || '{}'); } catch {}
 
-        const expected = process.env.ADMIN_PASSWORD;
-        if (!expected) {
-          throw new Error('ADMIN_PASSWORD não está disponível no deployment.');
-        }
-
+        const expected = process.env.ADMIN_PASSWORD || '';
+        if (!expected) throw new Error('ADMIN_PASSWORD não está disponível.');
         if (!payload.adminPassword || payload.adminPassword !== expected) {
-          throw new Error('Senha administrativa inválida para gerar o token de upload.');
+          throw new Error('Senha administrativa inválida.');
         }
 
-        const cleanPath = String(pathname || '');
-        if (!cleanPath.startsWith('games/')) {
-          throw new Error('Caminho de upload inválido.');
-        }
+        const p = String(pathname || '');
+        if (!p.startsWith('games/')) throw new Error('Caminho de upload inválido.');
 
         return {
-          // Não restringimos MIME: ISOs/ROMs podem chegar com tipos diferentes
-          // dependendo do navegador/Windows.
           maximumSizeInBytes: 5 * 1024 * 1024 * 1024 * 1024,
           addRandomSuffix: false,
           cacheControlMaxAge: 60,
-          tokenPayload: JSON.stringify({
-            pathname: cleanPath,
-            multipart: Boolean(multipart),
-          }),
+          tokenPayload: JSON.stringify({ pathname: p })
         };
       },
 
-      onUploadCompleted: async ({ blob, tokenPayload }) => {
-        console.log('RetroHub v3.5 upload completed', {
-          pathname: blob?.pathname,
-          size: blob?.size,
-          tokenPayload,
-        });
-      },
+      onUploadCompleted: async ({ blob }) => {
+        console.log('RetroHub v3.7 upload concluído:', blob?.pathname || blob?.url);
+      }
     });
 
     return res.status(200).json(jsonResponse);
   } catch (error) {
-    console.error('RetroHub v3.5 client upload error:', error);
+    console.error('RetroHub v3.7 /api/upload:', error);
     return res.status(400).json({
       error: error?.message || String(error),
-      route: 'upload-v3.5',
+      version: '3.7'
     });
   }
 }

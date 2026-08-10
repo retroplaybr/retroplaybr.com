@@ -1,1 +1,1 @@
-{"name":"retrohub-publicar-todos","private":true,"type":"module","dependencies":{"@vercel/blob":"^2.4.0"}}
+{"name":"retrohub-v37","private":true,"type":"module","dependencies":{"@vercel/blob":"2.4.0"}}
