@@ -1,22 +1,25 @@
-RetroHub v3.4 — upload grande / multipart
+RetroHub v3.5 — correção do client token do Vercel Blob
 
-ALTERAÇÕES:
-- Upload de ROM/ISO grande diretamente do navegador para o Vercel Blob.
-- Arquivos acima de 100 MB usam multipart automaticamente.
-- Barra de progresso mostra porcentagem e MB enviados.
-- O catálogo usa exatamente a URL retornada pelo Blob, sem esperar a listagem aparecer.
-- Mantém o seletor completo v3.3 com PS2, PS3, PSP, Xbox, Sega etc.
-- Mantém ADMIN_PASSWORD e o catálogo público já existente.
+CORREÇÕES:
+- /api/upload usa BLOB_READ_WRITE_TOKEN explicitamente.
+- O body do handleUpload é normalizado antes de gerar o client token.
+- Removida a lista rígida de MIME types, evitando falhas com ISO/ROM.
+- /api/blob-check confirma se o deployment realmente recebeu o token.
+- Mantém upload multipart para arquivos grandes.
+- Mantém barra de progresso.
+- Mantém catálogo e seletor completo de sistemas.
 
 INSTALAÇÃO:
-1. Substitua TODOS os arquivos no projeto, incluindo a pasta api.
-2. É essencial enviar o novo arquivo api/upload.js.
-3. Faça Redeploy na Vercel SEM Build Cache.
-4. Confirme no Admin: "Painel de jogos • v3.4".
-5. Para ISO grande, mantenha a aba aberta até chegar a 100%.
+1. Substitua TODOS os arquivos no GitHub, inclusive a pasta api.
+2. Confirme que existem:
+   api/upload.js
+   api/blob-check.js
+   api/catalog.js
+3. Faça Redeploy sem marcar "Use existing Build Cache".
+4. Abra o Admin e confirme "Painel de jogos • v3.5".
+5. Teste novamente "Publicar para todos".
 
-Observação:
-O Vercel Blob recomenda multipart para arquivos acima de 100 MB.
-O fato de uma ISO poder ser armazenada/publicada não significa que o console correspondente
-tenha emulador web compatível para rodar no navegador.
+Se o preflight funcionar, o Admin começa a transferência.
+Se o token ainda não estiver no deployment, a v3.5 mostra a causa ANTES de enviar a ISO.
+
 Use somente arquivos que você tenha direito de armazenar/disponibilizar.
