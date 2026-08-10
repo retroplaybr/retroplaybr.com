@@ -36,34 +36,7 @@ const requestedSystem = p.get('system') || '';
 const name = p.get('name') || requestedSystem;
 document.getElementById('title').textContent = name;
 
-const aliases = {
-  'snes':'snes','super nintendo':'snes','super nintendo entertainment system':'snes',
-  'nes':'nes','nes / famicom':'nes','nintendo entertainment system':'nes',
-  '3ds':'3ds','nintendo 3ds':'3ds',
-  'nds':'nds','ds':'nds','nintendo ds':'nds',
-  'n64':'n64','nintendo 64':'n64',
-  'n64dd':'n64dd','nintendo 64dd':'n64dd',
-  'gba':'gba','game boy advance':'gba',
-  'gbc':'gbc','game boy color':'gbc',
-  'gb':'gb','game boy':'gb',
-  'gamecube':'gamecube','nintendo gamecube':'gamecube',
-  'wii':'wii','nintendo wii':'wii',
-  'wiiu':'wiiu','wii u':'wiiu','nintendo wii u':'wiiu',
-  'switch':'switch','nintendo switch':'switch',
-  'psx':'psx','playstation':'psx','ps1':'psx',
-  'ps2':'ps2','playstation 2':'ps2',
-  'ps3':'ps3','playstation 3':'ps3',
-  'ps4':'ps4','playstation 4':'ps4',
-  'ps5':'ps5','playstation 5':'ps5',
-  'psp':'psp','ps vita':'psvita','psvita':'psvita',
-  'dreamcast':'dreamcast','sega dreamcast':'dreamcast',
-  'saturn':'saturn','sega saturn':'saturn',
-  'megadrive':'megadrive','mega drive / genesis':'megadrive','sega genesis':'megadrive',
-  'mastersystem':'mastersystem','master system':'mastersystem',
-  'gamegear':'gamegear','game gear':'gamegear',
-  'mame':'mame','arcade / mame':'mame',
-  'fbneo':'fbneo','finalburn neo':'fbneo'
-};
+const aliases = {"nes": "nes", "fds": "fds", "nes3d": "nes3d", "snes": "snes", "satellaview": "satellaview", "sufami": "sufami", "snes-msu1": "snes-msu1", "sgb": "sgb", "n64": "n64", "n64dd": "n64dd", "gamecube": "gamecube", "wii": "wii", "wiiu": "wiiu", "switch": "switch", "gb": "gb", "gbc": "gbc", "gba": "gba", "nds": "nds", "3ds": "3ds", "virtualboy": "virtualboy", "pokemini": "pokemini", "gameandwatch": "gameandwatch", "psx": "psx", "ps2": "ps2", "ps3": "ps3", "ps4": "ps4", "ps5": "ps5", "psp": "psp", "psvita": "psvita", "xbox": "xbox", "xbox360": "xbox360", "windows": "windows", "dos": "dos", "msx": "msx", "msx2": "msx2", "msx2plus": "msx2plus", "sg1000": "sg1000", "mastersystem": "mastersystem", "gamegear": "gamegear", "megadrive": "megadrive", "megadrive-msu": "megadrive-msu", "segacd": "segacd", "sega32x": "sega32x", "saturn": "saturn", "dreamcast": "dreamcast", "naomi": "naomi", "naomi2": "naomi2", "atomiswave": "atomiswave", "model2": "model2", "model3": "model3", "atari2600": "atari2600", "atari5200": "atari5200", "atari7800": "atari7800", "atari800": "atari800", "atarist": "atarist", "jaguar": "jaguar", "jaguarcd": "jaguarcd", "lynx": "lynx", "pcengine": "pcengine", "supergrafx": "supergrafx", "pcenginecd": "pcenginecd", "pcfx": "pcfx", "pc88": "pc88", "pc98": "pc98", "neogeo": "neogeo", "neogeocd": "neogeocd", "ngp": "ngp", "ngpc": "ngpc", "wonderswan": "wonderswan", "wonderswancolor": "wonderswancolor", "3do": "3do", "cdi": "cdi", "colecovision": "colecovision", "adam": "adam", "intellivision": "intellivision", "aquarius": "aquarius", "vectrex": "vectrex", "odyssey2": "odyssey2", "channelf": "channelf", "astrocade": "astrocade", "arcadia": "arcadia", "apfm1000": "apfm1000", "advision": "advision", "actionmax": "actionmax", "gx4000": "gx4000", "casloopy": "casloopy", "pv1000": "pv1000", "scv": "scv", "supracan": "supracan", "vc4000": "vc4000", "creativision": "creativision", "vsmile": "vsmile", "vircon32": "vircon32", "uzebox": "uzebox", "mame": "mame", "fbneo": "fbneo", "daphne": "daphne", "hypseus": "hypseus", "teknoparrot": "teknoparrot", "chihiro": "chihiro", "hikaru": "hikaru", "triforce": "triforce", "namcos22": "namcos22", "namco2x6": "namco2x6", "c64": "c64", "c128": "c128", "vic20": "vic20", "plus4": "plus4", "amiga": "amiga", "amigacd32": "amigacd32", "amigacdtv": "amigacdtv", "amstradcpc": "amstradcpc", "pcw": "pcw", "zxspectrum": "zxspectrum", "zx81": "zx81", "samcoupe": "samcoupe", "apple2": "apple2", "apple2gs": "apple2gs", "macintosh": "macintosh", "archimedes": "archimedes", "atom": "atom", "bbc": "bbc", "x68000": "x68000", "x1": "x1", "fm7": "fm7", "fmtowns": "fmtowns", "coco": "coco", "trs80": "trs80", "ti99": "ti99", "oric": "oric", "thomson": "thomson", "dragon32": "dragon32", "enterprise": "enterprise", "spectravideo": "spectravideo", "camputerslynx": "camputerslynx", "tutor": "tutor", "pegasus": "pegasus", "scummvm": "scummvm", "pico8": "pico8", "tic80": "tic80", "wasm4": "wasm4", "lowresnx": "lowresnx", "openbor": "openbor", "gzdoom": "gzdoom", "prboom": "prboom", "quake": "quake", "quake2": "quake2", "eduke32": "eduke32", "ecwolf": "ecwolf", "rtcw": "rtcw", "xash3d": "xash3d", "cavestory": "cavestory", "openjazz": "openjazz", "sonicmania": "sonicmania", "sonic3air": "sonic3air", "sonicretro": "sonicretro", "supermariowar": "supermariowar", "devilutionx": "devilutionx", "opengoal": "opengoal", "openlara": "openlara", "theforceengine": "theforceengine", "soh": "soh", "2s2h": "2s2h", "starship": "starship", "perfectdark": "perfectdark", "flash": "flash", "j2me": "j2me", "karaoke": "karaoke", "tvgames": "tvgames", "nintendo 3ds": "3ds", "nintendo ds": "nds", "nintendo 64": "n64", "game boy advance": "gba", "game boy": "gb", "game boy color": "gbc", "nintendo switch": "switch"};
 
 function norm(v){
   const s = String(v || '').trim().toLowerCase();

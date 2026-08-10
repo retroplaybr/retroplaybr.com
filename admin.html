@@ -1,11 +1,201 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RetroHub Admin v2.5</title>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RetroHub Admin v3.3</title>
 <style>
 :root{--bg:#06111f;--panel:#0d1b2a;--text:#f4f8ff;--muted:#91a3b7;--accent:#42c6ff;--danger:#ff667d;--green:#37d889}*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,Segoe UI,Arial,sans-serif;background:radial-gradient(circle at 50% 0,#173553,#06111f 42%,#02070d);color:var(--text)}.wrap{max-width:1080px;margin:auto;padding:28px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.brand{font-weight:900;letter-spacing:.15em;text-transform:uppercase}.brand b{color:var(--accent)}a{color:var(--accent);text-decoration:none}.panel{background:rgba(13,27,42,.92);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px;box-shadow:0 25px 70px rgba(0,0,0,.35)}h1,h2{margin-top:0}.login{max-width:430px;margin:11vh auto 0}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{margin-bottom:14px}label{display:block;color:#c8d6e5;font-size:13px;margin-bottom:7px}input,select{width:100%;padding:13px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:#081522;color:white;outline:none}input:focus,select:focus{border-color:var(--accent)}button{border:0;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer;background:var(--accent);color:#04111b}.secondary{background:#20364b;color:white}.public{background:var(--green);color:#042116}.danger{background:rgba(255,102,125,.14);color:#ff94a5;border:1px solid rgba(255,102,125,.35)}.actions{display:flex;gap:10px;flex-wrap:wrap}.msg{min-height:18px;margin-top:10px;color:#a9bdd1;font-size:13px}.hidden{display:none!important}.games{display:grid;gap:10px;margin-top:18px}.game{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(255,255,255,.035)}.cover{width:56px;height:70px;border-radius:8px;object-fit:cover;background:#172b3e}.game small{color:var(--muted)}.note{color:#91a3b7;font-size:12px;line-height:1.5;margin-top:14px}.badge{display:inline-block;padding:5px 8px;border-radius:999px;background:rgba(66,198,255,.12);color:#92e4ff;font-size:11px}.badge.public{background:rgba(55,216,137,.13);color:#84f1b8}.sectionTitle{display:flex;justify-content:space-between;align-items:center;gap:12px}.progress{height:8px;background:#07131f;border-radius:999px;overflow:hidden;margin-top:10px;display:none}.bar{height:100%;width:0;background:var(--accent);transition:width .2s}@media(max-width:680px){.wrap{padding:16px}.row{grid-template-columns:1fr}.game{grid-template-columns:48px 1fr}.game .danger{grid-column:1/-1}.cover{width:48px;height:60px}}
 </style></head><body><div class="wrap">
 <section id="loginView" class="panel login"><div class="brand"><b>Retro</b>Hub Admin</div><h1 style="margin-top:18px">Acesso administrativo</h1><div class="field"><label>Senha</label><input id="password" type="password" placeholder="Senha do administrador"></div><button id="loginBtn">Entrar</button><div class="msg" id="loginMsg"></div><div class="note">Use a senha configurada em <b>ADMIN_PASSWORD</b> na Vercel. Se ainda não configurou, esta versão aceita <b>retro123</b> como padrão temporário.</div></section>
-<section id="adminView" class="hidden"><div class="top"><div><div class="brand"><b>Retro</b>Hub Admin</div><span class="badge">Painel de jogos • v2.4</span></div><div class="actions"><a href="index.html">Abrir site</a><button class="secondary" id="logoutBtn">Sair</button></div></div>
-<div class="panel"><h2>Adicionar jogo</h2><div class="row"><div class="field"><label>Nome do jogo</label><input id="gameName" placeholder="Ex.: Super Mario World"></div><div class="field"><label>Console</label><select id="system"><option>SNES</option><option>NES</option><option>Nintendo 3DS</option><option>Nintendo DS</option><option>Nintendo 64</option><option>Game Boy Advance</option><option>Game Boy</option><option>Game Boy Color</option><option>GameCube</option><option>Nintendo Switch</option></select></div></div><div class="row"><div class="field"><label>Capa do jogo</label><input id="cover" type="file" accept="image/*"></div><div class="field"><label>Arquivo do jogo / ROM</label><input id="rom" type="file" accept=".nes,.sfc,.smc,.gb,.gbc,.gba,.n64,.z64,.v64,.nds,.3ds,.cia,.iso,.gcm,.nsp,.xci,.zip,.7z"></div></div>
+<section id="adminView" class="hidden"><div class="top"><div><div class="brand"><b>Retro</b>Hub Admin</div><span class="badge">Painel de jogos • v3.3</span></div><div class="actions"><a href="index.html">Abrir site</a><button class="secondary" id="logoutBtn">Sair</button></div></div>
+<div class="panel"><h2>Adicionar jogo</h2><div class="row"><div class="field"><label>Nome do jogo</label><input id="gameName" placeholder="Ex.: Super Mario World"></div><div class="field"><label>Console</label><select id="system">
+<optgroup label="Nintendo">
+<option value="nes">Nintendo Entertainment System / Famicom</option>
+<option value="fds">Famicom Disk System</option>
+<option value="nes3d">NES 3D</option>
+<option value="snes">Super Nintendo / Super Famicom</option>
+<option value="satellaview">Satellaview</option>
+<option value="sufami">SuFami Turbo</option>
+<option value="snes-msu1">Super NES MSU-1</option>
+<option value="sgb">Super Game Boy</option>
+<option value="n64">Nintendo 64</option>
+<option value="n64dd">Nintendo 64 Disk Drive</option>
+<option value="gamecube">GameCube</option>
+<option value="wii">Wii</option>
+<option value="wiiu">Wii U</option>
+<option value="switch">Nintendo Switch</option>
+<option value="gb">Game Boy</option>
+<option value="gbc">Game Boy Color</option>
+<option value="gba">Game Boy Advance</option>
+<option value="nds">Nintendo DS</option>
+<option value="3ds">Nintendo 3DS</option>
+<option value="virtualboy">Virtual Boy</option>
+<option value="pokemini">Pokémon Mini</option>
+<option value="gameandwatch">Game &amp; Watch</option>
+</optgroup>
+<optgroup label="PlayStation / Sony">
+<option value="psx">PlayStation</option>
+<option value="ps2">PlayStation 2</option>
+<option value="ps3">PlayStation 3</option>
+<option value="ps4">PlayStation 4</option>
+<option value="ps5">PlayStation 5</option>
+<option value="psp">PSP</option>
+<option value="psvita">PS Vita</option>
+</optgroup>
+<optgroup label="Xbox / Microsoft">
+<option value="xbox">Xbox</option>
+<option value="xbox360">Xbox 360</option>
+<option value="windows">Windows Games</option>
+<option value="dos">MS-DOS</option>
+<option value="msx">MSX</option>
+<option value="msx2">MSX2</option>
+<option value="msx2plus">MSX2+</option>
+</optgroup>
+<optgroup label="Sega">
+<option value="sg1000">SG-1000</option>
+<option value="mastersystem">Master System</option>
+<option value="gamegear">Game Gear</option>
+<option value="megadrive">Mega Drive / Genesis</option>
+<option value="megadrive-msu">Mega Drive MSU-MD</option>
+<option value="segacd">Sega CD / Mega-CD</option>
+<option value="sega32x">Sega 32X</option>
+<option value="saturn">Sega Saturn</option>
+<option value="dreamcast">Dreamcast</option>
+<option value="naomi">Naomi</option>
+<option value="naomi2">Naomi 2</option>
+<option value="atomiswave">Atomiswave</option>
+<option value="model2">Model 2</option>
+<option value="model3">Model 3</option>
+</optgroup>
+<optgroup label="Atari">
+<option value="atari2600">Atari 2600</option>
+<option value="atari5200">Atari 5200</option>
+<option value="atari7800">Atari 7800</option>
+<option value="atari800">Atari 800</option>
+<option value="atarist">Atari ST</option>
+<option value="jaguar">Atari Jaguar</option>
+<option value="jaguarcd">Atari Jaguar CD</option>
+<option value="lynx">Atari Lynx</option>
+</optgroup>
+<optgroup label="NEC">
+<option value="pcengine">PC Engine / TurboGrafx-16</option>
+<option value="supergrafx">SuperGrafx</option>
+<option value="pcenginecd">PC Engine CD / TurboGrafx-CD</option>
+<option value="pcfx">PC-FX</option>
+<option value="pc88">PC-88</option>
+<option value="pc98">PC-98</option>
+</optgroup>
+<optgroup label="SNK / Bandai">
+<option value="neogeo">Neo Geo</option>
+<option value="neogeocd">Neo Geo CD</option>
+<option value="ngp">Neo Geo Pocket</option>
+<option value="ngpc">Neo Geo Pocket Color</option>
+<option value="wonderswan">WonderSwan</option>
+<option value="wonderswancolor">WonderSwan Color</option>
+</optgroup>
+<optgroup label="Arcade">
+<option value="mame">MAME</option>
+<option value="fbneo">FinalBurn Neo</option>
+<option value="daphne">Daphne</option>
+<option value="hypseus">Hypseus Singe</option>
+<option value="teknoparrot">TeknoParrot</option>
+<option value="chihiro">Sega Chihiro</option>
+<option value="hikaru">Sega Hikaru</option>
+<option value="triforce">Triforce</option>
+<option value="namcos22">Namco System 22</option>
+<option value="namco2x6">Namco System 246/256</option>
+</optgroup>
+<optgroup label="Computadores">
+<option value="c64">Commodore 64</option>
+<option value="c128">Commodore 128</option>
+<option value="vic20">Commodore VIC-20</option>
+<option value="plus4">Commodore Plus/4</option>
+<option value="amiga">Amiga</option>
+<option value="amigacd32">Amiga CD32</option>
+<option value="amigacdtv">Amiga CDTV</option>
+<option value="amstradcpc">Amstrad CPC</option>
+<option value="pcw">Amstrad PCW</option>
+<option value="zxspectrum">ZX Spectrum</option>
+<option value="zx81">ZX81</option>
+<option value="samcoupe">Sam Coupé</option>
+<option value="apple2">Apple II</option>
+<option value="apple2gs">Apple IIGS</option>
+<option value="macintosh">Macintosh</option>
+<option value="archimedes">Acorn Archimedes</option>
+<option value="atom">Acorn Atom</option>
+<option value="bbc">BBC Micro</option>
+<option value="x68000">Sharp X68000</option>
+<option value="x1">Sharp X1</option>
+<option value="fm7">Fujitsu FM-7</option>
+<option value="fmtowns">Fujitsu FM Towns</option>
+<option value="coco">TRS-80 Color Computer</option>
+<option value="trs80">TRS-80</option>
+<option value="ti99">TI-99/4A</option>
+<option value="oric">Oric Atmos</option>
+<option value="thomson">Thomson MO/TO</option>
+<option value="dragon32">Dragon 32/64</option>
+<option value="enterprise">Enterprise 64/128</option>
+<option value="spectravideo">Spectravideo</option>
+<option value="camputerslynx">Camputers Lynx</option>
+<option value="tutor">Tomy Tutor</option>
+<option value="pegasus">Pegasus</option>
+</optgroup>
+<optgroup label="Outros consoles / Engines / Ports">
+<option value="3do">3DO</option>
+<option value="cdi">Philips CD-i</option>
+<option value="colecovision">ColecoVision</option>
+<option value="adam">Coleco Adam</option>
+<option value="intellivision">Intellivision</option>
+<option value="aquarius">Mattel Aquarius</option>
+<option value="vectrex">Vectrex</option>
+<option value="odyssey2">Odyssey² / Videopac</option>
+<option value="channelf">Channel F</option>
+<option value="astrocade">Bally Astrocade</option>
+<option value="arcadia">Arcadia 2001</option>
+<option value="apfm1000">APF MP-1000</option>
+<option value="advision">Adventure Vision</option>
+<option value="actionmax">Action Max</option>
+<option value="gx4000">Amstrad GX4000</option>
+<option value="casloopy">Casio Loopy</option>
+<option value="pv1000">Casio PV-1000</option>
+<option value="scv">Super Cassette Vision</option>
+<option value="supracan">Super A&amp;#x27;Can</option>
+<option value="vc4000">VC 4000</option>
+<option value="creativision">VTech CreatiVision</option>
+<option value="vsmile">VTech V.Smile</option>
+<option value="vircon32">Vircon32</option>
+<option value="uzebox">Uzebox</option>
+<option value="scummvm">ScummVM</option>
+<option value="pico8">PICO-8</option>
+<option value="tic80">TIC-80</option>
+<option value="wasm4">WASM-4</option>
+<option value="lowresnx">LowRes NX</option>
+<option value="openbor">OpenBOR</option>
+<option value="gzdoom">Doom / GZDoom</option>
+<option value="prboom">PrBoom</option>
+<option value="quake">Quake</option>
+<option value="quake2">Quake II</option>
+<option value="eduke32">Duke Nukem 3D</option>
+<option value="ecwolf">Wolfenstein 3D</option>
+<option value="rtcw">Return to Castle Wolfenstein</option>
+<option value="xash3d">Half-Life</option>
+<option value="cavestory">Cave Story</option>
+<option value="openjazz">OpenJazz</option>
+<option value="sonicmania">Sonic Mania</option>
+<option value="sonic3air">Sonic 3 A.I.R.</option>
+<option value="sonicretro">Sonic Retro</option>
+<option value="supermariowar">Super Mario War</option>
+<option value="devilutionx">DevilutionX</option>
+<option value="opengoal">OpenGOAL</option>
+<option value="openlara">OpenLara / Tomb Raider</option>
+<option value="theforceengine">The Force Engine</option>
+<option value="soh">Ship of Harkinian</option>
+<option value="2s2h">2 Ship 2 Harkinian</option>
+<option value="starship">Starship</option>
+<option value="perfectdark">Perfect Dark</option>
+<option value="flash">Flash</option>
+<option value="j2me">Java ME</option>
+<option value="karaoke">Karaoke</option>
+<option value="tvgames">TV Games</option>
+</optgroup>
+</select><small style="display:block;color:#7fd6ff;margin-top:7px">Lista completa v3.3 — inclui PS1, PS2, PS3, PSP, PS Vita, Xbox, Sega, Atari, Arcade e muito mais.</small></div></div><div class="row"><div class="field"><label>Capa do jogo</label><input id="cover" type="file" accept="image/*"></div><div class="field"><label>Arquivo do jogo / ROM</label><input id="rom" type="file"></div></div>
 <div class="actions"><button class="secondary" id="localBtn">Salvar só neste aparelho</button><button class="public" id="publicBtn">🌐 Publicar para todos</button><button class="secondary" id="clearBtn">Limpar campos</button></div><div class="progress" id="progress"><div class="bar" id="bar"></div></div><div class="msg" id="formMsg"></div><div class="note"><b>Publicar para todos</b> envia a capa e o arquivo para o Vercel Blob e adiciona o jogo ao catálogo público. Qualquer aparelho que abrir este site verá o mesmo jogo. Use apenas arquivos que você tenha autorização para disponibilizar.</div></div>
 <div class="panel" style="margin-top:18px"><div class="sectionTitle"><h2 style="margin:0">Jogos públicos</h2><span id="publicCount" class="badge public">0 jogos</span></div><div id="publicGames" class="games"></div></div>
 <div class="panel" style="margin-top:18px"><div class="sectionTitle"><h2 style="margin:0">Só neste aparelho</h2><span id="localCount" class="badge">0 jogos</span></div><div id="localGames" class="games"></div></div>

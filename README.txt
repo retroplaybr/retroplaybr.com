@@ -1,16 +1,24 @@
-RetroHub v3.1 — correção do catálogo público
+RetroHub v3.3 — seletor completo de sistemas no Admin
 
-CORREÇÕES:
-- Jogos públicos agora aparecem em outros aparelhos.
-- O filtro de sistema ignora maiúsculas/minúsculas e entende SNES/snes/Super Nintendo.
-- Link para o player usa ?id=...&scope=public corretamente.
-- Mantém o catálogo amplo de sistemas no estilo RetroBat.
-- Mantém Vercel Blob e API já configurados.
+Esta versão foi conferida para garantir que o seletor do Admin NÃO seja a lista curta.
 
-INSTALAÇÃO:
-1. Substitua TODOS os arquivos no GitHub/Vercel, inclusive a pasta api.
-2. Faça Redeploy SEM usar Build Cache.
-3. Abra o site Vercel e confira v3.1.
-4. Entre em Super Nintendo: o jogo público já existente deve aparecer, sem reenviar a ROM.
+No painel Admin aparecem grupos separados:
+- Nintendo
+- PlayStation / Sony (PS1, PS2, PS3, PS4, PS5, PSP, PS Vita)
+- Xbox / Microsoft
+- Sega
+- Atari
+- NEC
+- SNK / Bandai
+- Arcade
+- Computadores
+- Outros consoles / Engines / Ports
 
-Use apenas arquivos que você tenha direito de hospedar/disponibilizar.
+IMPORTANTE:
+1. Substitua TODOS os arquivos do projeto, inclusive a pasta api.
+2. Faça um novo deploy na Vercel sem Build Cache.
+3. No Admin correto deve aparecer claramente: "Painel de jogos • v3.3".
+4. Ao abrir o seletor Console, procure o grupo "PlayStation / Sony"; PS2 aparece lá.
+
+A lista permite cadastrar/publicar arquivos por sistema. Nem todo sistema da lista pode ser executado
+em navegador, pois o RetroBat original usa vários emuladores nativos de Windows.
