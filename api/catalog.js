@@ -64,7 +64,7 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'Senha inválida' });
       }
       res.setHeader('Cache-Control', 'no-store, max-age=0');
-      return res.status(200).json({ games: await readCatalog(), apiVersion: '3.1' });
+      return res.status(200).json({ games: await readCatalog(), apiVersion: '3.4' });
     }
 
     if (!authorized(req)) {
@@ -72,31 +72,24 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-      const { id, name, system, coverPath, romPath, romName } = req.body || {};
-      if (!id || !name || !system || !romPath) {
-        return res.status(400).json({ error: 'Dados incompletos' });
-      }
+      const {
+        id, name, system,
+        coverPath, romPath, romName,
+        coverUrl, romUrl
+      } = req.body || {};
 
-      const rom = await findUploadedBlob(String(romPath));
-      if (!rom) {
-        return res.status(409).json({
-          error: 'A ROM terminou de enviar, mas ainda não apareceu no Blob. Aguarde alguns segundos e tente Publicar para todos novamente.',
-        });
-      }
-
-      let cover = null;
-      if (coverPath) {
-        cover = await findUploadedBlob(String(coverPath));
+      if (!id || !name || !system || !romPath || !romUrl) {
+        return res.status(400).json({ error: 'Dados incompletos do jogo publicado' });
       }
 
       const game = {
         id: String(id),
         name: String(name),
         system: String(system),
-        cover: cover?.url || '',
-        rom: rom.url,
-        coverPath: cover?.pathname || coverPath || '',
-        romPath: rom.pathname,
+        cover: coverUrl || '',
+        rom: String(romUrl),
+        coverPath: coverPath || '',
+        romPath: String(romPath),
         romName: romName || '',
         createdAt: Date.now(),
       };
