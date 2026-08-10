@@ -5,8 +5,8 @@ function cfg(name, fallback='') {
 }
 
 function authHeader() {
-  const token = cfg('GITHUB_TOKEN');
-  if (!token) throw new Error('GITHUB_TOKEN não está configurado na Vercel.');
+  const token = cfg('GITHUB_TOKEN') || cfg('GH_TOKEN');
+  if (!token) throw new Error('GITHUB_TOKEN não chegou neste deployment. Salve a variável na Vercel e faça um novo Redeploy sem Build Cache.');
   return {
     'Authorization': `Bearer ${token}`,
     'Accept': 'application/vnd.github+json',

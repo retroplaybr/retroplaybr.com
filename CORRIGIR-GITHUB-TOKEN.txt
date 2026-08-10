@@ -1,0 +1,33 @@
+RETROHUB v4.2 — CORREÇÃO DO ERRO GITHUB_TOKEN
+
+IMPORTANTE:
+A variável GITHUB_TOKEN é lida no servidor da Vercel.
+Depois de criar/salvar GITHUB_TOKEN, é obrigatório fazer um NOVO DEPLOYMENT.
+
+PASSOS:
+1. Vercel -> Project -> Environment Variables
+2. Confirme que existe:
+   GITHUB_TOKEN
+   Sensitive = ON
+   Environments = Production and Preview
+3. Salve.
+4. Vá em Deployments.
+5. No deployment mais recente, use Redeploy.
+6. Faça Redeploy SEM Build Cache.
+7. Depois abra:
+   /api/env-check
+
+O resultado correto é:
+{
+  "ADMIN_PASSWORD": true,
+  "GITHUB_TOKEN": true
+}
+
+Este endpoint mostra apenas true/false. Ele NUNCA mostra a senha ou o token.
+
+Se GITHUB_TOKEN continuar false:
+- a variável não foi aplicada ao deployment atual;
+- confira se o nome está exatamente GITHUB_TOKEN;
+- salve novamente e faça outro Redeploy.
+
+A ROM continua no TeraBox. O token serve apenas para atualizar catalog.json no GitHub.
