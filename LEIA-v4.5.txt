@@ -1,0 +1,24 @@
+RETROHUB v4.5 COMPLETO
+
+Esta versão foi construída SOBRE a v4.3 completa.
+
+PRESERVADO:
+- arquivos e páginas existentes do RetroHub
+- catálogo e Admin
+- plataformas/emuladores existentes
+- Pegasus
+- TeraBox resolver
+- player de consoles
+- PC MS-DOS / Windows 95-98 (js-dos)
+
+ADICIONADO:
+- PC / Windows moderno
+- página pc-windows-moderno.html
+- atalho para PC/Windows moderno na página inicial
+
+IMPORTANTE:
+Um .exe moderno não roda nativamente dentro do Chrome/Vercel/webOS.
+Para execução dentro do navegador será necessária integração com streaming/host Windows
+ou runtime específico compatível com o jogo.
+
+Use somente software/jogos que você tenha direito de usar/disponibilizar.
