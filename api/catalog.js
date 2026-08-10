@@ -1,123 +1,101 @@
-import { put, list, del } from '@vercel/blob';
+import {
+  ListObjectsV2Command,
+  GetObjectCommand,
+  PutObjectCommand,
+  DeleteObjectCommand
+} from '@aws-sdk/client-s3';
+import { checkAdmin, r2Client, bucketName } from './_r2.js';
 
-function authorized(req) {
-  const expected = process.env.ADMIN_PASSWORD || 'retro123';
-  return req.headers['x-admin-password'] === expected;
-}
+export const config = { maxDuration: 30 };
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-async function findUploadedBlob(pathname) {
-  // Vercel Blob may append a random suffix to the final pathname depending on
-  // the upload token/options. Look up both the exact requested path and the
-  // suffixed variant inside the same game folder.
-  const requested = String(pathname);
-  const slash = requested.lastIndexOf('/');
-  const dir = slash >= 0 ? requested.slice(0, slash + 1) : '';
-  const file = slash >= 0 ? requested.slice(slash + 1) : requested;
-  const dot = file.lastIndexOf('.');
-  const stem = dot > 0 ? file.slice(0, dot) : file;
-  const ext = dot > 0 ? file.slice(dot) : '';
-
-  for (const wait of [0, 250, 600, 1200, 2000, 3500]) {
-    if (wait) await sleep(wait);
-    const result = await list({ prefix: dir || requested, limit: 100 });
-
-    const exact = result.blobs.find((blob) => blob.pathname === requested);
-    if (exact) return exact;
-
-    const suffixed = result.blobs.find((blob) => {
-      const name = blob.pathname.slice(dir.length);
-      if (ext) return name.startsWith(`${stem}-`) && name.endsWith(ext);
-      return name === stem || name.startsWith(`${stem}-`);
-    });
-    if (suffixed) return suffixed;
-  }
-  return null;
-}
-
-async function readCatalog() {
-  const result = await list({ prefix: 'catalog/', limit: 1000 });
-  const items = await Promise.all(
-    result.blobs
-      .filter((b) => b.pathname.endsWith('.json'))
-      .map(async (b) => {
-        try {
-          const r = await fetch(b.url, { cache: 'no-store' });
-          if (!r.ok) return null;
-          const j = await r.json();
-          return { ...j, metadataPath: b.pathname };
-        } catch {
-          return null;
-        }
-      }),
-  );
-  return items
-    .filter(Boolean)
-    .sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
+async function bodyToString(body) {
+  if (!body) return '';
+  if (typeof body.transformToString === 'function') return body.transformToString();
+  const chunks = [];
+  for await (const chunk of body) chunks.push(Buffer.from(chunk));
+  return Buffer.concat(chunks).toString('utf8');
 }
 
 export default async function handler(req, res) {
+  res.setHeader('Cache-Control', 'no-store');
+
   try {
+    const client = r2Client();
+    const Bucket = bucketName();
+
     if (req.method === 'GET') {
-      if (req.query?.adminCheck === '1' && !authorized(req)) {
-        return res.status(401).json({ error: 'Senha inválida' });
+      const listed = await client.send(new ListObjectsV2Command({
+        Bucket,
+        Prefix: 'catalog/'
+      }));
+
+      const keys = (listed.Contents || [])
+        .map(x => x.Key)
+        .filter(k => k && k.endsWith('.json'));
+
+      const games = [];
+      for (const Key of keys) {
+        try {
+          const obj = await client.send(new GetObjectCommand({ Bucket, Key }));
+          const text = await bodyToString(obj.Body);
+          games.push(JSON.parse(text));
+        } catch {}
       }
-      res.setHeader('Cache-Control', 'no-store, max-age=0');
-      return res.status(200).json({ games: await readCatalog(), apiVersion: '3.7' });
+
+      games.sort((a,b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
+      return res.status(200).json({ ok: true, version: '3.9', storage: 'Cloudflare R2', games });
     }
 
-    if (!authorized(req)) {
-      return res.status(401).json({ error: 'Senha administrativa inválida' });
-    }
+    checkAdmin(req);
 
     if (req.method === 'POST') {
-      const {
-        id, name, system,
-        coverPath, romPath, romName,
-        coverUrl, romUrl
-      } = req.body || {};
-
-      if (!id || !name || !system || !romPath || !romUrl) {
-        return res.status(400).json({ error: 'Dados incompletos do jogo publicado' });
+      const g = req.body || {};
+      if (!g.id || !g.name || !g.system || !g.rom) {
+        return res.status(400).json({ error: 'Dados incompletos do jogo.' });
       }
 
       const game = {
-        id: String(id),
-        name: String(name),
-        system: String(system),
-        cover: coverUrl || '',
-        rom: String(romUrl),
-        coverPath: coverPath || '',
-        romPath: String(romPath),
-        romName: romName || '',
-        createdAt: Date.now(),
+        id: String(g.id),
+        name: String(g.name),
+        system: String(g.system),
+        cover: String(g.cover || ''),
+        rom: String(g.rom),
+        coverKey: String(g.coverKey || ''),
+        romKey: String(g.romKey || ''),
+        romName: String(g.romName || ''),
+        createdAt: Number(g.createdAt || Date.now()),
+        scope: 'public',
+        storage: 'r2'
       };
 
-      const metadataPath = `catalog/${id}.json`;
-      const metadata = await put(metadataPath, JSON.stringify(game), {
-        access: 'public',
-        contentType: 'application/json',
-        allowOverwrite: true,
-        cacheControlMaxAge: 60,
-      });
+      await client.send(new PutObjectCommand({
+        Bucket,
+        Key: `catalog/${game.id}.json`,
+        Body: JSON.stringify(game),
+        ContentType: 'application/json'
+      }));
 
-      return res.status(200).json({
-        ok: true,
-        game: { ...game, metadataPath: metadata.pathname },
-      });
+      return res.status(200).json({ ok: true, game });
     }
 
     if (req.method === 'DELETE') {
-      const { coverUrl, romUrl, metadataPath } = req.body || {};
-      const targets = [coverUrl, romUrl, metadataPath].filter(Boolean);
-      if (targets.length) await del(targets);
+      const id = String(req.query?.id || req.body?.id || '');
+      if (!id) return res.status(400).json({ error: 'ID obrigatório.' });
+
+      await client.send(new DeleteObjectCommand({
+        Bucket,
+        Key: `catalog/${id}.json`
+      }));
+
       return res.status(200).json({ ok: true });
     }
 
-    return res.status(405).json({ error: 'Método não permitido' });
-  } catch (e) {
-    console.error('catalog api error', e);
-    return res.status(500).json({ error: e?.message || String(e) });
+    return res.status(405).json({ error: 'Método não permitido.' });
+  } catch (error) {
+    console.error('RetroHub v3.9 catalog:', error);
+    return res.status(error.statusCode || 500).json({
+      error: error?.message || String(error),
+      version: '3.9'
+    });
   }
 }
