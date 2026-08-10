@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RetroHub PC Player</title>
+<link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
+<style>
+html,body{height:100%;margin:0;background:#02060b;color:#fff;font-family:Inter,Segoe UI,Arial,sans-serif}
+body{display:grid;grid-template-rows:auto 1fr}
+.top{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#07111d}
+.brand{font-weight:900}.brand b{color:#42c6ff}
+.btn{border:1px solid #31465b;background:#14283b;color:white;border-radius:9px;padding:8px 12px;text-decoration:none}
+#jsdos{width:100%;height:100%;min-height:0}
+.message{max-width:760px;margin:40px auto;padding:24px;text-align:center;line-height:1.55}
+.message p{color:#aab9c8}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="brand"><b>Retro</b>Hub PC</div>
+  <div><span id="title"></span> <a class="btn" href="index.html">Voltar</a></div>
+</div>
+<div id="stage"><div id="jsdos"></div></div>
+
+<script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+<script>
+const params=new URLSearchParams(location.search);
+const id=params.get('id');
+const scope=params.get('scope')||'public';
+const stage=document.getElementById('stage');
+
+function fail(title,text){
+  stage.innerHTML='<div class="message"><h1>'+title+'</h1><p>'+text+'</p><p><a class="btn" href="index.html">Voltar</a></p></div>';
+}
+
+async function getGame(){
+  if(scope==='public'){
+    const r=await fetch('/api/catalog',{cache:'no-store'});
+    if(!r.ok)throw new Error('Catálogo indisponível');
+    return ((await r.json()).games||[]).find(g=>String(g.id)===String(id));
+  }
+  const games=JSON.parse(localStorage.getItem('retrohub_games_v1')||'[]');
+  return games.find(g=>String(g.id)===String(id));
+}
+
+async function resolveUrl(url){
+  if(/(?:1024)?terabox\.com\/s\//i.test(url)||/teraboxapp\.com\/s\//i.test(url)){
+    const r=await fetch('/api/terabox-resolve?url='+encodeURIComponent(url),{cache:'no-store'});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.directUrl)throw new Error(d.error||'Não foi possível resolver o link TeraBox.');
+    return d.directUrl;
+  }
+  return url;
+}
+
+async function boot(){
+  const game=await getGame();
+  if(!game)return fail('Jogo não encontrado','O cadastro não foi localizado.');
+
+  document.getElementById('title').textContent=game.name+' • PC';
+  let url=await resolveUrl(game.rom||'');
+
+  if(!/\.jsdos(?:\?|$)/i.test(url)){
+    return fail(
+      'Jogo de PC precisa estar preparado',
+      'O player PC usa js-dos. Para jogar no navegador, o jogo precisa estar em um bundle .jsdos. '+
+      'Quando você enviar seu jogo de PC legalmente, eu posso preparar a estrutura correta para este player.'
+    );
+  }
+
+  if(typeof Dos!=='function'){
+    return fail('Erro no emulador','Não foi possível carregar o js-dos.');
+  }
+
+  Dos(document.getElementById('jsdos'),{
+    url:url,
+    theme:'dark',
+    kiosk:false
+  });
+}
+
+boot().catch(e=>fail('Erro ao abrir',e.message||String(e)));
+</script>
+</body>
+</html>

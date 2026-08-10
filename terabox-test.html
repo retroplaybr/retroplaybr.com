@@ -1,0 +1,6 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Teste TeraBox</title><style>body{font-family:Arial;background:#06111f;color:white;max-width:800px;margin:40px auto;padding:20px}input,button{width:100%;padding:14px;margin:8px 0;border-radius:8px}pre{white-space:pre-wrap;background:#0d1b2a;padding:16px;border-radius:10px}</style></head>
+<body><h1>Teste do link TeraBox</h1><input id="u" placeholder="https://1024terabox.com/s/..."><button onclick="go()">TESTAR LINK</button><pre id="o">Aguardando...</pre>
+<script>
+async function go(){const u=document.getElementById('u').value.trim(),o=document.getElementById('o');o.textContent='Testando...';try{const r=await fetch('/api/terabox-resolve?url='+encodeURIComponent(u),{cache:'no-store'});const d=await r.json();o.textContent=JSON.stringify(d,null,2)}catch(e){o.textContent=String(e)}}
+</script></body></html>

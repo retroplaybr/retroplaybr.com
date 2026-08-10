@@ -1,0 +1,24 @@
+RETROHUB v4.3 — TERABOX RESOLVER + PC PLAYER
+
+NOVIDADES
+- O player tenta resolver automaticamente links públicos do TeraBox.
+- Novo endpoint: /api/terabox-resolve
+- Página de teste: /terabox-test.html
+- Novo PC Player: /pc-player.html
+- PC MS-DOS e Windows 95/98 usam js-dos.
+
+PC
+- Para PC no navegador, use bundles .jsdos.
+- Quando você enviar um jogo de PC que você possui legalmente, ele pode ser preparado para esse formato.
+- Jogos modernos de Windows (.exe recente) não são automaticamente compatíveis com navegador.
+
+TERABOX
+- O resolvedor é "best effort": o TeraBox pode alterar a página ou entregar URLs temporárias.
+- Se o TeraBox não expuser uma URL direta/CORS adequado, o navegador ainda pode não conseguir fazer streaming da ROM.
+- Use /terabox-test.html para testar um link antes de adicionar ao catálogo.
+
+SEGURANÇA
+- ADMIN_PASSWORD e GITHUB_TOKEN continuam somente na Vercel.
+- Não coloque tokens ou senhas no GitHub.
+
+Use somente arquivos que você tenha direito de usar/disponibilizar.
