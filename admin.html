@@ -206,7 +206,27 @@ function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open('
 async function putRom(id,file){const db=await openDB();return new Promise((resolve,reject)=>{const tx=db.transaction('roms','readwrite');tx.objectStore('roms').put(file,String(id));tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)})} async function deleteRom(id){const db=await openDB();return new Promise((resolve,reject)=>{const tx=db.transaction('roms','readwrite');tx.objectStore('roms').delete(String(id));tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)})}
 function fileToDataURL(file){return new Promise((resolve,reject)=>{if(!file)return resolve('');const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.readAsDataURL(file)})}
 async function api(path,opts={}){const headers={'x-admin-password':adminPassword,...(opts.headers||{})};const r=await fetch(path,{...opts,headers});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||`Erro HTTP ${r.status}`);return data}
-async function login(){const p=$('password').value;if(!p)return;$('loginMsg').textContent='Verificando...';try{const r=await fetch('/api/catalog?adminCheck=1',{headers:{'x-admin-password':p},cache:'no-store'});if(!r.ok)throw new Error('Senha incorreta.');adminPassword=p;sessionStorage.setItem('retrohub_admin_pass',p);$('loginView').classList.add('hidden');$('adminView').classList.remove('hidden');await renderAll()}catch(e){$('loginMsg').textContent=e.message}}
+async function login(){
+  const p=$('password').value;
+  if(!p)return;
+  $('loginMsg').textContent='Verificando...';
+  try{
+    const r=await fetch('/api/auth',{
+      method:'POST',
+      headers:{'x-admin-password':p},
+      cache:'no-store'
+    });
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(data.error||'Não foi possível entrar.');
+    adminPassword=p;
+    sessionStorage.setItem('retrohub_admin_pass',p);
+    $('loginView').classList.add('hidden');
+    $('adminView').classList.remove('hidden');
+    await renderAll();
+  }catch(e){
+    $('loginMsg').textContent=e.message||String(e);
+  }
+}
 $('loginBtn').onclick=login;$('password').addEventListener('keydown',e=>{if(e.key==='Enter')login()});$('logoutBtn').onclick=()=>{sessionStorage.removeItem('retrohub_admin_pass');location.reload()};
 function clearForm(){['gameName','cover','rom'].forEach(x=>$(x).value='');$('system').selectedIndex=0}$('clearBtn').onclick=clearForm;
 function fields(){return {name:$('gameName').value.trim(),system:$('system').value,coverFile:$('cover').files[0],romFile:$('rom').files[0]}}

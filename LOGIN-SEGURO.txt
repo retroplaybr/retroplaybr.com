@@ -1,0 +1,15 @@
+RETROHUB — LOGIN SEGURO
+
+O login usa /api/auth e a senha fica somente na variável ADMIN_PASSWORD da Vercel.
+
+NA VERCEL:
+1. Project -> Settings -> Environment Variables.
+2. Crie ou edite ADMIN_PASSWORD.
+3. Digite a senha desejada somente no campo Value da Vercel.
+4. Marque Sensitive.
+5. Selecione Production + Preview.
+6. Salve.
+7. Faça Redeploy sem Build Cache.
+
+Não escreva a senha em arquivos do GitHub.
+Não coloque a senha em admin.html ou em arquivos .js.
