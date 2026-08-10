@@ -1,0 +1,21 @@
+SENHA DO RETROHUB ADMIN
+
+A senha NÃO fica no HTML e NÃO aparece para visitantes.
+
+Na Vercel:
+1. Vá em Project Settings -> Environment Variables.
+2. Crie/edite:
+   Key: ADMIN_PASSWORD
+   Value: sla
+3. Marque como Sensitive.
+4. Aplique em Production and Preview.
+5. Salve.
+6. Faça Redeploy do projeto.
+
+Depois disso, a senha do Admin será:
+sla
+
+IMPORTANTE:
+- Não escreva a senha no GitHub.
+- Não coloque a senha dentro de admin.html.
+- Se mudar a senha depois, altere somente ADMIN_PASSWORD na Vercel e faça Redeploy.
