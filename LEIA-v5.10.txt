@@ -1,0 +1,8 @@
+RETROHUB v5.10 — BOTÃO CONTROLE VISÍVEL
+
+Correção:
+- Adicionado botão visível "🎮 CONTROLE" no menu principal.
+- O botão abre /controle.html.
+- Mantido suporte DualShock 4 USB da v5.9.
+- Mantidos Admin, consoles, pesquisa, players e demais funções.
+- Este ZIP NÃO contém catalog.json. Não apague o catalog.json existente no GitHub.
