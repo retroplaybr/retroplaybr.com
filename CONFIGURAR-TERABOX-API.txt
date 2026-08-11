@@ -1,0 +1,19 @@
+RETROHUB v5.7 — CORREÇÃO TERABOX
+
+O resolvedor agora tenta primeiro a OpenAPI oficial do TeraBox.
+
+Na Vercel:
+1. Abra Project > Settings > Environment Variables
+2. Crie:
+   Key: TERABOX_ACCESS_TOKEN
+   Value: seu access token da API TeraBox
+3. Marque Production e Preview
+4. Salve
+5. Faça Redeploy sem Build Cache
+
+O token fica somente no servidor (Vercel Environment Variable). Ele não é colocado
+no HTML nem enviado para o navegador.
+
+Se o token não estiver configurado, o RetroHub ainda tenta o método antigo de
+ler o HTML do compartilhamento, mas esse método não é confiável porque o TeraBox
+nem sempre expõe um dlink na página pública.

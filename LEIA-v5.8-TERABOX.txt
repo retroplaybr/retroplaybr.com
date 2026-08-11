@@ -1,0 +1,11 @@
+RETROHUB v5.8 — TERABOX D-LINK FIX
+
+- Corrigido o resolvedor do TeraBox.
+- Mantidos Admin, jogos, consoles, pesquisa, players e APIs.
+- O ZIP NÃO contém catalog.json.
+- NÃO apague o catalog.json existente no GitHub.
+
+Na Vercel, configure:
+TERABOX_ACCESS_TOKEN = seu token da API TeraBox
+
+Depois faça Redeploy sem Build Cache.

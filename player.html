@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>RetroHub Player v4.3</title><style>html,body{height:100%;margin:0;background:#02060b;color:#fff;font-family:Inter,Segoe UI,Arial,sans-serif}body{display:grid;grid-template-rows:auto 1fr}.top{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#07111d}.brand{font-weight:900}.brand b{color:#42c6ff}.btn{border:1px solid #31465b;background:#14283b;color:white;border-radius:9px;padding:8px 12px;text-decoration:none}.stage{min-height:0;display:grid;place-items:center}.frame,#game{width:100%;height:100%}.message{max-width:720px;padding:24px;text-align:center;line-height:1.5}.message p{color:#aab9c8}@media(pointer:coarse){.frame{touch-action:none}}</style></head><body><div class="top"><div class="brand"><b>Retro</b>Hub Player</div><div><span id="gameTitle"></span> <a class="btn" href="index.html">Voltar</a></div></div><div class="stage" id="stage"><div class="frame"><div id="game"></div></div></div><script>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>RetroHub Player v5.8</title><style>html,body{height:100%;margin:0;background:#02060b;color:#fff;font-family:Inter,Segoe UI,Arial,sans-serif}body{display:grid;grid-template-rows:auto 1fr}.top{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#07111d}.brand{font-weight:900}.brand b{color:#42c6ff}.btn{border:1px solid #31465b;background:#14283b;color:white;border-radius:9px;padding:8px 12px;text-decoration:none}.stage{min-height:0;display:grid;place-items:center}.frame,#game{width:100%;height:100%}.message{max-width:720px;padding:24px;text-align:center;line-height:1.5}.message p{color:#aab9c8}@media(pointer:coarse){.frame{touch-action:none}}</style></head><body><div class="top"><div class="brand"><b>Retro</b>Hub Player</div><div><span id="gameTitle"></span> <a class="btn" href="index.html">Voltar</a></div></div><div class="stage" id="stage"><div class="frame"><div id="game"></div></div></div><script>
 const params=new URLSearchParams(location.search),id=params.get('id'),scope=params.get('scope')||'public';
 const systemMap={
 'SNES':'snes','snes':'snes','Super Nintendo':'snes',
@@ -28,6 +28,9 @@ if(/(?:1024)?terabox\.com\/s\//i.test(url) || /teraboxapp\.com\/s\//i.test(url))
     return fail(
       'Não foi possível obter a ROM diretamente',
       (rd.error||'O TeraBox não forneceu uma URL direta utilizável.')+
+      (rd.needsTeraboxToken
+        ? '<br><br><b>Falta configurar TERABOX_ACCESS_TOKEN na Vercel.</b>'
+        : '')+
       '<br><br><a class="btn" href="'+url+'" target="_blank" rel="noopener">Abrir no TeraBox</a>'
     );
   }
