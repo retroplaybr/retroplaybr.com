@@ -41,5 +41,7 @@ if(/(?:1024)?terabox\.com\/s\//i.test(url)){
   return fail('Link do TeraBox salvo','Este é um link de compartilhamento do TeraBox, não uma URL direta da ROM. O jogo está no catálogo, mas o emulador do navegador pode não conseguir carregar a ISO diretamente por esse link. <br><br><a class="btn" href="'+url+'" target="_blank" rel="noopener">Abrir no TeraBox</a>');
 }if(scope==='local'||game.romStored){const blob=await getLocalRom(id);if(!blob)return fail('ROM não encontrada','O arquivo local não está disponível.');url=URL.createObjectURL(blob)}gameTitle.textContent=game.name+' • '+game.system;window.EJS_player='#game';window.EJS_core=core;window.EJS_gameUrl=url;window.EJS_gameName=game.name;window.EJS_pathtodata='https://cdn.emulatorjs.org/stable/data/';window.EJS_startOnLoaded=true;window.EJS_language='pt-BR';window.EJS_color='#42c6ff';window.EJS_controlScheme=core==='gb'?'gb':core;if(core==='3ds')window.EJS_threads=true;const s=document.createElement('script');s.src='https://cdn.emulatorjs.org/stable/data/loader.js';s.onerror=()=>fail('Erro no emulador','Não foi possível carregar o EmulatorJS.');document.body.appendChild(s)}boot().catch(e=>fail('Erro ao abrir',e.message||String(e)));
 </script>
-<script src="assets/gamepad-webos.js"></script>
+
+
+<script src="assets/webos2018-controller.js"></script>
 </body></html>

@@ -4,5 +4,7 @@
 <script>
 async function go(){const u=document.getElementById('u').value.trim(),o=document.getElementById('o');o.textContent='Testando...';try{const r=await fetch('/api/terabox-resolve?url='+encodeURIComponent(u),{cache:'no-store'});const d=await r.json();o.textContent=JSON.stringify(d,null,2)}catch(e){o.textContent=String(e)}}
 </script>
-<script src="assets/gamepad-webos.js"></script>
+
+
+<script src="assets/webos2018-controller.js"></script>
 </body></html>

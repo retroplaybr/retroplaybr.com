@@ -1,0 +1,19 @@
+RETROHUB v5.11 — CONTROLE PARA LG webOS 2018
+
+Mudança principal:
+- Não depende mais de navigator.getGamepads() para esta TV.
+- Usa eventos de teclado que o próprio webOS gera a partir do controle.
+- Mapeamento básico:
+  37 esquerda
+  38 cima
+  39 direita
+  40 baixo
+  13 OK/selecionar
+  461 voltar
+- controle.html mostra todos os keyCodes recebidos.
+- O botão 🎮 CONTROLE permanece no menu.
+
+Importante:
+- O ZIP NÃO contém catalog.json.
+- Não apague seu catalog.json existente no GitHub.
+- Esta versão preserva os jogos e demais páginas do RetroHub.

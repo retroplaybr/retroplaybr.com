@@ -12,5 +12,7 @@ const grid=document.getElementById('grid');games.forEach((g,i)=>{const d=documen
 function openGame(g){if(g.upload)location.href='emulator.html?system='+encodeURIComponent(sys.id)+'&upload=1';else location.href='emulator.html?system='+encodeURIComponent(sys.id)+'&name='+encodeURIComponent(g.name)+'&rom='+encodeURIComponent(g.rom)}
 let f=0;function setF(){[...grid.children][f]?.focus()};addEventListener('keydown',e=>{if(e.key==='ArrowRight'){f=Math.min(games.length-1,f+1);setF()}if(e.key==='ArrowLeft'){f=Math.max(0,f-1);setF()}if(e.key==='Enter')openGame(games[f]);if(e.key==='Escape')location.href='index.html'});setF();
 </script>
-<script src="assets/gamepad-webos.js"></script>
+
+
+<script src="assets/webos2018-controller.js"></script>
 </body></html>

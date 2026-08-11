@@ -1,39 +1,75 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
-<title>RetroHub - Controle USB</title>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RetroHub - Diagnóstico Controle webOS 2018</title>
 <style>
-body{margin:0;background:#06111b;color:white;font-family:Arial,sans-serif;padding:28px}
-.card{max-width:850px;margin:auto;background:#0b2235;border:1px solid #1aa9ef;border-radius:18px;padding:24px}
-h1{color:#35c8ff}.ok{color:#5cff9a}.bad{color:#ff7c7c}
-button{font-size:20px;padding:14px 20px;border:0;border-radius:10px;margin:8px;background:#148fd1;color:#fff}
-pre{white-space:pre-wrap;background:#04101a;padding:16px;border-radius:10px}
-</style></head>
-<body><div class="card">
-<h1>🎮 Controle USB — RetroHub</h1>
-<p>Conecte o DualShock 4 por cabo USB diretamente na TV e pressione ✕.</p>
-<button onclick="testar()">TESTAR CONTROLE</button>
-<button onclick="history.back()">VOLTAR</button>
-<pre id="out">Aguardando controle...</pre>
+body{margin:0;background:#06111b;color:#fff;font-family:Arial,sans-serif;padding:26px}
+.wrap{max-width:900px;margin:auto}
+.card{background:#0b2235;border:1px solid #20b7ee;border-radius:18px;padding:22px;margin-bottom:18px}
+h1{color:#38c9ff;margin-top:0}
+.big{font-size:25px;font-weight:800;color:#7ee7ff}
+.key{font-family:monospace;background:#03101a;border-radius:8px;padding:10px;display:block;margin-top:8px}
+button,a.btn{display:inline-block;background:#168fd0;color:#fff;border:0;border-radius:10px;padding:12px 16px;margin:5px;text-decoration:none;font-size:17px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{padding:8px;border-bottom:1px solid #27465c;text-align:left}
+.ok{color:#65ffa0}.warn{color:#ffd866}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>🎮 Controle — LG webOS 2018</h1>
+    <p>Conecte o DualShock 4 por USB diretamente na TV e aperte os botões.</p>
+    <p class="warn">Nesta TV, o webOS pode transformar os botões do controle em eventos de teclado. Esta tela mostra exatamente o que chega ao RetroHub.</p>
+    <div class="big" id="status">Aguardando algum botão...</div>
+    <span class="key" id="last">Nenhum keyCode recebido ainda.</span>
+    <p>
+      <button onclick="limpar()">LIMPAR TESTE</button>
+      <a class="btn" href="/">VOLTAR AO RETROHUB</a>
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Eventos recebidos</h2>
+    <table>
+      <thead><tr><th>keyCode</th><th>key</th><th>code</th><th>Hora</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Mapeamento já conhecido da LG</h2>
+    <p>37 = esquerda • 38 = cima • 39 = direita • 40 = baixo • 13 = OK/selecionar • 461 = voltar</p>
+    <p>Se os botões do PS4 gerarem outros números, anote ou tire uma foto desta tela. Esses números serão usados para mapear X, círculo, quadrado, triângulo, L1/R1 etc.</p>
+  </div>
 </div>
-<script src="assets/gamepad-webos.js"></script>
+
+<script src="assets/webos2018-controller.js"></script>
 <script>
-function testar(){
- var o=document.getElementById('out');
- if(!navigator.getGamepads && !navigator.webkitGetGamepads){
-   o.innerHTML='ERRO: este WebView não expõe a Gamepad API.';
-   return;
- }
- var r=window.RetroHubGamepadSupport.test();
- o.innerHTML=r ? JSON.stringify(r,null,2) : 'Nenhum controle detectado.\nConecte por USB e aperte ✕/PS.';
-}
-setInterval(function(){
- var gp=window.RetroHubGamepadSupport && window.RetroHubGamepadSupport.getGamepad();
- if(!gp)return;
- var pressed=[];
- for(var i=0;i<gp.buttons.length;i++) if(gp.buttons[i].pressed) pressed.push(i);
- document.getElementById('out').innerHTML=
-   'CONECTADO\nID: '+gp.id+'\nMapping: '+gp.mapping+
-   '\nBotões pressionados: '+pressed.join(', ')+
-   '\nEixos: '+Array.prototype.slice.call(gp.axes).map(function(x){return x.toFixed(2)}).join(', ');
-},120);
-</script></body></html>
+(function(){
+  var rows=document.getElementById('rows');
+  var last=document.getElementById('last');
+  var status=document.getElementById('status');
+
+  window.addEventListener('retrohubkey',function(e){
+    var d=e.detail||{};
+    status.innerHTML='✅ Evento recebido da TV';
+    last.innerHTML='keyCode: '+d.keyCode+' | key: '+(d.key||'(vazio)')+' | code: '+(d.code||'(vazio)');
+    var tr=document.createElement('tr');
+    var dt=new Date(d.time||Date.now());
+    tr.innerHTML='<td>'+d.keyCode+'</td><td>'+(d.key||'')+'</td><td>'+(d.code||'')+'</td><td>'+dt.toLocaleTimeString()+'</td>';
+    rows.insertBefore(tr,rows.firstChild);
+  });
+
+  window.limpar=function(){
+    rows.innerHTML='';
+    last.innerHTML='Nenhum keyCode recebido ainda.';
+    status.innerHTML='Aguardando algum botão...';
+    if(window.RetroHubWebOS2018) window.RetroHubWebOS2018.clear();
+  };
+})();
+</script>
+</body>
+</html>
