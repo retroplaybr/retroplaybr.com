@@ -11,4 +11,6 @@ games.push({name:'Carregar minha ROM',desc:'Adicionar arquivo local',upload:true
 const grid=document.getElementById('grid');games.forEach((g,i)=>{const d=document.createElement('div');d.tabIndex=0;d.className='game';d.innerHTML=`<div class="cover">${g.upload?'＋':'🎮'}</div><h2>${g.name}</h2><p>${g.desc}</p>`;d.onclick=()=>openGame(g);grid.appendChild(d)});
 function openGame(g){if(g.upload)location.href='emulator.html?system='+encodeURIComponent(sys.id)+'&upload=1';else location.href='emulator.html?system='+encodeURIComponent(sys.id)+'&name='+encodeURIComponent(g.name)+'&rom='+encodeURIComponent(g.rom)}
 let f=0;function setF(){[...grid.children][f]?.focus()};addEventListener('keydown',e=>{if(e.key==='ArrowRight'){f=Math.min(games.length-1,f+1);setF()}if(e.key==='ArrowLeft'){f=Math.max(0,f-1);setF()}if(e.key==='Enter')openGame(games[f]);if(e.key==='Escape')location.href='index.html'});setF();
-</script></body></html>
+</script>
+<script src="assets/gamepad-webos.js"></script>
+</body></html>

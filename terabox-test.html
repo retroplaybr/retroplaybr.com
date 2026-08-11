@@ -3,4 +3,6 @@
 <body><h1>Teste do link TeraBox</h1><input id="u" placeholder="https://1024terabox.com/s/..."><button onclick="go()">TESTAR LINK</button><pre id="o">Aguardando...</pre>
 <script>
 async function go(){const u=document.getElementById('u').value.trim(),o=document.getElementById('o');o.textContent='Testando...';try{const r=await fetch('/api/terabox-resolve?url='+encodeURIComponent(u),{cache:'no-store'});const d=await r.json();o.textContent=JSON.stringify(d,null,2)}catch(e){o.textContent=String(e)}}
-</script></body></html>
+</script>
+<script src="assets/gamepad-webos.js"></script>
+</body></html>

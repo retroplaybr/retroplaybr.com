@@ -1,0 +1,14 @@
+RETROHUB v5.9 — DUALSHOCK 4 USB / webOS
+
+Adicionado:
+- Gamepad API para controle USB.
+- DualShock 4 / controles com mapeamento padrão.
+- Navegação do RetroHub com D-pad/analógico.
+- X = selecionar/entrar; círculo = voltar.
+- Eventos de L1/L2/R1/R2, Square/Triangle, Share/Options.
+- Página controle.html para diagnóstico.
+- window.RetroHubGamepad expõe o controle bruto aos players/emuladores.
+
+IMPORTANTE:
+- O ZIP NÃO contém catalog.json. Não apague o catalog.json já publicado.
+- A TV precisa reconhecer o controle USB no nível do webOS.

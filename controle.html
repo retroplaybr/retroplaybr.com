@@ -1,0 +1,39 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>RetroHub - Controle USB</title>
+<style>
+body{margin:0;background:#06111b;color:white;font-family:Arial,sans-serif;padding:28px}
+.card{max-width:850px;margin:auto;background:#0b2235;border:1px solid #1aa9ef;border-radius:18px;padding:24px}
+h1{color:#35c8ff}.ok{color:#5cff9a}.bad{color:#ff7c7c}
+button{font-size:20px;padding:14px 20px;border:0;border-radius:10px;margin:8px;background:#148fd1;color:#fff}
+pre{white-space:pre-wrap;background:#04101a;padding:16px;border-radius:10px}
+</style></head>
+<body><div class="card">
+<h1>🎮 Controle USB — RetroHub</h1>
+<p>Conecte o DualShock 4 por cabo USB diretamente na TV e pressione ✕.</p>
+<button onclick="testar()">TESTAR CONTROLE</button>
+<button onclick="history.back()">VOLTAR</button>
+<pre id="out">Aguardando controle...</pre>
+</div>
+<script src="assets/gamepad-webos.js"></script>
+<script>
+function testar(){
+ var o=document.getElementById('out');
+ if(!navigator.getGamepads && !navigator.webkitGetGamepads){
+   o.innerHTML='ERRO: este WebView não expõe a Gamepad API.';
+   return;
+ }
+ var r=window.RetroHubGamepadSupport.test();
+ o.innerHTML=r ? JSON.stringify(r,null,2) : 'Nenhum controle detectado.\nConecte por USB e aperte ✕/PS.';
+}
+setInterval(function(){
+ var gp=window.RetroHubGamepadSupport && window.RetroHubGamepadSupport.getGamepad();
+ if(!gp)return;
+ var pressed=[];
+ for(var i=0;i<gp.buttons.length;i++) if(gp.buttons[i].pressed) pressed.push(i);
+ document.getElementById('out').innerHTML=
+   'CONECTADO\nID: '+gp.id+'\nMapping: '+gp.mapping+
+   '\nBotões pressionados: '+pressed.join(', ')+
+   '\nEixos: '+Array.prototype.slice.call(gp.axes).map(function(x){return x.toFixed(2)}).join(', ');
+},120);
+</script></body></html>

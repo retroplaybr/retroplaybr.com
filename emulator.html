@@ -5,4 +5,6 @@ const systems=[{"id": "nes", "name": "Nintendinho", "core": "nes", "emoji": "NES
 function launch(url,name){document.getElementById('picker').style.display='none';document.getElementById('name').textContent=name||sys.name;window.EJS_player='#game';window.EJS_core=sys.core;window.EJS_gameName=name||'Jogo';window.EJS_gameUrl=url;window.EJS_pathtodata='https://cdn.emulatorjs.org/stable/data/';window.EJS_language='pt-BR';window.EJS_startOnLoaded=true;const s=document.createElement('script');s.src='https://cdn.emulatorjs.org/stable/data/loader.js';document.body.appendChild(s)}
 if(q.get('upload')==='1'){document.getElementById('picker').style.display='grid';document.getElementById('file').addEventListener('change',e=>{const f=e.target.files[0];if(f)launch(URL.createObjectURL(f),f.name)})}else launch(q.get('rom'),q.get('name'));
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.fullscreenElement)location.href='library.html?system='+encodeURIComponent(sys.id)})
-</script></body></html>
+</script>
+<script src="assets/gamepad-webos.js"></script>
+</body></html>
