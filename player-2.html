@@ -1,0 +1,27 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>RetroHub Player</title><style>html,body{height:100%;margin:0;background:#02060b;color:#fff;font-family:Inter,Segoe UI,Arial,sans-serif}body{display:grid;grid-template-rows:auto 1fr}.top{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#07111d}.brand{font-weight:900}.brand b{color:#42c6ff}.btn{border:1px solid #31465b;background:#14283b;color:white;border-radius:9px;padding:8px 12px;text-decoration:none}.stage{min-height:0;display:grid;place-items:center}.frame,#game{width:100%;height:100%}.message{max-width:720px;padding:24px;text-align:center;line-height:1.5}.message p{color:#aab9c8}@media(pointer:coarse){.frame{touch-action:none}}</style></head><body><div class="top"><div class="brand"><b>Retro</b>Hub Player</div><div><span id="gameTitle"></span> <a class="btn" href="index.html">Voltar</a></div></div><div class="stage" id="stage"><div class="frame"><div id="game"></div></div></div><script>
+const params=new URLSearchParams(location.search),id=params.get('id'),scope=params.get('scope')||'public';
+const systemMap={
+'SNES':'snes','snes':'snes','Super Nintendo':'snes',
+'NES':'nes','nes':'nes','NES / Famicom':'nes',
+'Nintendo 3DS':'3ds','3DS':'3ds','3ds':'3ds',
+'Nintendo DS':'nds','DS':'nds','nds':'nds',
+'Nintendo 64':'n64','N64':'n64','n64':'n64',
+'Game Boy Advance':'gba','GBA':'gba','gba':'gba',
+'Game Boy':'gb','GB':'gb','gb':'gb',
+'Game Boy Color':'gb','GBC':'gb','gbc':'gb',
+'PSP':'psp','psp':'psp','PlayStation Portable':'psp','Playstation Portable':'psp'
+};
+function fail(t,x){stage.innerHTML=`<div class="message"><h1>${t}</h1><p>${x}</p><p><a class="btn" href="index.html">Voltar</a></p></div>`}async function getGame(){if(scope==='public'){const r=await fetch('/api/catalog',{cache:'no-store'});if(!r.ok)throw new Error('Catálogo indisponível');return ((await r.json()).games||[]).find(g=>String(g.id)===String(id))}const games=JSON.parse(localStorage.getItem('retrohub_games_v1')||'[]');return games.find(g=>String(g.id)===String(id))}function getLocalRom(id){return new Promise((resolve,reject)=>{const r=indexedDB.open('retrohub_files_v1',1);r.onsuccess=()=>{const q=r.result.transaction('roms').objectStore('roms').get(String(id));q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error)};r.onerror=()=>reject(r.error)})}
+async function boot(){const game=await getGame();if(!game)return fail('Jogo não encontrado','O cadastro não foi localizado.');if(game.system==='GameCube')return fail('GameCube ainda não está ativo','O player atual ainda não possui core GameCube.');const core=systemMap[game.system];if(!core)return fail('Console não configurado','Ainda não há core para este console.');let url=game.rom||'';if(scope==='local'||game.romStored){const blob=await getLocalRom(id);if(!blob)return fail('ROM não encontrada','O arquivo local não está disponível.');url=URL.createObjectURL(blob)}gameTitle.textContent=game.name+' • '+game.system;window.EJS_player='#game';window.EJS_core=core;window.EJS_gameUrl=url;window.EJS_gameName=game.name;window.EJS_pathtodata='https://cdn.emulatorjs.org/stable/data/';window.EJS_startOnLoaded=true;window.EJS_language='pt-BR';window.EJS_color='#42c6ff';window.EJS_controlScheme=core==='gb'?'gb':core;
+if(core==='psp'){
+  if(typeof WebAssembly==='undefined')return fail('PSP não suportado neste navegador','Este navegador não possui WebAssembly.');
+  let gl=null;
+  try{const c=document.createElement('canvas');gl=c.getContext('webgl2')||c.getContext('webgl')||c.getContext('experimental-webgl')}catch(_){}
+  if(!gl)return fail('PSP não suportado neste aparelho','O navegador não conseguiu iniciar WebGL.');
+  window.EJS_threads=true;
+  window.EJS_forceLegacyCores=true;
+  window.EJS_disableLocalStorage=true;
+  window.EJS_cacheConfig={enabled:false};
+}
+if(core==='3ds')window.EJS_threads=true;const s=document.createElement('script');s.src='https://cdn.emulatorjs.org/stable/data/loader.js';s.onerror=()=>fail('Erro no emulador','Não foi possível carregar o EmulatorJS.');document.body.appendChild(s)}boot().catch(e=>fail('Erro ao abrir',e.message||String(e)));
+</script></body></html>
