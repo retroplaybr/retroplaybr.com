@@ -1,12 +1,22 @@
-# RetroHub Theme - Nintendo Wii U Custom UI
+# RetroPlayBR Cloud — GameHub-style UI
 
-Tema responsivo criado sob medida para o frontend **RetroHub**, trazendo a identidade e estética clássica dos blocos tridimensionais arredondados do **Nintendo Wii U**.
+Protótipo web estático inspirado na lógica de navegação do modo Console do GameHub, com identidade própria.
 
-## 🛠️ Recursos Preservados:
-* **Toda a listagem original**: Mantidos todos os 28 consoles exibidos na imagem original (NES, Famicom, PS5, etc).
-* **Painel Admin**: Botão de gerenciamento mantido no topo com os estilos de relevo e gradientes em azul.
-* **Barra de Pesquisa e Filtros por Fabricante**: Todos os seletores e a lógica visual de categorias intactos.
+## Rodar localmente
+Abra `index.html` no navegador ou use qualquer servidor estático.
 
-## 📁 Estrutura:
-* `/index.html` -> Marcação completa com a estrutura nativa de classes.
-* `/css/style.css` -> Estilização simulando o relevo glossy (brilhante) 3D do Wii U.
+## GitHub / Vercel
+1. Extraia o ZIP.
+2. Crie um repositório no GitHub.
+3. Envie `index.html`, `styles.css`, `app.js` e este `README.md`.
+4. Na Vercel, importe o repositório e selecione deploy estático, sem build command.
+
+## Controles do protótipo
+- `[` / `]`: alternar abas como LB/RB
+- `Y`: abrir busca
+- `M`: abrir menu lateral
+- `B` ou `Esc`: voltar/fechar
+- `Enter`: abrir jogo focado
+
+## Próxima etapa
+Conectar o botão **Jogar agora** a um backend de cloud gaming (por exemplo, sessão própria com Sunshine/Moonlight/WebRTC ou outra infraestrutura autorizada).
