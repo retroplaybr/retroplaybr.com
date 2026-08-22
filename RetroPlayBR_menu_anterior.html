@@ -876,4 +876,166 @@ main {
         + '<div class="game-card">'
         +   '<div class="game-card-inner">'
         +     '<div class="cover">'
-        +       '<button class="favorite-mini ' + (fav ? 'is-fav' : 
+        +       '<button class="favorite-mini ' + (fav ? 'is-fav' : '') + '" data-fav="' + game.id + '">' + (fav ? '★' : '☆') + '</button>'
+        +       '<div class="cover-art ' + consoleClass(game.console) + '">' + safeText(game.icon + " " + game.title) + '</div>'
+        +     '</div>'
+        +     '<div class="card-info">'
+        +       '<div class="card-console">' + safeText(game.console) + '</div>'
+        +       '<div class="card-title">' + safeText(game.title) + '</div>'
+        +       '<button class="open-btn" data-open="' + game.id + '">Ver jogo</button>'
+        +     '</div>'
+        +   '</div>'
+        + '</div>';
+    }
+
+    gameGrid.innerHTML = html;
+    gameCount.innerHTML = list.length + (list.length === 1 ? " jogo" : " jogos");
+    emptyState.style.display = list.length ? "none" : "block";
+
+    if (showOnlyFavorites) {
+      sectionTitle.innerHTML = "Favoritos";
+      favButton.style.background = "#ffffff";
+      favButton.style.color = "#111111";
+    } else {
+      sectionTitle.innerHTML = selectedConsole === "Todos" ? "Todos os jogos" : selectedConsole;
+      favButton.style.background = "#1d1d23";
+      favButton.style.color = "#ffd45b";
+    }
+
+    bindCardButtons();
+  }
+
+  function bindCardButtons() {
+    var favButtons = document.querySelectorAll("[data-fav]");
+    var openButtons = document.querySelectorAll("[data-open]");
+    var i;
+
+    for (i = 0; i < favButtons.length; i++) {
+      favButtons[i].onclick = function (event) {
+        if (event && event.stopPropagation) event.stopPropagation();
+        toggleFavorite(parseInt(this.getAttribute("data-fav"), 10));
+      };
+    }
+
+    for (i = 0; i < openButtons.length; i++) {
+      openButtons[i].onclick = function () {
+        openGame(parseInt(this.getAttribute("data-open"), 10));
+      };
+    }
+  }
+
+  function findGame(id) {
+    var i;
+    for (i = 0; i < games.length; i++) {
+      if (games[i].id === id) return games[i];
+    }
+    return null;
+  }
+
+  function openGame(id) {
+    selectedGame = findGame(id);
+    if (!selectedGame) return;
+
+    modalCover.innerHTML = safeText(selectedGame.icon);
+    modalConsole.innerHTML = safeText(selectedGame.console);
+    modalTitle.innerHTML = safeText(selectedGame.title);
+    modalDescription.innerHTML = safeText(selectedGame.desc);
+    updateModalFavorite();
+
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden";
+  }
+
+  function updateModalFavorite() {
+    if (!selectedGame) return;
+    favoriteButton.innerHTML = isFavorite(selectedGame.id) ? "★ Favorito" : "☆ Favoritar";
+  }
+
+  function hideModal() {
+    modal.style.display = "none";
+    document.body.style.overflow = "";
+  }
+
+  consoleTabs.onclick = function (event) {
+    var target = event.target || event.srcElement;
+    if (!target || target.getAttribute("data-console") === null) return;
+
+    var buttons = consoleTabs.getElementsByTagName("button");
+    var i;
+    for (i = 0; i < buttons.length; i++) {
+      buttons[i].className = "tab";
+    }
+
+    target.className = "tab active";
+    selectedConsole = target.getAttribute("data-console");
+    showOnlyFavorites = false;
+    renderGames();
+  };
+
+  searchInput.onkeyup = renderGames;
+  searchInput.oninput = renderGames;
+
+  favButton.onclick = function () {
+    showOnlyFavorites = !showOnlyFavorites;
+    renderGames();
+  };
+
+  closeModal.onclick = hideModal;
+
+  modal.onclick = function (event) {
+    if ((event.target || event.srcElement) === modal) {
+      hideModal();
+    }
+  };
+
+  favoriteButton.onclick = function () {
+    if (selectedGame) toggleFavorite(selectedGame.id);
+  };
+
+  playButton.onclick = function () {
+    if (!selectedGame) return;
+    alert("Jogar: " + selectedGame.title + "\n\nNesta versão HTML o botão é demonstrativo. No APK ele poderá abrir um emulador.");
+  };
+
+
+  adminButton.onclick = openAdminLogin;
+
+  closeAdminLogin.onclick = closeAdminModals;
+  closeAdminPanel.onclick = closeAdminModals;
+
+  adminLoginButton.onclick = function () {
+    if (adminPassword.value === "abcd") {
+      adminLoginError.innerHTML = "";
+      openAdminPanel();
+    } else {
+      adminLoginError.innerHTML = "Senha incorreta.";
+    }
+  };
+
+  adminPassword.onkeyup = function (event) {
+    event = event || window.event;
+    if (event.keyCode === 13) {
+      adminLoginButton.onclick();
+    }
+  };
+
+  adminAddGame.onclick = addAdminGame;
+
+  adminLoginModal.onclick = function (event) {
+    if ((event.target || event.srcElement) === adminLoginModal) {
+      closeAdminModals();
+    }
+  };
+
+  adminPanelModal.onclick = function (event) {
+    if ((event.target || event.srcElement) === adminPanelModal) {
+      closeAdminModals();
+    }
+  };
+
+  renderGames();
+})();
+
+</script>
+</body>
+</html>
