@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Retro Games</title>
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:#080a0f;color:#fff;font-family:Arial,Helvetica,sans-serif;min-height:100%;overflow-x:hidden}
+  body{padding-bottom:78px}
+  .top{position:sticky;top:0;z-index:10;background:linear-gradient(#0b0e15,#080a0f);padding:18px 16px 12px;border-bottom:1px solid #1e2430}
+  .brand{font-weight:900;font-size:28px;letter-spacing:.5px}.sub{color:#9aa3b2;margin-top:3px;font-size:13px}
+  .tabs{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:2px}
+  .tab{border:1px solid #2a3241;background:#141922;color:#dfe7f6;border-radius:14px;padding:9px 13px;white-space:nowrap;cursor:pointer}
+  .tab.active{background:#0b5cff;border-color:#0b5cff}
+  .wrap{padding:16px}.hero{background:radial-gradient(circle at 20% 20%,#173466 0,#101722 35%,#0e131c 100%);border:1px solid #283246;border-radius:22px;padding:18px;margin-bottom:18px;box-shadow:0 12px 35px #0007}
+  .hero h2{margin:0 0 6px;font-size:23px}.hero p{margin:0;color:#aab3c1;line-height:1.45}.hero .btn{margin-top:14px}
+  .section-title{display:flex;justify-content:space-between;align-items:center;margin:12px 2px 10px}.section-title h3{margin:0;font-size:18px}.muted{color:#8993a3;font-size:12px}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .console-card,.game-card{background:#141922;border:1px solid #252d3c;border-radius:18px;overflow:hidden;box-shadow:0 8px 24px #0005;cursor:pointer;outline:none}
+  .console-card:focus,.game-card:focus,.btn:focus,.nav-btn:focus,.tab:focus{box-shadow:0 0 0 3px #1d7cff;transform:scale(1.02)}
+  button,.console-card,.game-card{touch-action:manipulation;-webkit-user-select:none;user-select:none}
+  .gamepad-status{position:fixed;right:10px;bottom:78px;z-index:50;background:#0e1219e8;border:1px solid #2a3241;border-radius:12px;padding:7px 10px;font-size:11px;color:#aeb7c6}
+  .console-art{height:118px;display:flex;align-items:center;justify-content:center;font-size:33px;font-weight:900;background:linear-gradient(135deg,#18233c,#0d1119)}
+  .console-card:nth-child(2n) .console-art{background:linear-gradient(135deg,#23153d,#111018)}
+  .console-card:nth-child(3n) .console-art{background:linear-gradient(135deg,#3b1919,#111018)}
+  .card-body{padding:12px}.card-title{font-weight:800;font-size:15px}.card-meta{color:#8993a3;font-size:12px;margin-top:4px}
+  .game-cover{height:140px;background:linear-gradient(135deg,#22314f,#111722);display:flex;align-items:center;justify-content:center;font-weight:800;color:#d6e3ff;text-align:center;padding:12px}
+  .btn{appearance:none;border:0;border-radius:14px;padding:11px 14px;background:#0b5cff;color:white;font-weight:800;cursor:pointer}.btn.secondary{background:#202633;border:1px solid #323b4c}.btn.danger{background:#a61e2c}.btn.small{padding:8px 10px;border-radius:10px;font-size:12px}
+  .bottom{position:fixed;left:0;right:0;bottom:0;height:68px;background:#0e1219ee;border-top:1px solid #242b37;display:grid;grid-template-columns:repeat(4,1fr);z-index:20;backdrop-filter:blur(8px)}
+  .nav-btn{border:0;background:transparent;color:#b5bdc9;font-size:11px;font-weight:700;cursor:pointer}.nav-btn span{display:block;font-size:22px;margin-bottom:2px}.nav-btn.active{color:white}
+  .hidden{display:none!important}.panel{background:#111722;border:1px solid #273044;border-radius:18px;padding:14px;margin-bottom:14px}
+  label{display:block;font-size:12px;color:#9ca6b5;margin:10px 0 5px}input,select,textarea{width:100%;background:#090d13;color:#fff;border:1px solid #30394b;border-radius:12px;padding:11px;outline:none}textarea{min-height:70px;resize:vertical}
+  .admin-list{display:grid;gap:8px;margin-top:14px}.admin-item{display:flex;justify-content:space-between;gap:10px;align-items:center;background:#0d121a;border:1px solid #242c3b;border-radius:12px;padding:10px}.admin-item b{display:block}.row{display:flex;gap:8px}.row>*{flex:1}
+  .notice{background:#221b0f;border:1px solid #604b19;color:#ffe29b;border-radius:14px;padding:12px;font-size:12px;line-height:1.45;margin-bottom:14px}
+  @media(min-width:700px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.game-cover{height:170px}.wrap{max-width:1100px;margin:auto}.console-art{height:150px}}
+</style>
+</head>
+<body>
+  <header class="top">
+    <div class="brand">RETRO GAMES</div>
+    <div class="sub">Launcher retrô leve • Android 5 via navegador/WebView</div>
+    <div class="tabs" id="consoleTabs"></div>
+  </header>
+
+  <main class="wrap">
+    <section id="homeView">
+      <div class="hero">
+        <h2>Seu hub retrô</h2>
+        <p>Escolha um console, veja os jogos publicados no catálogo e abra o link configurado. Funciona com toque e navegação por teclado/controle em navegadores compatíveis.</p>
+        <button class="btn" onclick="showAllGames()">Ver catálogo</button>
+      </div>
+      <div class="section-title"><h3>Consoles</h3><span class="muted">toque ou use setas + Enter</span></div>
+      <div class="grid" id="consoleGrid"></div>
+    </section>
+
+    <section id="gamesView" class="hidden">
+      <div class="section-title"><h3 id="gamesTitle">Jogos</h3><button class="btn secondary small" onclick="showHome()">Voltar</button></div>
+      <div class="grid" id="gamesGrid"></div>
+    </section>
+
+    <section id="favoritesView" class="hidden">
+      <div class="section-title"><h3>Favoritos</h3></div>
+      <div class="grid" id="favoritesGrid"></div>
+    </section>
+
+    <section id="adminView" class="hidden">
+      <div class="section-title"><h3>Painel Admin</h3></div>
+      <div id="adminLogin" class="panel">
+        <label>Senha</label>
+        <input id="adminPassword" type="password" placeholder="Digite a senha" />
+        <button class="btn" style="margin-top:10px" onclick="loginAdmin()">Entrar</button>
+      </div>
+      <div id="adminPanel" class="hidden">
+        <div class="notice">Este HTML salva o catálogo neste dispositivo usando localStorage. Para “publicar para todo mundo” de verdade, conecte este painel a um backend/API seu (Firebase, Supabase, servidor próprio etc.). Não inclua ROMs/ISOs comerciais sem autorização.</div>
+        <div class="panel">
+          <div class="row">
+            <div><label>Console</label><select id="gameConsole"></select></div>
+            <div><label>Título</label><input id="gameTitle" placeholder="Ex.: Meu Homebrew" /></div>
+          </div>
+          <label>Imagem/capa (URL opcional)</label><input id="gameCover" placeholder="https://..." />
+          <label>Link para jogar / página / arquivo autorizado</label><input id="gameUrl" placeholder="https://..." />
+          <label>Descrição</label><textarea id="gameDesc" placeholder="Descrição curta"></textarea>
+          <button class="btn" style="margin-top:10px" onclick="addGame()">Publicar no catálogo local</button>
+        </div>
+        <div class="admin-list" id="adminList"></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom">
+    <button class="nav-btn active" data-nav="home" onclick="showHome()"><span>⌂</span>Início</button>
+    <button class="nav-btn" data-nav="games" onclick="showAllGames()"><span>🎮</span>Jogos</button>
+    <button class="nav-btn" data-nav="favorites" onclick="showFavorites()"><span>★</span>Favoritos</button>
+    <button class="nav-btn" data-nav="admin" onclick="showAdmin()"><span>⚙</span>Admin</button>
+  </nav>
+  <div class="gamepad-status" id="gamepadStatus">🎮 Controle: aguardando</div>
+
+<script>
+const ADMIN_PASS = 'abcd';
+const consoles = [
+  {id:'ps2',name:'PlayStation 2',label:'PS2'},{id:'psp',name:'PSP',label:'PSP'},{id:'ps1',name:'PlayStation 1',label:'PS1'},
+  {id:'snes',name:'Super Nintendo',label:'SNES'},{id:'nes',name:'Nintendo',label:'NES'},{id:'n64',name:'Nintendo 64',label:'N64'},
+  {id:'gba',name:'Game Boy Advance',label:'GBA'},{id:'nds',name:'Nintendo DS',label:'NDS'},{id:'dc',name:'Dreamcast',label:'DC'},
+  {id:'arcade',name:'Arcade',label:'ARCADE'},{id:'ports',name:'Ports & Outros',label:'PORTS'}
+];
+let games = JSON.parse(localStorage.getItem('retroGamesCatalog')||'[]');
+let favorites = JSON.parse(localStorage.getItem('retroGamesFavs')||'[]');
+
+function save(){localStorage.setItem('retroGamesCatalog',JSON.stringify(games));localStorage.setItem('retroGamesFavs',JSON.stringify(favorites));}
+function navActive(name){document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.nav===name));}
+function hideAll(){['homeView','gamesView','favoritesView','adminView'].forEach(id=>document.getElementById(id).classList.add('hidden'));}
+function showHome(){hideAll();document.getElementById('homeView').classList.remove('hidden');navActive('home');setTimeout(ensureFocus,0);}
+function showAllGames(){hideAll();document.getElementById('gamesView').classList.remove('hidden');document.getElementById('gamesTitle').textContent='Todos os jogos';renderGames(games);navActive('games');setTimeout(ensureFocus,0);}
+function showConsole(id){hideAll();document.getElementById('gamesView').classList.remove('hidden');let c=consoles.find(x=>x.id===id);document.getElementById('gamesTitle').textContent=c?c.name:'Jogos';renderGames(games.filter(g=>g.console===id));navActive('games');setTimeout(ensureFocus,0);}
+function showFavorites(){hideAll();document.getElementById('favoritesView').classList.remove('hidden');renderFavorites();navActive('favorites');setTimeout(ensureFocus,0);}
+function showAdmin(){hideAll();document.getElementById('adminView').classList.remove('hidden');navActive('admin');setTimeout(ensureFocus,0);}
+
+function renderConsoles(){
+  const grid=document.getElementById('consoleGrid');grid.innerHTML='';
+  consoles.forEach(c=>{const el=document.createElement('div');el.className='console-card';el.tabIndex=0;el.innerHTML=`<div class="console-art">${c.label}</div><div class="card-body"><div class="card-title">${c.name}</div><div class="card-meta">Abrir biblioteca</div></div>`;el.onclick=()=>showConsole(c.id);el.onkeydown=e=>{if(e.key==='Enter'||e.key===' ')el.click()};grid.appendChild(el)});
+}
+function gameCard(g){
+  const fav=favorites.includes(g.id);
+  const cover=g.cover?`<div class="game-cover" style="background-image:url('${escapeHtml(g.cover)}');background-size:cover;background-position:center"></div>`:`<div class="game-cover">${escapeHtml(g.title)}</div>`;
+  const el=document.createElement('div');el.className='game-card';el.tabIndex=0;el.innerHTML=`${cover}<div class="card-body"><div class="card-title">${escapeHtml(g.title)}</div><div class="card-meta">${escapeHtml(consoleName(g.console))}</div><p class="card-meta">${escapeHtml(g.desc||'')}</p><div class="row"><button class="btn small" data-play>JOGAR</button><button class="btn secondary small" data-fav>${fav?'★':'☆'}</button></div></div>`;
+  el.querySelector('[data-play]').onclick=e=>{e.stopPropagation();playGame(g)};el.querySelector('[data-fav]').onclick=e=>{e.stopPropagation();toggleFav(g.id)};return el;
+}
+function renderGames(list){const grid=document.getElementById('gamesGrid');grid.innerHTML='';if(!list.length){grid.innerHTML='<div class="panel">Nenhum jogo publicado nesta categoria.</div>';return}list.forEach(g=>grid.appendChild(gameCard(g)));}
+function renderFavorites(){const grid=document.getElementById('favoritesGrid');grid.innerHTML='';const list=games.filter(g=>favorites.includes(g.id));if(!list.length){grid.innerHTML='<div class="panel">Você ainda não favoritou nenhum jogo.</div>';return}list.forEach(g=>grid.appendChild(gameCard(g)));}
+function toggleFav(id){favorites=favorites.includes(id)?favorites.filter(x=>x!==id):favorites.concat(id);save();showFavorites();}
+function playGame(g){if(!g.url){alert('Este item não possui link configurado.');return}window.location.href=g.url;}
+function consoleName(id){const c=consoles.find(x=>x.id===id);return c?c.name:id;}
+function escapeHtml(s){return String(s||'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[m]));}
+
+function loginAdmin(){if(document.getElementById('adminPassword').value===ADMIN_PASS){document.getElementById('adminLogin').classList.add('hidden');document.getElementById('adminPanel').classList.remove('hidden');renderAdmin();}else alert('Senha incorreta');}
+function addGame(){const c=document.getElementById('gameConsole').value,t=document.getElementById('gameTitle').value.trim(),cover=document.getElementById('gameCover').value.trim(),url=document.getElementById('gameUrl').value.trim(),desc=document.getElementById('gameDesc').value.trim();if(!t){alert('Digite o título.');return}games.unshift({id:'g'+Date.now(),console:c,title:t,cover,url,desc});save();document.getElementById('gameTitle').value='';document.getElementById('gameCover').value='';document.getElementById('gameUrl').value='';document.getElementById('gameDesc').value='';renderAdmin();}
+function removeGame(id){games=games.filter(g=>g.id!==id);favorites=favorites.filter(x=>x!==id);save();renderAdmin();}
+function renderAdmin(){const box=document.getElementById('adminList');box.innerHTML='';games.forEach(g=>{const el=document.createElement('div');el.className='admin-item';el.innerHTML=`<div><b>${escapeHtml(g.title)}</b><span class="muted">${escapeHtml(consoleName(g.console))}</span></div><button class="btn danger small">Excluir</button>`;el.querySelector('button').onclick=()=>removeGame(g.id);box.appendChild(el)});}
+
+
+// ===== SUPORTE A CONTROLES / GAMEPADS =====
+// Compatível com Gamepad API quando o navegador/WebView oferece suporte.
+// Também aceita teclado, D-pad, Enter, Espaço, Esc/Backspace e vários mapeamentos comuns.
+let gpIndex = null;
+let lastButtons = [];
+let lastAxes = [0,0,0,0];
+let lastMoveAt = 0;
+const MOVE_DELAY = 180;
+
+function focusables(){
+  return Array.from(document.querySelectorAll('button:not(.hidden), .console-card:not(.hidden), .game-card:not(.hidden), input:not(.hidden), select:not(.hidden), textarea:not(.hidden)'))
+    .filter(el => el.offsetParent !== null && !el.disabled);
+}
+function ensureFocus(){
+  const a=focusables();
+  if(a.length && !a.includes(document.activeElement)) a[0].focus();
+}
+function moveFocus(dir){
+  const a=focusables(); if(!a.length) return;
+  let cur=document.activeElement; let i=a.indexOf(cur); if(i<0){a[0].focus();return;}
+  const r=cur.getBoundingClientRect();
+  let best=null,bestScore=1e9;
+  a.forEach((el,idx)=>{
+    if(idx===i) return;
+    const q=el.getBoundingClientRect();
+    const dx=(q.left+q.width/2)-(r.left+r.width/2), dy=(q.top+q.height/2)-(r.top+r.height/2);
+    if(dir==='left' && dx>=-5) return;
+    if(dir==='right' && dx<=5) return;
+    if(dir==='up' && dy>=-5) return;
+    if(dir==='down' && dy<=5) return;
+    const main=(dir==='left'||dir==='right')?Math.abs(dx):Math.abs(dy);
+    const cross=(dir==='left'||dir==='right')?Math.abs(dy):Math.abs(dx);
+    const score=main + cross*2.5;
+    if(score<bestScore){bestScore=score;best=el;}
+  });
+  if(best){best.focus();best.scrollIntoView({block:'nearest',inline:'nearest'});}
+}
+function activateFocused(){
+  const el=document.activeElement;
+  if(el && typeof el.click==='function') el.click();
+}
+function goBack(){
+  if(!document.getElementById('gamesView').classList.contains('hidden')) showHome();
+  else if(!document.getElementById('favoritesView').classList.contains('hidden')) showHome();
+  else if(!document.getElementById('adminView').classList.contains('hidden')) showHome();
+}
+
+window.addEventListener('keydown',e=>{
+  const k=e.key;
+  if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Enter',' ','Escape','Backspace'].includes(k)){
+    if(document.activeElement && ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName) && !['Escape'].includes(k)) return;
+    e.preventDefault();
+  }
+  if(k==='ArrowLeft') moveFocus('left');
+  else if(k==='ArrowRight') moveFocus('right');
+  else if(k==='ArrowUp') moveFocus('up');
+  else if(k==='ArrowDown') moveFocus('down');
+  else if(k==='Enter'||k===' ') activateFocused();
+  else if(k==='Escape'||k==='Backspace') goBack();
+});
+
+window.addEventListener('gamepadconnected',e=>{
+  gpIndex=e.gamepad.index;
+  document.getElementById('gamepadStatus').textContent='🎮 Controle: '+(e.gamepad.id||'conectado');
+  ensureFocus();
+});
+window.addEventListener('gamepaddisconnected',e=>{
+  if(gpIndex===e.gamepad.index) gpIndex=null;
+  document.getElementById('gamepadStatus').textContent='🎮 Controle: aguardando';
+});
+
+function pressed(gp,i){ return !!(gp.buttons[i] && gp.buttons[i].pressed); }
+function edge(gp,i){ const p=pressed(gp,i); const old=!!lastButtons[i]; lastButtons[i]=p; return p&&!old; }
+function axisDir(v,old){
+  const T=.55,R=.25;
+  if(v>T && old<=R) return 1;
+  if(v<-T && old>=-R) return -1;
+  return 0;
+}
+function pollGamepad(){
+  const pads=(navigator.getGamepads&&navigator.getGamepads())||[];
+  let gp=gpIndex!=null?pads[gpIndex]:null;
+  if(!gp){ for(let i=0;i<pads.length;i++){ if(pads[i]){gp=pads[i];gpIndex=i;break;} } }
+  if(gp){
+    document.getElementById('gamepadStatus').textContent='🎮 Controle: '+(gp.id||'conectado');
+    const now=Date.now();
+    // Padrão Gamepad API: 12/13/14/15 = D-pad; 0 = A/Cross; 1 = B/Circle; 8/9 = Select/Start
+    if(edge(gp,12)) moveFocus('up');
+    if(edge(gp,13)) moveFocus('down');
+    if(edge(gp,14)) moveFocus('left');
+    if(edge(gp,15)) moveFocus('right');
+    if(edge(gp,0) || edge(gp,2)) activateFocused();
+    if(edge(gp,1) || edge(gp,3)) goBack();
+    if(edge(gp,9)) showHome();
+    if(edge(gp,8)) showFavorites();
+    // Analógicos esquerdo e direito
+    if(now-lastMoveAt>MOVE_DELAY){
+      const x=(gp.axes[0]||0), y=(gp.axes[1]||0), rx=(gp.axes[2]||0), ry=(gp.axes[3]||0);
+      let dx=axisDir(Math.abs(x)>Math.abs(rx)?x:rx, lastAxes[0]);
+      let dy=axisDir(Math.abs(y)>Math.abs(ry)?y:ry, lastAxes[1]);
+      if(dx<0){moveFocus('left');lastMoveAt=now;} else if(dx>0){moveFocus('right');lastMoveAt=now;}
+      if(dy<0){moveFocus('up');lastMoveAt=now;} else if(dy>0){moveFocus('down');lastMoveAt=now;}
+      lastAxes=[x,y,rx,ry];
+    }
+  }
+  requestAnimationFrame(pollGamepad);
+}
+requestAnimationFrame(pollGamepad);
+
+// Toque: dá foco antes de executar, ajudando em Android TV/WebView antigos.
+document.addEventListener('touchstart',e=>{
+  const el=e.target.closest('button,.console-card,.game-card,input,select,textarea');
+  if(el && el.focus) el.focus();
+},{passive:true});
+
+function init(){
+  renderConsoles();
+  const tabs=document.getElementById('consoleTabs');
+  tabs.innerHTML='<button class="tab active" onclick="showHome()">Início</button>';
+  consoles.forEach(c=>{const b=document.createElement('button');b.className='tab';b.textContent=c.label;b.onclick=()=>showConsole(c.id);tabs.appendChild(b)});
+  const sel=document.getElementById('gameConsole');consoles.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o)});
+  if(!games.length){games=[
+    {id:'demo1',console:'psp',title:'Exemplo PSP',desc:'Item de demonstração. Substitua por conteúdo autorizado.',url:'',cover:''},
+    {id:'demo2',console:'snes',title:'Exemplo SNES',desc:'Catálogo local de exemplo.',url:'',cover:''}
+  ];save();}
+}
+init();
+setTimeout(ensureFocus,100);
+</script>
+</body>
+</html>
