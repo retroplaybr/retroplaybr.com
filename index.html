@@ -2,9 +2,10 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>RetroPlayBR - Estilo RetroBat</title>
+    <title>RetroPlayBR - Estilo RetroBat Touch & Gamepad</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
         body {
             background-color: #0b0b0d;
             color: #ffffff;
@@ -14,23 +15,26 @@
             width: 100vw; height: 100vh;
         }
 
+        /* Top Bar */
         .header {
             height: 10vh;
             display: flex;
-            align-content: center;
+            align-items: center;
             justify-content: space-between;
-            padding: 20px 50px;
+            padding: 0 50px;
             background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
         }
         .logo { font-size: 28px; font-weight: bold; color: #ff0043; text-transform: uppercase; letter-spacing: 2px; }
         .sistema-nome { font-size: 24px; color: #aaaaaa; }
 
+        /* Conteudo Carrossel */
         .conteudo {
-            height: 75vh;
+            height: 65vh;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            touch-action: pan-x;
         }
 
         .carrossel {
@@ -43,8 +47,8 @@
             background: #16161a;
             border: 4px solid #24242b;
             border-radius: 12px;
-            width: 280px;
-            height: 380px;
+            width: 260px;
+            height: 340px;
             margin: 0 20px;
             display: flex;
             flex-direction: column;
@@ -54,22 +58,53 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
             transition: all 0.25s ease;
             opacity: 0.5;
+            cursor: pointer;
         }
 
         .card-plataforma.focado {
             border-color: #ff0043;
             box-shadow: 0 0 30px rgba(255, 0, 67, 0.4);
-            transform: scale(1.15);
+            transform: scale(1.1);
             opacity: 1;
             background: #1f1f27;
         }
 
-        .card-plataforma .icone { font-size: 60px; margin-bottom: 20px; }
-        .card-plataforma h2 { margin: 10px 0; font-size: 24px; }
-        .card-plataforma .contador { color: #888; font-size: 14px; }
+        .card-plataforma .icone { font-size: 60px; margin-bottom: 20px; pointer-events: none; }
+        .card-plataforma h2 { margin: 10px 0; font-size: 22px; pointer-events: none; }
+        .card-plataforma .contador { color: #888; font-size: 14px; pointer-events: none; }
 
+        /* Controles Virtuais Touch Ocultos por padrão */
+        .controles-touch {
+            display: none;
+            position: fixed;
+            bottom: 12vh;
+            left: 0;
+            width: 100vw;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 100;
+        }
+        .btn-touch {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .btn-touch:active {
+            background: #ff0043;
+            border-color: #ff0043;
+        }
+
+        /* Rodape Informativo */
         .footer {
-            height: 15vh;
+            height: 12vh;
             background: #141419;
             display: flex;
             align-items: center;
@@ -80,6 +115,7 @@
         }
         .btn-guia { background: #333; padding: 5px 12px; border-radius: 6px; margin-right: 10px; color: #fff; font-weight: bold; }
         .btn-guia.confirmar { background: #ff0043; }
+        .status-controle { margin-left: auto; color: #00ff66; font-size: 14px; display: flex; align-items: center; gap: 8px; }
 
         #iframe-emulador {
             display: none;
@@ -96,16 +132,23 @@
         <div class="sistema-nome" id="nome-sistema-atual">Super Nintendo</div>
     </div>
 
-    <div class="conteudo">
+    <div class="conteudo" id="conteudo-id">
         <div class="carrossel" id="carrossel-consoles"></div>
+    </div>
+
+    <div class="controles-touch" id="botoes-touch">
+        <div class="btn-touch" id="touch-esq">◀</div>
+        <div class="btn-touch" id="touch-ok">OK</div>
+        <div class="btn-touch" id="touch-dir">▶</div>
     </div>
 
     <div class="footer">
         <span class="btn-guia">⬅️ ➡️</span> Navegar 
-        <span style="margin-left: 30px;"></span>
-        <span class="btn-guia confirmar">OK / Enter</span> Abrir Plataforma
-        <span style="margin-left: 30px;"></span>
-        <span class="btn-guia">Back / Voltar</span> Sair do Jogo
+        <span style="margin-left: 20px;"></span>
+        <span class="btn-guia confirmar">A / OK</span> Selecionar
+        <span style="margin-left: 20px;"></span>
+        <span class="btn-guia">Back</span> Sair do Jogo
+        <div class="status-controle" id="gamepad-status">🔌 Aguardando controle...</div>
     </div>
 
     <iframe id="iframe-emulador"></iframe>
@@ -127,7 +170,7 @@
         for (var i = 0; i < listaConsoles.length; i++) {
             var c = listaConsoles[i];
             var classeFocado = (i === indexFocado) ? "focado" : "";
-            html += '<div class="card-plataforma ' + classeFocado + '" id="console-' + i + '">' +
+            html += '<div class="card-plataforma ' + classeFocado + '" id="console-' + i + '" data-index="' + i + '">' +
                         '<div class="icone">' + c.icone + '</div>' +
                         '<h2>' + c.nome + '</h2>' +
                         '<div class="contador">' + c.total + '</div>' +
@@ -142,49 +185,102 @@
         for (var i = 0; i < cards.length; i++) {
             cards[i].classList.remove("focado");
         }
-        
         var cardFocado = document.getElementById("console-" + indexFocado);
         if (cardFocado) {
             cardFocado.classList.add("focado");
             document.getElementById("nome-sistema-atual").innerText = listaConsoles[indexFocado].nome;
         }
-
-        var deslocamento = -(indexFocado * 320);
+        var deslocamento = -(indexFocado * 300);
         carrossel.style.transform = "translateX(" + deslocamento + "px)";
     }
 
-    document.addEventListener("keydown", function(e) {
-        if (emuladorAberto) {
-            if (e.keyCode === 461 || e.key === "Backspace") {
-                fecharEmulador();
-            }
-            return; 
+    function moverDireita() {
+        if (indexFocado < listaConsoles.length - 1) { indexFocado++; atualizarPosicao(); }
+    }
+    function moverEsquerda() {
+        if (indexFocado > 0) { indexFocado--; atualizarPosicao(); }
+    }
+    function acaoConfirmar() {
+        alert("Carregando jogos para: " + listaConsoles[indexFocado].nome + "\nEnvie suas ROMs para integrar!");
+    }
+
+    // 1. SUPORTE A CONTROLES (PS4, PS3, PS2, PS1)
+    window.addEventListener("gamepadconnected", function(e) {
+        document.getElementById("gamepad-status").innerText = "🎮 Controle conectado: " + e.gamepad.id.substring(0, 15);
+        loopGamepad();
+    });
+
+    window.addEventListener("gamepaddisconnected", function(e) {
+        document.getElementById("gamepad-status").innerText = "🔌 Aguardando controle...";
+    });
+
+    var travaBotao = false;
+    function loopGamepad() {
+        if (emuladorAberto) return;
+        
+        var gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        var gp = gamepads[0];
+        if (!gp) return;
+
+        var eixosX = gp.axes[0];
+        var dpadEsq = gp.buttons[14] && gp.buttons[14].pressed;
+        var dpadDir = gp.buttons[15] && gp.buttons[15].pressed;
+        var btnA = gp.buttons[0] && gp.buttons[0].pressed; // Botão X do PlayStation
+
+        if (!travaBotao) {
+            if (dpadDir || eixosX > 0.5) { moverDireita(); travaBotao = true; setTimeout(liberarTrava, 250); }
+            else if (dpadEsq || eixosX < -0.5) { moverEsquerda(); travaBotao = true; setTimeout(liberarTrava, 250); }
+            else if (btnA) { acaoConfirmar(); travaBotao = true; setTimeout(liberarTrava, 500); }
         }
 
-        if (e.keyCode === 39) {
-            if (indexFocado < listaConsoles.length - 1) {
-                indexFocado++;
-                atualizarPosicao();
-            }
-        } else if (e.keyCode === 37) {
-            if (indexFocado > 0) {
-                indexFocado--;
-                atualizarPosicao();
-            }
-        } else if (e.keyCode === 13) {
-            solicitarAberturaJogo();
+        requestAnimationFrame(loopGamepad);
+    }
+    function liberarTrava() { travaBotao = false; if(!emuladorAberto) requestAnimationFrame(loopGamepad); }
+
+    // 2. SUPORTE A TOUCH SCREEN & CLIQUES NATURAIS
+    window.addEventListener("touchstart", function() {
+        document.getElementById("botoes-touch").style.display = "flex";
+    }, {once: true});
+
+    document.getElementById("touch-esq").addEventListener("click", moverEsquerda);
+    document.getElementById("touch-dir").addEventListener("click", moverDireita);
+    document.getElementById("touch-ok").addEventListener("click", acaoConfirmar);
+
+    document.getElementById("carrossel-consoles").addEventListener("click", function(e) {
+        var card = e.target.closest(".card-plataforma");
+        if (card) {
+            var idx = parseInt(card.getAttribute("data-index"));
+            if (idx === indexFocado) { acaoConfirmar(); } 
+            else { indexFocado = idx; atualizarPosicao(); }
         }
     });
 
-    function solicitarAberturaJogo() {
-        alert("Modifique este arquivo para injetar suas ROMs da plataforma: " + listaConsoles[indexFocado].nome);
-    }
+    var touchStartX = 0;
+    document.getElementById("conteudo-id").addEventListener("touchstart", function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    document.getElementById("conteudo-id").addEventListener("touchend", function(e) {
+        var touchEndX = e.changedTouches[0].screenX;
+        if (touchStartX - touchEndX > 50) { moverDireita(); }
+        if (touchEndX - touchStartX > 50) { moverEsquerda(); }
+    });
+
+    // 3. TECLADO & CONTROLE REMOTO LG WEBOS
+    document.addEventListener("keydown", function(e) {
+        if (emuladorAberto) {
+            if (e.keyCode === 461 || e.key === "Backspace") { fecharEmulador(); }
+            return; 
+        }
+        if (e.keyCode === 39) { moverDireita(); }
+        else if (e.keyCode === 37) { moverEsquerda(); }
+        else if (e.keyCode === 13) { acaoConfirmar(); }
+    });
 
     function fecharEmulador() {
         var iframe = document.getElementById("iframe-emulador");
-        iframe.src = "";
-        iframe.style.display = "none";
+        iframe.src = ""; iframe.style.display = "none";
         emuladorAberto = false;
+        requestAnimationFrame(loopGamepad);
     }
 
     renderizarMenu();

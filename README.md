@@ -1,13 +1,12 @@
-# RetroPlayBR - webOS RetroBat Edition
+# RetroPlayBR - Edição Multi-Controle e Touch
 
-Interface de emulação retrô sob medida para Smart TVs LG rodando **webOS 4.0+ (modelos de 2018 ou superiores)**.
+Código base do catálogo estilo RetroBat otimizado para TVs LG de 2018 (webOS 4.0), telas Touch e suporte unificado a controles via Gamepad API.
 
-## 🚀 Como usar
-1. Extraia o conteúdo deste repositório na raiz do seu projeto.
-2. Hospede no **Vercel** ou no seu próprio servidor local.
-3. Insira suas ROMs diretamente no arquivo `index.html`.
+### 🎮 Controles Suportados:
+- **PS4 (DualShock 4) e PS3 (DualShock 3):** Reconhecimento imediato via USB ou pareamento Bluetooth.
+- **PS2 e PS1:** Suporte pleno ligando os joysticks nas portas USB da TV usando adaptadores USB convencionais de controle.
+- **Mapeamento nativo:** O D-Pad digital, o analógico esquerdo e o botão **X (Cross)** efetuam o controle completo dos menus.
 
-## 🎮 Controles da TV
-- **Setas Direita / Esquerda**: Navega entre os sistemas.
-- **Botão OK / Enter**: Seleciona e abre.
-- **Botão Back / Voltar (Código 461)**: Fecha o emulador ativo e retorna ao carrossel.
+### 📱 Interface Touch Inteligente:
+- Adicionados gestos de arrastar para o lado (Swipes) para passar os consoles.
+- Botões virtuais flutuantes aparecem dinamicamente em telas sensíveis ao toque para facilitar testes em dispositivos mobile.
