@@ -27,8 +27,8 @@
         }
         .logo { font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: 1px; }
         .logo span { color: #ff0043; }
-        .gamepad-status { font-size: 14px; color: #888; background: #222; padding: 6px 12px; border-radius: 20px; }
-        .gamepad-status.connected { color: #00ff66; border: 1px solid #00ff66; }
+        .btn-admin-nav { background: #333; color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-admin-nav:hover { background: #444; }
 
         /* Tela 1: Carrossel Principal de Consoles */
         .main-container {
@@ -59,7 +59,7 @@
         .card-system h2 { margin: 0; font-size: 22px; font-weight: bold; text-transform: uppercase; }
         .card-system .count { color: #ff0043; font-weight: bold; font-size: 14px; background: #111; padding: 4px 12px; border-radius: 10px; }
 
-        /* Tela 2: Lista Lateral de Jogos (Estilo RetroBat Gamelist) */
+        /* Tela 2: Lista Lateral de Jogos */
         .gamelist-container {
             display: none; height: 73vh; background: #141419; padding: 30px 50px;
             flex-direction: row; justify-content: space-between; align-items: center;
@@ -82,6 +82,24 @@
         .preview-jogo .capa-placeholder { font-size: 90px; margin-bottom: 20px; opacity: 0.7; }
         .preview-jogo h3 { margin: 0; font-size: 26px; text-align: center; color: #ff0043; }
 
+        /* Tela 3: Painel Admin */
+        .admin-container {
+            display: none; height: 73vh; background: #1c1c24; padding: 40px;
+            flex-direction: column; align-items: center; overflow-y: auto;
+        }
+        .admin-box {
+            background: #252530; padding: 30px; border-radius: 12px; width: 100%; max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 15px;
+        }
+        .admin-box h2 { margin: 0 0 10px 0; color: #ff0043; text-align: center; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 14px; color: #aaa; }
+        .form-group input, .form-group select {
+            background: #141419; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; font-size: 16px;
+        }
+        .btn-submit { background: #ff0043; color: white; border: none; padding: 14px; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .btn-submit:hover { background: #e0003c; }
+
         /* Rodapé de Comandos */
         .footer {
             height: 15vh; background: #111114; display: flex; align-items: center;
@@ -92,7 +110,7 @@
         .btn-controle { background: #ff0043; color: white; font-weight: bold; padding: 4px 10px; border-radius: 6px; margin-right: 8px; font-size: 13px; }
         .btn-controle.neutro { background: #444; }
 
-        /* Janela do Emulador (Iframe Fullscreen) */
+        /* Janela do Emulador */
         #retro-screen {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; border: none; z-index: 99999; background: #000;
         }
@@ -102,7 +120,7 @@
 
     <div class="header">
         <div class="logo">RETRO<span>PLAY</span>BR</div>
-        <div class="gamepad-status" id="status-controle">🎮 CONTROLE DESCONECTADO</div>
+        <button class="btn-admin-nav" onclick="verificarAcessoAdmin()">⚙️ Painel Admin</button>
     </div>
 
     <!-- Tela 1: Carrossel -->
@@ -121,6 +139,31 @@
         </div>
     </div>
 
+    <!-- Tela 3: Painel Admin -->
+    <div class="admin-container" id="tela-admin">
+        <div class="admin-box">
+            <h2>Adicionar Nova ROM (TeraBox)</h2>
+            <div class="form-group">
+                <label>Nome do Jogo</label>
+                <input type="text" id="admin-nome" placeholder="Ex: Pokémon FireRed">
+            </div>
+            <div class="form-group">
+                <label>Console</label>
+                <select id="admin-console">
+                    <option value="gba">Game Boy Advance</option>
+                    <option value="snes">Super Nintendo</option>
+                    <option value="mega">Mega Drive</option>
+                    <option value="nes">Nintendo NES</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Link Direto / URL TeraBox da ROM</label>
+                <input type="text" id="admin-rom" placeholder="https://terabox.com/webmaster/...">
+            </div>
+            <button class="btn-submit" onclick="salvarNovaRom()">Salvar na Biblioteca</button>
+        </div>
+    </div>
+
     <div class="footer">
         <div class="controles-guia">
             <div class="comando-item"><span class="btn-controle neutro">D-PAD / SETAS</span> Mover Cursor</div>
@@ -134,23 +177,8 @@
 
 <script>
     var linguasConsoles = [
-        { 
-            id: "gba", nome: "Game Boy Advance", icone: "🎮", total: "5 Jogos",
-            jogos: [
-                { nome: "Pokémon - Fire Red Version", rom: "pokemon_firered.gba", core: "gba" },
-                { nome: "Pokémon - Emerald Version", rom: "pokemon_emerald.gba", core: "gba" },
-                { nome: "The Legend of Zelda - The Minish Cap", rom: "zelda_minish.gba", core: "gba" },
-                { nome: "Super Mario Advance 2", rom: "mario_advance2.gba", core: "gba" },
-                { nome: "Metroid - Zero Mission", rom: "metroid_zero.gba", core: "gba" }
-            ]
-        },
-        { 
-            id: "snes", nome: "Super Nintendo", icone: "🕹️", total: "2 Jogos",
-            jogos: [
-                { nome: "Super Mario World", rom: "smw.smc", core: "snes" },
-                { nome: "Top Gear", rom: "topgear.smc", core: "snes" }
-            ]
-        },
+        { id: "gba", nome: "Game Boy Advance", icone: "🎮", total: "0 Jogos", jogos: [] },
+        { id: "snes", nome: "Super Nintendo", icone: "🕹️", total: "0 Jogos", jogos: [] },
         { id: "mega", nome: "Mega Drive", icone: "👾", total: "0 Jogos", jogos: [] },
         { id: "nes", nome: "Nintendo NES", icone: "📺", total: "0 Jogos", jogos: [] }
     ];
@@ -162,9 +190,35 @@
     var divCarrossel = document.getElementById("carrossel");
     var telaCarrossel = document.getElementById("tela-carrossel");
     var telaJogos = document.getElementById("tela-jogos");
+    var telaAdmin = document.getElementById("tela-admin");
     var listaJogosUI = document.getElementById("container-lista-jogos");
 
+    function carregarBiblioteca() {
+        // Reinicia listas limpas
+        for(var i=0; i<linguasConsoles.length; i++) { linguasConsoles[i].jogos = []; }
+
+        // Carrega dados salvos no localStorage
+        var salvos = localStorage.getItem("retroplay_custom_roms");
+        if (salvos) {
+            var romsCustom = JSON.parse(salvos);
+            for (var i = 0; i < romsCustom.length; i++) {
+                var r = romsCustom[i];
+                for (var j = 0; j < linguasConsoles.length; j++) {
+                    if (linguasConsoles[j].id === r.console) {
+                        linguasConsoles[j].jogos.push(r);
+                    }
+                }
+            }
+        }
+
+        // Atualiza contadores
+        for(var i=0; i<linguasConsoles.length; i++) {
+            linguasConsoles[i].total = linguasConsoles[i].jogos.length + " Jogos";
+        }
+    }
+
     function montarMenu() {
+        carregarBiblioteca();
         var html = "";
         for (var i = 0; i < linguasConsoles.length; i++) {
             var c = linguasConsoles[i];
@@ -191,13 +245,14 @@
     function renderizarListaJogos() {
         var consoleAtual = linguasConsoles[indexConsole];
         if (consoleAtual.jogos.length === 0) {
-            alert("Nenhum jogo adicionado nesta categoria!");
+            alert("Nenhum jogo adicionado nesta categoria! Entre no painel Admin para cadastrar links do TeraBox.");
             return;
         }
         
         estadoApp = "JOGOS";
         indexJogo = 0;
         telaCarrossel.style.display = "none";
+        telaAdmin.style.display = "none";
         telaJogos.style.display = "flex";
 
         var html = "";
@@ -216,17 +271,55 @@
         var el = document.getElementById("game-" + indexJogo);
         if (el) {
             el.classList.add("focado");
-            el.scrollIntoView({ block: "nearest", behavior: "smooth" });
             document.getElementById("txt-preview-titulo").innerText = linguasConsoles[indexConsole].jogos[indexJogo].nome;
         }
     }
 
+    function verificarAcessoAdmin() {
+        var senha = prompt("Digite a senha do administrador:");
+        if (senha === "abcd") {
+            estadoApp = "ADMIN";
+            telaCarrossel.style.display = "none";
+            telaJogos.style.display = "none";
+            telaAdmin.style.display = "flex";
+        } else {
+            alert("Senha Incorreta!");
+        }
+    }
+
+    function salvarNovaRom() {
+        var nome = document.getElementById("admin-nome").value;
+        var consoleId = document.getElementById("admin-console").value;
+        var urlRom = document.getElementById("admin-rom").value;
+
+        if(!nome || !urlRom) {
+            alert("Preencha todos os campos do formulário!");
+            return;
+        }
+
+        var rSalvas = localStorage.getItem("retroplay_custom_roms");
+        var arrayRoms = rSalvas ? JSON.parse(rSalvas) : [];
+
+        arrayRoms.push({ nome: nome, console: consoleId, rom: urlRom, core: consoleId });
+        localStorage.setItem("retroplay_custom_roms", JSON.stringify(arrayRoms));
+
+        alert("Jogo salvo com sucesso!");
+        
+        // Limpa form
+        document.getElementById("admin-nome").value = "";
+        document.getElementById("admin-rom").value = "";
+
+        // Retorna pro carrossel principal atualizado
+        voltarMenuAnterior();
+    }
+
     function voltarMenuAnterior() {
-        if (estadoApp === "JOGOS") {
+        if (estadoApp === "JOGOS" || estadoApp === "ADMIN") {
             estadoApp = "CARROSSEL";
             telaJogos.style.display = "none";
+            telaAdmin.style.display = "none";
             telaCarrossel.style.display = "flex";
-            atualizarLayoutCarrossel();
+            montarMenu();
         } else if (estadoApp === "EMULADOR") {
             fecharJogo();
         }
@@ -234,11 +327,9 @@
 
     function dispararEmulador() {
         var jogo = linguasConsoles[indexConsole].jogos[indexJogo];
-        var urlRomCompleta = window.location.origin + "/" + jogo.rom;
-        
         estadoApp = "EMULADOR";
         var frame = document.getElementById("retro-screen");
-        frame.src = "https://emulatorjs.org/play.html?rom=" + encodeURIComponent(urlRomCompleta) + "&core=" + jogo.core;
+        frame.src = "https://emulatorjs.org/play.html?rom=" + encodeURIComponent(jogo.rom) + "&core=" + jogo.core;
         frame.style.display = "block";
     }
 
