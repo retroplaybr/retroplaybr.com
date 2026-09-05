@@ -2,288 +2,290 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>RetroPlayBR - Estilo RetroBat Touch & Gamepad</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetroPlayBR - Biblioteca Retrô</title>
     <style>
         * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
         body {
-            background-color: #0b0b0d;
+            background-color: #1a1a1e;
             color: #ffffff;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             margin: 0; padding: 0;
             overflow: hidden;
             width: 100vw; height: 100vh;
         }
 
-        /* Top Bar */
+        /* Topo do App */
         .header {
-            height: 10vh;
+            height: 12vh;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 50px;
-            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+            padding: 0 40px;
+            border-bottom: 3px solid #ff0043;
+            background-color: #111114;
         }
-        .logo { font-size: 28px; font-weight: bold; color: #ff0043; text-transform: uppercase; letter-spacing: 2px; }
-        .sistema-nome { font-size: 24px; color: #aaaaaa; }
+        .logo { font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: 1px; }
+        .logo span { color: #ff0043; }
+        .gamepad-status { font-size: 14px; color: #888; background: #222; padding: 6px 12px; border-radius: 20px; }
+        .gamepad-status.connected { color: #00ff66; border: 1px solid #00ff66; }
 
-        /* Conteudo Carrossel */
-        .conteudo {
-            height: 65vh;
+        /* Tela 1: Carrossel Principal de Consoles */
+        .main-container {
+            height: 73vh;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            touch-action: pan-x;
+            background: radial-gradient(circle, #282830 0%, #1a1a1e 100%);
         }
-
+        .wrapper-carrossel { width: 100%; overflow: hidden; display: flex; align-items: center; }
         .carrossel {
             display: flex;
-            transition: transform 0.3s ease-in-out;
-            padding: 0 40vw;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            padding-left: 50vw;
         }
+        .card-system {
+            background: #222227; border: 4px solid #33333d; border-radius: 16px;
+            width: 260px; height: 340px; margin-right: 30px;
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            padding: 30px 20px; cursor: pointer; opacity: 0.4; transform: scale(0.9); transition: all 0.2s ease;
+        }
+        .card-system.focado {
+            border-color: #ff0043; opacity: 1; transform: scale(1.05); background: #2a2a32;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+        .card-system .logo-console { font-size: 70px; }
+        .card-system h2 { margin: 0; font-size: 22px; font-weight: bold; text-transform: uppercase; }
+        .card-system .count { color: #ff0043; font-weight: bold; font-size: 14px; background: #111; padding: 4px 12px; border-radius: 10px; }
 
-        .card-plataforma {
-            background: #16161a;
-            border: 4px solid #24242b;
-            border-radius: 12px;
-            width: 260px;
-            height: 340px;
-            margin: 0 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            transition: all 0.25s ease;
-            opacity: 0.5;
-            cursor: pointer;
+        /* Tela 2: Lista Lateral de Jogos (Estilo RetroBat Gamelist) */
+        .gamelist-container {
+            display: none; height: 73vh; background: #141419; padding: 30px 50px;
+            flex-direction: row; justify-content: space-between; align-items: center;
         }
+        .lista-jogos {
+            width: 45%; height: 100%; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
+        }
+        .lista-jogos::-webkit-scrollbar { display: none; }
+        .item-jogo {
+            background: #1e1e24; padding: 15px 20px; border-left: 5px solid transparent;
+            font-size: 18px; font-weight: bold; border-radius: 4px; cursor: pointer; transition: all 0.15s;
+        }
+        .item-jogo.focado {
+            background: #ff0043; color: white; border-left-color: #ffffff; padding-left: 30px;
+        }
+        .preview-jogo {
+            width: 45%; height: 100%; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; background: #1a1a22; border-radius: 12px; border: 2px solid #252530;
+        }
+        .preview-jogo .capa-placeholder { font-size: 90px; margin-bottom: 20px; opacity: 0.7; }
+        .preview-jogo h3 { margin: 0; font-size: 26px; text-align: center; color: #ff0043; }
 
-        .card-plataforma.focado {
-            border-color: #ff0043;
-            box-shadow: 0 0 30px rgba(255, 0, 67, 0.4);
-            transform: scale(1.1);
-            opacity: 1;
-            background: #1f1f27;
-        }
-
-        .card-plataforma .icone { font-size: 60px; margin-bottom: 20px; pointer-events: none; }
-        .card-plataforma h2 { margin: 10px 0; font-size: 22px; pointer-events: none; }
-        .card-plataforma .contador { color: #888; font-size: 14px; pointer-events: none; }
-
-        /* Controles Virtuais Touch Ocultos por padrão */
-        .controles-touch {
-            display: none;
-            position: fixed;
-            bottom: 12vh;
-            left: 0;
-            width: 100vw;
-            justify-content: space-between;
-            padding: 0 40px;
-            z-index: 100;
-        }
-        .btn-touch {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            border-radius: 50%;
-            width: 70px;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        .btn-touch:active {
-            background: #ff0043;
-            border-color: #ff0043;
-        }
-
-        /* Rodape Informativo */
+        /* Rodapé de Comandos */
         .footer {
-            height: 12vh;
-            background: #141419;
-            display: flex;
-            align-items: center;
-            padding: 0 50px;
-            font-size: 16px;
-            color: #ccc;
-            border-top: 2px solid #222;
+            height: 15vh; background: #111114; display: flex; align-items: center;
+            justify-content: space-between; padding: 0 40px; border-top: 1px solid #222;
         }
-        .btn-guia { background: #333; padding: 5px 12px; border-radius: 6px; margin-right: 10px; color: #fff; font-weight: bold; }
-        .btn-guia.confirmar { background: #ff0043; }
-        .status-controle { margin-left: auto; color: #00ff66; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .controles-guia { display: flex; gap: 20px; }
+        .comando-item { font-size: 15px; color: #aaa; display: flex; align-items: center; }
+        .btn-controle { background: #ff0043; color: white; font-weight: bold; padding: 4px 10px; border-radius: 6px; margin-right: 8px; font-size: 13px; }
+        .btn-controle.neutro { background: #444; }
 
-        #iframe-emulador {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            border: none; z-index: 9999; background: #000;
+        /* Janela do Emulador (Iframe Fullscreen) */
+        #retro-screen {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; border: none; z-index: 99999; background: #000;
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="logo">RetroPlayBR</div>
-        <div class="sistema-nome" id="nome-sistema-atual">Super Nintendo</div>
+        <div class="logo">RETRO<span>PLAY</span>BR</div>
+        <div class="gamepad-status" id="status-controle">🎮 CONTROLE DESCONECTADO</div>
     </div>
 
-    <div class="conteudo" id="conteudo-id">
-        <div class="carrossel" id="carrossel-consoles"></div>
+    <!-- Tela 1: Carrossel -->
+    <div class="main-container" id="tela-carrossel">
+        <div class="wrapper-carrossel">
+            <div class="carrossel" id="carrossel"></div>
+        </div>
     </div>
 
-    <div class="controles-touch" id="botoes-touch">
-        <div class="btn-touch" id="touch-esq">◀</div>
-        <div class="btn-touch" id="touch-ok">OK</div>
-        <div class="btn-touch" id="touch-dir">▶</div>
+    <!-- Tela 2: Menu de Jogos -->
+    <div class="gamelist-container" id="tela-jogos">
+        <div class="lista-jogos" id="container-lista-jogos"></div>
+        <div class="preview-jogo">
+            <div class="capa-placeholder">🎮</div>
+            <h3 id="txt-preview-titulo">Selecione um Jogo</h3>
+        </div>
     </div>
 
     <div class="footer">
-        <span class="btn-guia">⬅️ ➡️</span> Navegar 
-        <span style="margin-left: 20px;"></span>
-        <span class="btn-guia confirmar">A / OK</span> Selecionar
-        <span style="margin-left: 20px;"></span>
-        <span class="btn-guia">Back</span> Sair do Jogo
-        <div class="status-controle" id="gamepad-status">🔌 Aguardando controle...</div>
+        <div class="controles-guia">
+            <div class="comando-item"><span class="btn-controle neutro">D-PAD / SETAS</span> Mover Cursor</div>
+            <div class="comando-item"><span class="btn-controle">X / ENTER</span> Confirmar</div>
+            <div class="comando-item"><span class="btn-controle neutro">BACKSPACE</span> Voltar</div>
+        </div>
+        <div style="color: #666; font-size: 14px;">webOS 4.0 Pro</div>
     </div>
 
-    <iframe id="iframe-emulador"></iframe>
+    <iframe id="retro-screen"></iframe>
 
 <script>
-    var listaConsoles = [
-        { id: "snes", nome: "Super Nintendo", icone: "🕹️", total: "0 Jogos" },
-        { id: "gba", nome: "Game Boy Advance", icone: "🎮", total: "0 Jogos" },
-        { id: "mega", nome: "Mega Drive", icone: "👾", total: "0 Jogos" },
-        { id: "nes", nome: "Nintendo (NES)", icone: "📺", total: "0 Jogos" }
+    var linguasConsoles = [
+        { 
+            id: "gba", nome: "Game Boy Advance", icone: "🎮", total: "5 Jogos",
+            jogos: [
+                { nome: "Pokémon - Fire Red Version", rom: "pokemon_firered.gba", core: "gba" },
+                { nome: "Pokémon - Emerald Version", rom: "pokemon_emerald.gba", core: "gba" },
+                { nome: "The Legend of Zelda - The Minish Cap", rom: "zelda_minish.gba", core: "gba" },
+                { nome: "Super Mario Advance 2", rom: "mario_advance2.gba", core: "gba" },
+                { nome: "Metroid - Zero Mission", rom: "metroid_zero.gba", core: "gba" }
+            ]
+        },
+        { 
+            id: "snes", nome: "Super Nintendo", icone: "🕹️", total: "2 Jogos",
+            jogos: [
+                { nome: "Super Mario World", rom: "smw.smc", core: "snes" },
+                { nome: "Top Gear", rom: "topgear.smc", core: "snes" }
+            ]
+        },
+        { id: "mega", nome: "Mega Drive", icone: "👾", total: "0 Jogos", jogos: [] },
+        { id: "nes", nome: "Nintendo NES", icone: "📺", total: "0 Jogos", jogos: [] }
     ];
 
-    var indexFocado = 0;
-    var emuladorAberto = false;
-    var carrossel = document.getElementById("carrossel-consoles");
+    var estadoApp = "CARROSSEL"; 
+    var indexConsole = 0;
+    var indexJogo = 0;
+    
+    var divCarrossel = document.getElementById("carrossel");
+    var telaCarrossel = document.getElementById("tela-carrossel");
+    var telaJogos = document.getElementById("tela-jogos");
+    var listaJogosUI = document.getElementById("container-lista-jogos");
 
-    function renderizarMenu() {
+    function montarMenu() {
         var html = "";
-        for (var i = 0; i < listaConsoles.length; i++) {
-            var c = listaConsoles[i];
-            var classeFocado = (i === indexFocado) ? "focado" : "";
-            html += '<div class="card-plataforma ' + classeFocado + '" id="console-' + i + '" data-index="' + i + '">' +
-                        '<div class="icone">' + c.icone + '</div>' +
+        for (var i = 0; i < linguasConsoles.length; i++) {
+            var c = linguasConsoles[i];
+            var focado = (i === indexConsole) ? "focado" : "";
+            html += '<div class="card-system ' + focado + '" id="sys-' + i + '" onclick="clickConsole(' + i + ')">' +
+                        '<div class="logo-console">' + c.icone + '</div>' +
                         '<h2>' + c.nome + '</h2>' +
-                        '<div class="contador">' + c.total + '</div>' +
+                        '<div class="count">' + c.total + '</div>' +
                     '</div>';
         }
-        carrossel.innerHTML = html;
-        atualizarPosicao();
+        divCarrossel.innerHTML = html;
+        atualizarLayoutCarrossel();
     }
 
-    function atualizarPosicao() {
-        var cards = document.querySelectorAll(".card-plataforma");
-        for (var i = 0; i < cards.length; i++) {
-            cards[i].classList.remove("focado");
+    function atualizarLayoutCarrossel() {
+        var cards = document.querySelectorAll(".card-system");
+        for (var i = 0; i < cards.length; i++) { cards[i].classList.remove("focado"); }
+        var el = document.getElementById("sys-" + indexConsole);
+        if (el) el.classList.add("focado");
+        var shift = -(indexConsole * 290) - 130; 
+        divCarrossel.style.transform = "translateX(" + shift + "px)";
+    }
+
+    function renderizarListaJogos() {
+        var consoleAtual = linguasConsoles[indexConsole];
+        if (consoleAtual.jogos.length === 0) {
+            alert("Nenhum jogo adicionado nesta categoria!");
+            return;
         }
-        var cardFocado = document.getElementById("console-" + indexFocado);
-        if (cardFocado) {
-            cardFocado.classList.add("focado");
-            document.getElementById("nome-sistema-atual").innerText = listaConsoles[indexFocado].nome;
-        }
-        var deslocamento = -(indexFocado * 300);
-        carrossel.style.transform = "translateX(" + deslocamento + "px)";
-    }
-
-    function moverDireita() {
-        if (indexFocado < listaConsoles.length - 1) { indexFocado++; atualizarPosicao(); }
-    }
-    function moverEsquerda() {
-        if (indexFocado > 0) { indexFocado--; atualizarPosicao(); }
-    }
-    function acaoConfirmar() {
-        alert("Carregando jogos para: " + listaConsoles[indexFocado].nome + "\nEnvie suas ROMs para integrar!");
-    }
-
-    // 1. SUPORTE A CONTROLES (PS4, PS3, PS2, PS1)
-    window.addEventListener("gamepadconnected", function(e) {
-        document.getElementById("gamepad-status").innerText = "🎮 Controle conectado: " + e.gamepad.id.substring(0, 15);
-        loopGamepad();
-    });
-
-    window.addEventListener("gamepaddisconnected", function(e) {
-        document.getElementById("gamepad-status").innerText = "🔌 Aguardando controle...";
-    });
-
-    var travaBotao = false;
-    function loopGamepad() {
-        if (emuladorAberto) return;
         
-        var gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-        var gp = gamepads[0];
-        if (!gp) return;
+        estadoApp = "JOGOS";
+        indexJogo = 0;
+        telaCarrossel.style.display = "none";
+        telaJogos.style.display = "flex";
 
-        var eixosX = gp.axes[0];
-        var dpadEsq = gp.buttons[14] && gp.buttons[14].pressed;
-        var dpadDir = gp.buttons[15] && gp.buttons[15].pressed;
-        var btnA = gp.buttons[0] && gp.buttons[0].pressed; // Botão X do PlayStation
-
-        if (!travaBotao) {
-            if (dpadDir || eixosX > 0.5) { moverDireita(); travaBotao = true; setTimeout(liberarTrava, 250); }
-            else if (dpadEsq || eixosX < -0.5) { moverEsquerda(); travaBotao = true; setTimeout(liberarTrava, 250); }
-            else if (btnA) { acaoConfirmar(); travaBotao = true; setTimeout(liberarTrava, 500); }
+        var html = "";
+        for (var i = 0; i < consoleAtual.jogos.length; i++) {
+            var jogo = consoleAtual.jogos[i];
+            var classeFocado = (i === indexJogo) ? "focado" : "";
+            html += '<div class="item-jogo ' + classeFocado + '" id="game-' + i + '" onclick="clickJogo(' + i + ')">' + jogo.nome + '</div>';
         }
-
-        requestAnimationFrame(loopGamepad);
+        listaJogosUI.innerHTML = html;
+        atualizarFocoJogo();
     }
-    function liberarTrava() { travaBotao = false; if(!emuladorAberto) requestAnimationFrame(loopGamepad); }
 
-    // 2. SUPORTE A TOUCH SCREEN & CLIQUES NATURAIS
-    window.addEventListener("touchstart", function() {
-        document.getElementById("botoes-touch").style.display = "flex";
-    }, {once: true});
-
-    document.getElementById("touch-esq").addEventListener("click", moverEsquerda);
-    document.getElementById("touch-dir").addEventListener("click", moverDireita);
-    document.getElementById("touch-ok").addEventListener("click", acaoConfirmar);
-
-    document.getElementById("carrossel-consoles").addEventListener("click", function(e) {
-        var card = e.target.closest(".card-plataforma");
-        if (card) {
-            var idx = parseInt(card.getAttribute("data-index"));
-            if (idx === indexFocado) { acaoConfirmar(); } 
-            else { indexFocado = idx; atualizarPosicao(); }
+    function atualizarFocoJogo() {
+        var itens = document.querySelectorAll(".item-jogo");
+        for (var i = 0; i < itens.length; i++) { itens[i].classList.remove("focado"); }
+        var el = document.getElementById("game-" + indexJogo);
+        if (el) {
+            el.classList.add("focado");
+            el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+            document.getElementById("txt-preview-titulo").innerText = linguasConsoles[indexConsole].jogos[indexJogo].nome;
         }
-    });
+    }
 
-    var touchStartX = 0;
-    document.getElementById("conteudo-id").addEventListener("touchstart", function(e) {
-        touchStartX = e.changedTouches[0].screenX;
-    });
-    document.getElementById("conteudo-id").addEventListener("touchend", function(e) {
-        var touchEndX = e.changedTouches[0].screenX;
-        if (touchStartX - touchEndX > 50) { moverDireita(); }
-        if (touchEndX - touchStartX > 50) { moverEsquerda(); }
-    });
+    function voltarMenuAnterior() {
+        if (estadoApp === "JOGOS") {
+            estadoApp = "CARROSSEL";
+            telaJogos.style.display = "none";
+            telaCarrossel.style.display = "flex";
+            atualizarLayoutCarrossel();
+        } else if (estadoApp === "EMULADOR") {
+            fecharJogo();
+        }
+    }
 
-    // 3. TECLADO & CONTROLE REMOTO LG WEBOS
+    function dispararEmulador() {
+        var jogo = linguasConsoles[indexConsole].jogos[indexJogo];
+        var urlRomCompleta = window.location.origin + "/" + jogo.rom;
+        
+        estadoApp = "EMULADOR";
+        var frame = document.getElementById("retro-screen");
+        frame.src = "https://emulatorjs.org/play.html?rom=" + encodeURIComponent(urlRomCompleta) + "&core=" + jogo.core;
+        frame.style.display = "block";
+    }
+
+    function fecharJogo() {
+        estadoApp = "JOGOS";
+        var frame = document.getElementById("retro-screen");
+        frame.src = ""; frame.style.display = "none";
+    }
+
     document.addEventListener("keydown", function(e) {
-        if (emuladorAberto) {
-            if (e.keyCode === 461 || e.key === "Backspace") { fecharEmulador(); }
+        if (e.keyCode === 461 || e.key === "Backspace") { 
+            e.preventDefault(); 
+            voltarMenuAnterior(); 
             return; 
         }
-        if (e.keyCode === 39) { moverDireita(); }
-        else if (e.keyCode === 37) { moverEsquerda(); }
-        else if (e.keyCode === 13) { acaoConfirmar(); }
+
+        if (estadoApp === "CARROSSEL") {
+            if (e.keyCode === 39) { 
+                if (indexConsole < linguasConsoles.length - 1) { indexConsole++; atualizarLayoutCarrossel(); }
+            } else if (e.keyCode === 37) { 
+                if (indexConsole > 0) { indexConsole--; atualizarLayoutCarrossel(); }
+            } else if (e.keyCode === 13) { 
+                renderizarListaJogos();
+            }
+        } 
+        else if (estadoApp === "JOGOS") {
+            var limiteJogos = linguasConsoles[indexConsole].jogos.length;
+            if (e.keyCode === 40) { 
+                if (indexJogo < limiteJogos - 1) { indexJogo++; atualizarFocoJogo(); }
+            } else if (e.keyCode === 38) { 
+                if (indexJogo > 0) { indexJogo--; atualizarFocoJogo(); }
+            } else if (e.keyCode === 13) { 
+                dispararEmulador();
+            }
+        }
     });
 
-    function fecharEmulador() {
-        var iframe = document.getElementById("iframe-emulador");
-        iframe.src = ""; iframe.style.display = "none";
-        emuladorAberto = false;
-        requestAnimationFrame(loopGamepad);
+    function clickConsole(idx) {
+        if(indexConsole === idx) { renderizarListaJogos(); } 
+        else { indexConsole = idx; atualizarLayoutCarrossel(); }
+    }
+    function clickJogo(idx) {
+        if(indexJogo === idx) { dispararEmulador(); } 
+        else { indexJogo = idx; atualizarFocoJogo(); }
     }
 
-    renderizarMenu();
+    montarMenu();
 </script>
 </body>
 </html>
