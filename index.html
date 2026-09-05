@@ -1,879 +1,193 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <meta name="theme-color" content="#111111">
-  <title>RetroPlayBR</title>
-  <style>
-
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  background: #0d0d0f;
-  color: #ffffff;
-  font-family: Arial, Helvetica, sans-serif;
-  min-height: 100%;
-}
-
-body {
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-}
-
-button, input {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.topbar {
-  height: 64px;
-  padding: 0 16px;
-  background: #121216;
-  border-bottom: 1px solid #24242b;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-}
-
-.brand-mark {
-  width: 38px;
-  height: 38px;
-  line-height: 38px;
-  text-align: center;
-  border-radius: 10px;
-  background: #ffffff;
-  color: #111111;
-  font-weight: bold;
-  font-size: 22px;
-  margin-right: 10px;
-}
-
-.brand-title {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.brand-subtitle {
-  color: #8f8f9b;
-  font-size: 11px;
-  margin-top: 2px;
-}
-
-.icon-btn {
-  background: #1d1d23;
-  border: 1px solid #2d2d36;
-  color: #ffd45b;
-  border-radius: 10px;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
-}
-
-.hero {
-  margin: 14px 14px 0;
-  min-height: 180px;
-  border-radius: 18px;
-  overflow: hidden;
-  position: relative;
-  background:
-    linear-gradient(135deg, rgba(30,30,35,0.92), rgba(8,8,10,0.95)),
-    radial-gradient(circle at 80% 30%, rgba(255,255,255,0.15), transparent 40%);
-  border: 1px solid #292932;
-}
-
-.hero:after {
-  content: "🎮";
-  position: absolute;
-  right: 24px;
-  bottom: 4px;
-  font-size: 92px;
-  opacity: 0.18;
-}
-
-.hero-overlay {
-  padding: 22px;
-  position: relative;
-  z-index: 2;
-  width: 72%;
-}
-
-.hero-badge {
-  display: inline-block;
-  padding: 5px 8px;
-  border-radius: 20px;
-  background: #ffffff;
-  color: #111111;
-  font-size: 10px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.hero h1 {
-  margin: 0;
-  font-size: 27px;
-  line-height: 1.1;
-}
-
-.hero p {
-  color: #c1c1c8;
-  font-size: 13px;
-  line-height: 1.5;
-  margin: 10px 0 0;
-}
-
-.search-wrap {
-  padding: 14px;
-}
-
-.search-wrap input {
-  width: 100%;
-  height: 46px;
-  border: 1px solid #2b2b33;
-  border-radius: 13px;
-  background: #17171c;
-  color: #ffffff;
-  padding: 0 14px;
-  outline: none;
-  font-size: 14px;
-}
-
-.console-tabs {
-  white-space: nowrap;
-  overflow-x: auto;
-  padding: 0 14px 12px;
-  -webkit-overflow-scrolling: touch;
-}
-
-.tab {
-  display: inline-block;
-  border: 1px solid #2d2d35;
-  border-radius: 20px;
-  padding: 9px 15px;
-  margin-right: 7px;
-  background: #18181e;
-  color: #bdbdc6;
-  font-size: 13px;
-}
-
-.tab.active {
-  background: #ffffff;
-  color: #101012;
-  border-color: #ffffff;
-  font-weight: bold;
-}
-
-main {
-  padding: 0 14px 28px;
-}
-
-.section-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 4px 0 12px;
-}
-
-.section-head h2 {
-  margin: 0;
-  font-size: 18px;
-}
-
-#gameCount {
-  color: #8e8e99;
-  font-size: 12px;
-}
-
-.game-grid {
-  display: flex;
-  flex-wrap: wrap;
-  margin: -6px;
-}
-
-.game-card {
-  width: 50%;
-  padding: 6px;
-}
-
-.game-card-inner {
-  background: #17171d;
-  border: 1px solid #282830;
-  border-radius: 14px;
-  overflow: hidden;
-  min-height: 240px;
-  position: relative;
-}
-
-.cover {
-  height: 165px;
-  position: relative;
-  background: #24242c;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.cover-art {
-  width: 82%;
-  height: 82%;
-  border-radius: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 12px;
-  font-weight: bold;
-  font-size: 20px;
-  box-shadow: 0 12px 26px rgba(0,0,0,0.32);
-}
-
-.cover-ps2 { background: linear-gradient(145deg, #203d82, #11172d); }
-.cover-psp { background: linear-gradient(145deg, #44485b, #16171d); }
-.cover-ps1 { background: linear-gradient(145deg, #737581, #2d2f37); }
-.cover-snes { background: linear-gradient(145deg, #66528d, #2c263c); }
-.cover-gba { background: linear-gradient(145deg, #3d5385, #202942); }
-.cover-n64 { background: linear-gradient(145deg, #486c43, #223622); }
-.cover-android { background: linear-gradient(145deg, #4b7b48, #233a24); }
-
-.favorite-mini {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 3;
-  border: 0;
-  width: 32px;
-  height: 32px;
-  border-radius: 16px;
-  background: rgba(0,0,0,0.62);
-  color: #ffffff;
-  font-size: 17px;
-}
-
-.favorite-mini.is-fav {
-  color: #ffd45b;
-}
-
-.card-info {
-  padding: 11px;
-}
-
-.card-console {
-  color: #8f8f9b;
-  font-size: 10px;
-  text-transform: uppercase;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.card-title {
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 1.25;
-  min-height: 34px;
-}
-
-.open-btn {
-  width: 100%;
-  margin-top: 8px;
-  border: 1px solid #30303a;
-  background: #222229;
-  color: #ffffff;
-  border-radius: 9px;
-  padding: 8px 10px;
-  font-size: 12px;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 50px 10px;
-  color: #8d8d96;
-}
-
-.modal {
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.82);
-  overflow-y: auto;
-  padding: 18px;
-}
-
-.modal-card {
-  max-width: 500px;
-  margin: 24px auto;
-  background: #17171c;
-  border: 1px solid #303039;
-  border-radius: 18px;
-  overflow: hidden;
-  position: relative;
-}
-
-.close-btn {
-  position: absolute;
-  z-index: 4;
-  top: 10px;
-  right: 10px;
-  width: 38px;
-  height: 38px;
-  border: 0;
-  border-radius: 20px;
-  background: rgba(0,0,0,0.65);
-  color: #ffffff;
-  font-size: 26px;
-  line-height: 34px;
-}
-
-.modal-cover {
-  min-height: 210px;
-  background: linear-gradient(135deg, #25252f, #111115);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 74px;
-}
-
-.modal-body {
-  padding: 18px;
-}
-
-.modal-console {
-  font-size: 11px;
-  color: #9a9aa5;
-  text-transform: uppercase;
-  font-weight: bold;
-}
-
-.modal-body h3 {
-  margin: 5px 0 9px;
-  font-size: 25px;
-}
-
-.modal-body p {
-  color: #b6b6bf;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.modal-actions {
-  display: flex;
-  margin-top: 16px;
-}
-
-.play-btn,
-.secondary-btn {
-  flex: 1;
-  border-radius: 11px;
-  padding: 12px 8px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.play-btn {
-  background: #ffffff;
-  color: #111111;
-  border: 1px solid #ffffff;
-  margin-right: 7px;
-}
-
-.secondary-btn {
-  background: #24242b;
-  color: #ffffff;
-  border: 1px solid #33333d;
-  margin-left: 7px;
-}
-
-.hint {
-  margin-top: 16px !important;
-  font-size: 11px !important;
-  color: #777783 !important;
-}
-
-@media (min-width: 560px) {
-  .game-card { width: 33.3333%; }
-}
-
-@media (min-width: 820px) {
-  .game-card { width: 25%; }
-  #app { max-width: 1100px; margin: 0 auto; }
-}
-
-
-.top-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.admin-card {
-  max-width: 520px;
-}
-
-.admin-input {
-  width: 100%;
-  border: 1px solid #33333d;
-  background: #101015;
-  color: #ffffff;
-  border-radius: 10px;
-  padding: 12px;
-  margin: 6px 0 12px;
-  font-size: 14px;
-}
-
-.admin-textarea {
-  min-height: 90px;
-  resize: vertical;
-}
-
-.admin-label {
-  display: block;
-  font-size: 12px;
-  color: #a9a9b3;
-  margin-top: 6px;
-}
-
-.admin-full-btn {
-  width: 100%;
-  margin-top: 4px;
-}
-
-.admin-error {
-  color: #ff6b6b !important;
-  min-height: 18px;
-  margin: 8px 0 0 !important;
-}
-
-.admin-divider {
-  height: 1px;
-  background: #2d2d35;
-  margin: 22px 0 16px;
-}
-
-.admin-small-title {
-  font-size: 17px !important;
-  margin-bottom: 10px !important;
-}
-
-.admin-game-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  border: 1px solid #2a2a32;
-  background: #111116;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 8px;
-}
-
-.admin-game-info {
-  min-width: 0;
-}
-
-.admin-game-name {
-  font-weight: bold;
-  font-size: 13px;
-}
-
-.admin-game-console {
-  color: #8d8d97;
-  font-size: 11px;
-  margin-top: 3px;
-}
-
-.admin-delete-btn {
-  border: 1px solid #4a2d31;
-  background: #2a171a;
-  color: #ff8f98;
-  border-radius: 8px;
-  padding: 8px 10px;
-  font-size: 12px;
-}
-
-</style>
+    <meta charset="UTF-8">
+    <title>RetroPlayBR - Estilo RetroBat</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background-color: #0b0b0d;
+            color: #ffffff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0; padding: 0;
+            overflow: hidden;
+            width: 100vw; height: 100vh;
+        }
+
+        .header {
+            height: 10vh;
+            display: flex;
+            align-content: center;
+            justify-content: space-between;
+            padding: 20px 50px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+        }
+        .logo { font-size: 28px; font-weight: bold; color: #ff0043; text-transform: uppercase; letter-spacing: 2px; }
+        .sistema-nome { font-size: 24px; color: #aaaaaa; }
+
+        .conteudo {
+            height: 75vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .carrossel {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+            padding: 0 40vw;
+        }
+
+        .card-plataforma {
+            background: #16161a;
+            border: 4px solid #24242b;
+            border-radius: 12px;
+            width: 280px;
+            height: 380px;
+            margin: 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transition: all 0.25s ease;
+            opacity: 0.5;
+        }
+
+        .card-plataforma.focado {
+            border-color: #ff0043;
+            box-shadow: 0 0 30px rgba(255, 0, 67, 0.4);
+            transform: scale(1.15);
+            opacity: 1;
+            background: #1f1f27;
+        }
+
+        .card-plataforma .icone { font-size: 60px; margin-bottom: 20px; }
+        .card-plataforma h2 { margin: 10px 0; font-size: 24px; }
+        .card-plataforma .contador { color: #888; font-size: 14px; }
+
+        .footer {
+            height: 15vh;
+            background: #141419;
+            display: flex;
+            align-items: center;
+            padding: 0 50px;
+            font-size: 16px;
+            color: #ccc;
+            border-top: 2px solid #222;
+        }
+        .btn-guia { background: #333; padding: 5px 12px; border-radius: 6px; margin-right: 10px; color: #fff; font-weight: bold; }
+        .btn-guia.confirmar { background: #ff0043; }
+
+        #iframe-emulador {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            border: none; z-index: 9999; background: #000;
+        }
+    </style>
 </head>
 <body>
-  <div id="app">
-    <header class="topbar">
-      <div class="brand">
-        <span class="brand-mark">R</span>
-        <div>
-          <div class="brand-title">RetroPlayBR</div>
-          <div class="brand-subtitle">Game Library</div>
-        </div>
-      </div>
-      <div class="top-actions"><button id="adminButton" class="icon-btn" aria-label="Admin">⚙</button><button id="favButton" class="icon-btn" aria-label="Favoritos">★</button></div>
-    </header>
 
-    <section class="hero">
-      <div class="hero-overlay">
-        <div class="hero-badge">ANDROID 5</div>
-        <h1>Sua biblioteca retrô</h1>
-        <p>Organize seus jogos por console e abra seus favoritos rapidamente.</p>
-      </div>
-    </section>
-
-    <section class="search-wrap">
-      <input id="searchInput" type="search" placeholder="Pesquisar jogo..." autocomplete="off">
-    </section>
-
-    <nav id="consoleTabs" class="console-tabs">
-      <button class="tab active" data-console="Todos">Todos</button>
-      <button class="tab" data-console="PS2">PS2</button>
-      <button class="tab" data-console="PSP">PSP</button>
-      <button class="tab" data-console="PS1">PS1</button>
-      <button class="tab" data-console="SNES">SNES</button>
-      <button class="tab" data-console="GBA">GBA</button>
-      <button class="tab" data-console="N64">N64</button>
-      <button class="tab" data-console="Android">Android</button>
-    </nav>
-
-    <main>
-      <div class="section-head">
-        <h2 id="sectionTitle">Todos os jogos</h2>
-        <span id="gameCount"></span>
-      </div>
-      <div id="gameGrid" class="game-grid"></div>
-      <div id="emptyState" class="empty-state" style="display:none;">
-        Nenhum jogo adicionado.
-      </div>
-    </main>
-
-
-    <div id="adminLoginModal" class="modal" style="display:none;">
-      <div class="modal-card admin-card">
-        <button id="closeAdminLogin" class="close-btn">×</button>
-        <div class="modal-body">
-          <div class="modal-console">PAINEL ADMIN</div>
-          <h3>Entrar</h3>
-          <p>Digite a senha do administrador.</p>
-          <input id="adminPassword" class="admin-input" type="password" placeholder="Senha">
-          <button id="adminLoginButton" class="play-btn admin-full-btn">Entrar</button>
-          <p id="adminLoginError" class="admin-error"></p>
-        </div>
-      </div>
+    <div class="header">
+        <div class="logo">RetroPlayBR</div>
+        <div class="sistema-nome" id="nome-sistema-atual">Super Nintendo</div>
     </div>
 
-    <div id="adminPanelModal" class="modal" style="display:none;">
-      <div class="modal-card admin-card">
-        <button id="closeAdminPanel" class="close-btn">×</button>
-        <div class="modal-body">
-          <div class="modal-console">PAINEL ADMIN</div>
-          <h3>Gerenciar jogos</h3>
-
-          <label class="admin-label">Nome do jogo</label>
-          <input id="adminGameTitle" class="admin-input" type="text" placeholder="Ex.: God of War II">
-
-          <label class="admin-label">Console</label>
-          <select id="adminGameConsole" class="admin-input">
-            <option>PS2</option>
-            <option>PSP</option>
-            <option>PS1</option>
-            <option>SNES</option>
-            <option>GBA</option>
-            <option>N64</option>
-            <option>Android</option>
-          </select>
-
-          <label class="admin-label">Ícone</label>
-          <input id="adminGameIcon" class="admin-input" type="text" placeholder="Ex.: 🎮">
-
-          <label class="admin-label">Descrição</label>
-          <textarea id="adminGameDesc" class="admin-input admin-textarea" placeholder="Descrição do jogo"></textarea>
-
-          <button id="adminAddGame" class="play-btn admin-full-btn">+ Adicionar jogo</button>
-
-          <div class="admin-divider"></div>
-          <h3 class="admin-small-title">Jogos cadastrados</h3>
-          <div id="adminGameList"></div>
-        </div>
-      </div>
+    <div class="conteudo">
+        <div class="carrossel" id="carrossel-consoles"></div>
     </div>
 
-    <div id="gameModal" class="modal" style="display:none;">
-      <div class="modal-card">
-        <button id="closeModal" class="close-btn">×</button>
-        <div id="modalCover" class="modal-cover"></div>
-        <div class="modal-body">
-          <div id="modalConsole" class="modal-console"></div>
-          <h3 id="modalTitle"></h3>
-          <p id="modalDescription"></p>
-          <div class="modal-actions">
-            <button id="playButton" class="play-btn">▶ Jogar</button>
-            <button id="favoriteButton" class="secondary-btn">☆ Favoritar</button>
-          </div>
-          <p class="hint">
-            O botão Jogar é demonstrativo nesta versão HTML. Ao transformar em APK,
-            ele pode ser ligado a um emulador instalado no aparelho.
-          </p>
-        </div>
-      </div>
+    <div class="footer">
+        <span class="btn-guia">⬅️ ➡️</span> Navegar 
+        <span style="margin-left: 30px;"></span>
+        <span class="btn-guia confirmar">OK / Enter</span> Abrir Plataforma
+        <span style="margin-left: 30px;"></span>
+        <span class="btn-guia">Back / Voltar</span> Sair do Jogo
     </div>
-  </div>
 
-  <script>
+    <iframe id="iframe-emulador"></iframe>
 
-(function () {
-  var games = [];
+<script>
+    var listaConsoles = [
+        { id: "snes", nome: "Super Nintendo", icone: "🕹️", total: "0 Jogos" },
+        { id: "gba", nome: "Game Boy Advance", icone: "🎮", total: "0 Jogos" },
+        { id: "mega", nome: "Mega Drive", icone: "👾", total: "0 Jogos" },
+        { id: "nes", nome: "Nintendo (NES)", icone: "📺", total: "0 Jogos" }
+    ];
 
-  function loadGames() {
-    try {
-      var raw = localStorage.getItem("retroplay_games");
-      if (raw) {
-        games = JSON.parse(raw);
-      }
-    } catch (e) {
-      games = [];
-    }
-  }
+    var indexFocado = 0;
+    var emuladorAberto = false;
+    var carrossel = document.getElementById("carrossel-consoles");
 
-  function saveGames() {
-    try {
-      localStorage.setItem("retroplay_games", JSON.stringify(games));
-    } catch (e) {}
-  }
-
-  loadGames();
-
-  var selectedConsole = "Todos";
-  var showOnlyFavorites = false;
-  var selectedGame = null;
-
-  var searchInput = document.getElementById("searchInput");
-  var gameGrid = document.getElementById("gameGrid");
-  var gameCount = document.getElementById("gameCount");
-  var sectionTitle = document.getElementById("sectionTitle");
-  var emptyState = document.getElementById("emptyState");
-  var consoleTabs = document.getElementById("consoleTabs");
-  var favButton = document.getElementById("favButton");
-  var modal = document.getElementById("gameModal");
-  var closeModal = document.getElementById("closeModal");
-  var modalCover = document.getElementById("modalCover");
-  var modalConsole = document.getElementById("modalConsole");
-  var modalTitle = document.getElementById("modalTitle");
-  var modalDescription = document.getElementById("modalDescription");
-  var favoriteButton = document.getElementById("favoriteButton");
-  var playButton = document.getElementById("playButton");
-  var adminButton = document.getElementById("adminButton");
-  var adminLoginModal = document.getElementById("adminLoginModal");
-  var adminPanelModal = document.getElementById("adminPanelModal");
-  var closeAdminLogin = document.getElementById("closeAdminLogin");
-  var closeAdminPanel = document.getElementById("closeAdminPanel");
-  var adminPassword = document.getElementById("adminPassword");
-  var adminLoginButton = document.getElementById("adminLoginButton");
-  var adminLoginError = document.getElementById("adminLoginError");
-  var adminGameTitle = document.getElementById("adminGameTitle");
-  var adminGameConsole = document.getElementById("adminGameConsole");
-  var adminGameIcon = document.getElementById("adminGameIcon");
-  var adminGameDesc = document.getElementById("adminGameDesc");
-  var adminAddGame = document.getElementById("adminAddGame");
-  var adminGameList = document.getElementById("adminGameList");
-
-
-  function getFavorites() {
-    try {
-      var raw = localStorage.getItem("retroplay_favorites");
-      if (!raw) return [];
-      return JSON.parse(raw);
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function saveFavorites(list) {
-    try {
-      localStorage.setItem("retroplay_favorites", JSON.stringify(list));
-    } catch (e) {}
-  }
-
-  function isFavorite(id) {
-    var favs = getFavorites();
-    var i;
-    for (i = 0; i < favs.length; i++) {
-      if (favs[i] === id) return true;
-    }
-    return false;
-  }
-
-  function toggleFavorite(id) {
-    var favs = getFavorites();
-    var output = [];
-    var exists = false;
-    var i;
-
-    for (i = 0; i < favs.length; i++) {
-      if (favs[i] === id) {
-        exists = true;
-      } else {
-        output.push(favs[i]);
-      }
-    }
-
-    if (!exists) output.push(id);
-    saveFavorites(output);
-    renderGames();
-
-    if (selectedGame && selectedGame.id === id) {
-      updateModalFavorite();
-    }
-  }
-
-  function safeText(text) {
-    var div = document.createElement("div");
-    div.appendChild(document.createTextNode(text));
-    return div.innerHTML;
-  }
-
-  function consoleClass(consoleName) {
-    return "cover-" + consoleName.toLowerCase();
-  }
-
-  function filteredGames() {
-    var query = (searchInput.value || "").toLowerCase();
-    var result = [];
-    var favs = getFavorites();
-    var i, j, favMatch;
-
-    for (i = 0; i < games.length; i++) {
-      var game = games[i];
-
-      if (selectedConsole !== "Todos" && game.console !== selectedConsole) {
-        continue;
-      }
-
-      if (query && game.title.toLowerCase().indexOf(query) === -1 &&
-          game.console.toLowerCase().indexOf(query) === -1) {
-        continue;
-      }
-
-      if (showOnlyFavorites) {
-        favMatch = false;
-        for (j = 0; j < favs.length; j++) {
-          if (favs[j] === game.id) {
-            favMatch = true;
-            break;
-          }
+    function renderizarMenu() {
+        var html = "";
+        for (var i = 0; i < listaConsoles.length; i++) {
+            var c = listaConsoles[i];
+            var classeFocado = (i === indexFocado) ? "focado" : "";
+            html += '<div class="card-plataforma ' + classeFocado + '" id="console-' + i + '">' +
+                        '<div class="icone">' + c.icone + '</div>' +
+                        '<h2>' + c.nome + '</h2>' +
+                        '<div class="contador">' + c.total + '</div>' +
+                    '</div>';
         }
-        if (!favMatch) continue;
-      }
-
-      result.push(game);
+        carrossel.innerHTML = html;
+        atualizarPosicao();
     }
 
-    return result;
-  }
-
-
-  function openAdminLogin() {
-    adminLoginError.innerHTML = "";
-    adminPassword.value = "";
-    adminLoginModal.style.display = "block";
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeAdminModals() {
-    adminLoginModal.style.display = "none";
-    adminPanelModal.style.display = "none";
-    document.body.style.overflow = "";
-  }
-
-  function renderAdminGameList() {
-    var html = "";
-    var i;
-    if (!games.length) {
-      adminGameList.innerHTML = '<div class="empty-state" style="padding:20px 0;">Nenhum jogo cadastrado.</div>';
-      return;
-    }
-
-    for (i = 0; i < games.length; i++) {
-      html += ''
-        + '<div class="admin-game-row">'
-        +   '<div class="admin-game-info">'
-        +     '<div class="admin-game-name">' + safeText(games[i].title) + '</div>'
-        +     '<div class="admin-game-console">' + safeText(games[i].console) + '</div>'
-        +   '</div>'
-        +   '<button class="admin-delete-btn" data-delete-game="' + games[i].id + '">Excluir</button>'
-        + '</div>';
-    }
-
-    adminGameList.innerHTML = html;
-
-    var deleteButtons = document.querySelectorAll("[data-delete-game]");
-    for (i = 0; i < deleteButtons.length; i++) {
-      deleteButtons[i].onclick = function () {
-        var id = parseInt(this.getAttribute("data-delete-game"), 10);
-        var newGames = [];
-        var j;
-        for (j = 0; j < games.length; j++) {
-          if (games[j].id !== id) newGames.push(games[j]);
+    function atualizarPosicao() {
+        var cards = document.querySelectorAll(".card-plataforma");
+        for (var i = 0; i < cards.length; i++) {
+            cards[i].classList.remove("focado");
         }
-        games = newGames;
-        saveGames();
-        renderAdminGameList();
-        renderGames();
-      };
-    }
-  }
+        
+        var cardFocado = document.getElementById("console-" + indexFocado);
+        if (cardFocado) {
+            cardFocado.classList.add("focado");
+            document.getElementById("nome-sistema-atual").innerText = listaConsoles[indexFocado].nome;
+        }
 
-  function openAdminPanel() {
-    adminLoginModal.style.display = "none";
-    adminPanelModal.style.display = "block";
-    renderAdminGameList();
-  }
-
-  function addAdminGame() {
-    var title = (adminGameTitle.value || "").replace(/^\s+|\s+$/g, "");
-    var consoleName = adminGameConsole.value;
-    var icon = (adminGameIcon.value || "").replace(/^\s+|\s+$/g, "") || "🎮";
-    var desc = (adminGameDesc.value || "").replace(/^\s+|\s+$/g, "");
-
-    if (!title) {
-      alert("Digite o nome do jogo.");
-      return;
+        var deslocamento = -(indexFocado * 320);
+        carrossel.style.transform = "translateX(" + deslocamento + "px)";
     }
 
-    var maxId = 0;
-    var i;
-    for (i = 0; i < games.length; i++) {
-      if (games[i].id > maxId) maxId = games[i].id;
-    }
+    document.addEventListener("keydown", function(e) {
+        if (emuladorAberto) {
+            if (e.keyCode === 461 || e.key === "Backspace") {
+                fecharEmulador();
+            }
+            return; 
+        }
 
-    games.push({
-      id: maxId + 1,
-      title: title,
-      console: consoleName,
-      icon: icon,
-      desc: desc || "Jogo adicionado pelo painel de administrador."
+        if (e.keyCode === 39) {
+            if (indexFocado < listaConsoles.length - 1) {
+                indexFocado++;
+                atualizarPosicao();
+            }
+        } else if (e.keyCode === 37) {
+            if (indexFocado > 0) {
+                indexFocado--;
+                atualizarPosicao();
+            }
+        } else if (e.keyCode === 13) {
+            solicitarAberturaJogo();
+        }
     });
 
-    saveGames();
-    adminGameTitle.value = "";
-    adminGameIcon.value = "";
-    adminGameDesc.value = "";
-    renderAdminGameList();
-    renderGames();
-  }
+    function solicitarAberturaJogo() {
+        alert("Modifique este arquivo para injetar suas ROMs da plataforma: " + listaConsoles[indexFocado].nome);
+    }
 
-  function renderGames() {
-    var list = filteredGames();
-    var html = "";
-    var i;
+    function fecharEmulador() {
+        var iframe = document.getElementById("iframe-emulador");
+        iframe.src = "";
+        iframe.style.display = "none";
+        emuladorAberto = false;
+    }
 
-    for (i = 0; i < list.length; i++) {
-      var game = list[i];
-      var fav = isFavorite(game.id);
-
-      html += ''
-        + '<div class="game-card">'
-        +   '<div class="game-card-inner">'
-        +     '<div class="cover">'
-        +       '<button class="favorite-mini ' + (fav ? 'is-fav' : 
+    renderizarMenu();
+</script>
+</body>
+</html>

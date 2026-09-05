@@ -1,22 +1,13 @@
-# RetroPlayBR Cloud — GameHub-style UI
+# RetroPlayBR - webOS RetroBat Edition
 
-Protótipo web estático inspirado na lógica de navegação do modo Console do GameHub, com identidade própria.
+Interface de emulação retrô sob medida para Smart TVs LG rodando **webOS 4.0+ (modelos de 2018 ou superiores)**.
 
-## Rodar localmente
-Abra `index.html` no navegador ou use qualquer servidor estático.
+## 🚀 Como usar
+1. Extraia o conteúdo deste repositório na raiz do seu projeto.
+2. Hospede no **Vercel** ou no seu próprio servidor local.
+3. Insira suas ROMs diretamente no arquivo `index.html`.
 
-## GitHub / Vercel
-1. Extraia o ZIP.
-2. Crie um repositório no GitHub.
-3. Envie `index.html`, `styles.css`, `app.js` e este `README.md`.
-4. Na Vercel, importe o repositório e selecione deploy estático, sem build command.
-
-## Controles do protótipo
-- `[` / `]`: alternar abas como LB/RB
-- `Y`: abrir busca
-- `M`: abrir menu lateral
-- `B` ou `Esc`: voltar/fechar
-- `Enter`: abrir jogo focado
-
-## Próxima etapa
-Conectar o botão **Jogar agora** a um backend de cloud gaming (por exemplo, sessão própria com Sunshine/Moonlight/WebRTC ou outra infraestrutura autorizada).
+## 🎮 Controles da TV
+- **Setas Direita / Esquerda**: Navega entre os sistemas.
+- **Botão OK / Enter**: Seleciona e abre.
+- **Botão Back / Voltar (Código 461)**: Fecha o emulador ativo e retorna ao carrossel.
