@@ -1,9 +1,7 @@
-# RetroPlayBR - webOS Admin Edition
+# RetroPlayBR corrigido
 
-Roms baseadas em armazenamento local gerenciadas pelo Painel de Administração interno.
+Substitua os arquivos `index.html`, `style.css` e `app.js` do repositório por estes três arquivos.
 
-## 🛠️ Credenciais
-- **Senha do Admin:** abcd
+Inclui catálogo inicial com PSP, GBA, N64 e DS; busca e filtros; painel administrativo; validação; escape de conteúdo e links externos seguros.
 
-## 🚀 Como usar
-Clique no botão "Painel Admin" no topo superior direito da tela, digite a senha e adicione seus links do TeraBox.
+Senha atual do painel: `abcd`.
