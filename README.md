@@ -1,7 +1,3 @@
 # RetroPlayBR corrigido
 
-Substitua os arquivos `index.html`, `style.css` e `app.js` do repositório por estes três arquivos.
-
-Inclui catálogo inicial com PSP, GBA, N64 e DS; busca e filtros; painel administrativo; validação; escape de conteúdo e links externos seguros.
-
-Senha atual do painel: `abcd`.
+Inclui PSP, GBA, N64, DS e SNES. Para adicionar um jogo, selecione a plataforma e informe a URL real no campo “URL do site onde o jogo está”. O botão abre exatamente essa URL. Senha do painel: `abcd`.

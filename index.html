@@ -1,18 +1,1 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>RetroPlayBR</title><link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header><div class="brand"><span>RETRO</span>PLAYBR</div><button id="adminBtn" class="outline">⚙ Admin</button></header>
-  <main>
-    <section class="hero"><p>SEU CATÁLOGO RETRÔ</p><h1>Jogos clássicos em um só lugar</h1><span>Escolha sua plataforma e encontre seu próximo jogo.</span></section>
-    <section class="toolbar"><input id="search" type="search" placeholder="Pesquisar jogo..."><div id="filters" class="filters"></div></section>
-    <div id="catalog" class="grid"></div>
-  </main>
-  <div id="modal" class="modal hidden"><div class="panel"><button class="close" id="close">×</button>
-    <div id="login"><h2>Painel de Admin</h2><p>Gerencie o catálogo localmente.</p><input id="password" type="password" placeholder="Senha"><button id="loginBtn">Entrar</button><small id="error"></small></div>
-    <div id="dashboard" class="hidden"><h2>Adicionar jogo</h2><form id="gameForm"><input id="name" placeholder="Nome do jogo" required><select id="platform" required><option value="">Plataforma</option><option>PSP</option><option>GBA</option><option>N64</option><option>DS</option></select><input id="cover" type="url" placeholder="URL da capa" required><input id="link" type="url" placeholder="Link do download" required><button type="submit">Adicionar jogo</button></form><div id="adminList"></div><button id="logout" class="secondary">Sair</button></div>
-  </div></div><script src="app.js"></script>
-</body></html>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RetroPlayBR</title><link rel="stylesheet" href="style.css"></head><body><header><div class="brand"><span>RETRO</span>PLAYBR</div><button id="adminBtn" class="outline">⚙ Admin</button></header><main><section class="hero"><p>SEU CATÁLOGO RETRÔ</p><h1>Jogos clássicos em um só lugar</h1><span>Escolha sua plataforma e encontre seu próximo jogo.</span></section><section class="toolbar"><input id="search" type="search" placeholder="Pesquisar jogo..."><div id="filters" class="filters"></div></section><div id="catalog" class="grid"></div></main><div id="modal" class="modal hidden"><div class="panel"><button class="close" id="close">×</button><div id="login"><h2>Painel de Admin</h2><p>Gerencie o catálogo localmente.</p><input id="password" type="password" placeholder="Senha"><button id="loginBtn">Entrar</button><small id="error"></small></div><div id="dashboard" class="hidden"><h2>Adicionar jogo</h2><form id="gameForm"><input id="name" placeholder="Nome do jogo" required><select id="platform" required><option value="">Plataforma</option><option>PSP</option><option>GBA</option><option>N64</option><option>DS</option><option>SNES</option></select><input id="cover" type="url" placeholder="URL da capa" required><input id="link" type="url" placeholder="URL do site onde o jogo está" required><button type="submit">Adicionar jogo</button></form><div id="adminList"></div><button id="logout" class="secondary">Sair</button></div></div></div><script src="app.js"></script></body></html>
