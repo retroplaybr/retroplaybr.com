@@ -1,1 +1,53 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RetroPlayBR</title><link rel="stylesheet" href="style.css"></head><body><header><div class="brand"><span>RETRO</span>PLAYBR</div><button id="adminBtn" class="outline">⚙ Admin</button></header><main><section class="hero"><p>SEU CATÁLOGO RETRÔ</p><h1>Jogos clássicos em um só lugar</h1><span>Escolha sua plataforma e encontre seu próximo jogo.</span></section><section class="toolbar"><input id="search" type="search" placeholder="Pesquisar jogo..."><div id="filters" class="filters"></div></section><div id="catalog" class="grid"></div></main><div id="modal" class="modal hidden"><div class="panel"><button class="close" id="close">×</button><div id="login"><h2>Painel de Admin</h2><p>Gerencie o catálogo localmente.</p><input id="password" type="password" placeholder="Senha"><button id="loginBtn">Entrar</button><small id="error"></small></div><div id="dashboard" class="hidden"><h2>Adicionar jogo</h2><form id="gameForm"><input id="name" placeholder="Nome do jogo" required><select id="platform" required><option value="">Plataforma</option><option>PSP</option><option>GBA</option><option>N64</option><option>DS</option><option>SNES</option></select><input id="cover" type="url" placeholder="URL da capa" required><input id="link" type="url" placeholder="URL do site onde o jogo está" required><button type="submit">Adicionar jogo</button></form><div id="adminList"></div><button id="logout" class="secondary">Sair</button></div></div></div><script src="app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha TV Retro</title>
+    <style>
+        body { background-color: #141414; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        h1 { color: #e50914; margin-bottom: 30px; }
+        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+        .card { background: #222; border: 2px solid transparent; border-radius: 8px; padding: 15px; width: 180px; cursor: pointer; transition: 0.2s; }
+        .card:focus, .card:hover { border-color: #e50914; background: #333; transform: scale(1.05); outline: none; }
+        .card img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; }
+        .card p { margin-top: 10px; font-weight: bold; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <h1>🎮 Meus Jogos Retrô</h1>
+
+    <div class="grid">
+        <!-- Exemplo de Jogo 1 (Super Nintendo) -->
+        <div class="card" tabindex="0" onclick="jogar('snes', 'roms/super_mario.smc')">
+            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=150&auto=format&fit=crop" alt="Capa">
+            <p>Super Mario World</p>
+        </div>
+
+        <!-- Exemplo de Jogo 2 (Mega Drive) -->
+        <div class="card" tabindex="0" onclick="jogar('megaDrive', 'roms/sonic.bin')">
+            <img src="https://images.unsplash.com/photo-1531525645387-7f14be1bdbbd?w=150&auto=format&fit=crop" alt="Capa">
+            <p>Sonic The Hedgehog</p>
+        </div>
+    </div>
+
+    <script>
+        function jogar(consoleTipo, romPath) {
+            window.location.href = `jogar.html?core=${consoleTipo}&rom=${encodeURIComponent(romPath)}`;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            const active = document.activeElement;
+            const cards = Array.from(document.querySelectorAll('.card'));
+            let index = cards.indexOf(active);
+
+            if (e.key === 'ArrowRight' && index < cards.length - 1) cards[index + 1].focus();
+            if (e.key === 'ArrowLeft' && index > 0) cards[index - 1].focus();
+            if (e.key === 'Enter' && index !== -1) cards[index].click();
+        });
+
+        if(document.querySelector('.card')) document.querySelector('.card').focus();
+    </script>
+</body>
+</html>

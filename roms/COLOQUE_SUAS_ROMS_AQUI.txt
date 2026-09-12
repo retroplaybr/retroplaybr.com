@@ -1,0 +1,1 @@
+Coloque os arquivos dos seus jogos (.smc, .nes, .bin) nesta pasta.

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogando...</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: black; overflow: hidden; }
+        #game { width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+
+    <div id="game"></div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const core = urlParams.get('core'); 
+        const rom = urlParams.get('rom');   
+
+        EJS_player = '#game';
+        EJS_core = core;
+        EJS_gameName = "Jogo Retrô";
+        EJS_color = '#e50914';
+        EJS_startOnLoaded = true; 
+        EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/'; 
+        EJS_gameUrl = rom; 
+        EJS_gamepad = true; 
+    </script>
+    
+    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+
+</body>
+</html>
